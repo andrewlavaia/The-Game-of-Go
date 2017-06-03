@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="lib/chessboard-0.3.0.min.css">
     <link rel="stylesheet" href="lib/WinJS.4.0/css/ui-light.css" />
     <link rel="stylesheet" href="/default.css" />
+    <link rel="stylesheet" type="text/css" href="wgo/wgo.player.css" />
   </head>
   <body>
     <div class="page login" id='page-login'>
-      <div class='logo'></div>
       <input id='username'></input>
       <button id='login'>Login</button>
     </div>
@@ -32,12 +32,16 @@
       </div>
     </div>
 
-        <div id="board"></div>
+    <div id="GOboard"> </div>
+
+    <div id="board"></div>
 	<div>
 	    <div id="black-captures">0</div>
 	    <div id="white-captures">0</div>
 	</div>
-	<div><p>Lorem Ipsum.... </p></div>
+
+
+
 
     <script src="lib/socket.io-1.2.0.js"></script>
     <script src="lib/jquery-1.11.1.js"></script>
@@ -46,7 +50,35 @@
     <script src="lib/chessboard-0.3.0.min.js"></script> 
    	<script type="text/javascript" src="lib/jgoboard-latest.js"></script>
 	<script type="text/javascript" src="board.js"></script>
+	<script type="text/javascript" src="wgo/wgo.js"></script>
     <script src="/default.js"></script>
+
+
+	<script type="text/javascript">
+
+	/*
+		move(1, 1, WGo.B);
+		move(0, 0, WGo.W);
+		move(0, 1, WGo.B);
+		move(2, 4, WGo.W);
+		move(1, 0, WGo.B);
+		move(0, 2, WGo.W);
+		move(4, 4, WGo.B);
+		move(1, 2, WGo.W);
+		move(5, 4, WGo.B);
+		move(2, 2, WGo.W);
+		move(6, 4, WGo.B);
+		move(2, 1, WGo.W);
+		move(7, 4, WGo.B);
+		move(2, 0, WGo.W);
+		// move(0, 0, WGo.B); // suicide
+		move(3, 5, WGo.B);
+
+		drawBoard(game, board);
+	*/
+
+	</script>
+
 
 
   </body>
