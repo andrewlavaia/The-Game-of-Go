@@ -17,7 +17,7 @@
       var board = new WGo.Board(document.getElementById("board"), {width: 600,});
 
 
-      // Hide go board until game is initiated
+      // Hide go board until game is initialized
       $('#board').hide();
 
            
@@ -58,14 +58,8 @@
       socket.on('joingame', function(msg) {
         console.log("joined as game id: " + msg.game.id );   
         playerColor = msg.color;
-        //initGame(msg.game); // start chess game
         initializeGame(msg.game);
         
-        // !!!
-        // if no prior moves in game then reset game and redraw board:
-        // game.firstPosition();
-        // drawBoard(game, board);
-
         $('#page-lobby').hide();
         $('#page-game').show();
         $('#board').show();
@@ -300,19 +294,25 @@
 
       board.addEventListener("click", function(x, y) {
 
-        //!!! check if it's correct player's move
+        // check if it's the correct player's move
+        if(( game.turn == 1 && username == serverGame.users.white ) ||
+           ( game.turn == -1 && username == serverGame.users.black) ) {
 
-        if( move(game, x, y, game.turn) == 1 ) { // legal move
-          
-          // draw updated position
-          drawBoard(game, board);
+          if( move(game, x, y, game.turn) == 1 ) { // legal move
+            
+            // draw updated position
+            drawBoard(game, board);
 
-          // broadcast move to opponent
-          socket.emit('move', { x: x, y: y, color: game.turn, gameId: serverGame.id, game: game });
+            // broadcast move to opponent
+            socket.emit('move', { x: x, y: y, color: game.turn, gameId: serverGame.id, game: game });
+          }
+        } else {
+          alert("not your turn");
         }
 
       });
 
+/*
       board.addListener('mousemove', function(coord, ev) {
         if(coord.i == -1 || coord.j == -1 || (coord.i == lastX && coord.j == lastY))
           return;
@@ -324,7 +324,6 @@
         lastX = coord.i;
         lastY = coord.j;
 
-        /*
         if(jboard.getType(coord) == JGO.CLEAR && jboard.getMark(coord) == JGO.MARK.NONE) {
           //jboard.setType(coord, player == JGO.WHITE ? JGO.DIM_WHITE : JGO.DIM_BLACK);
           lastHover = true;
@@ -332,7 +331,6 @@
           lastHover = false;
         }
 
-        */
       });
 
       board.addListener('mouseout', function(ev) {
@@ -343,6 +341,8 @@
         lastHover = false;
       });
   
+*/
+
     }); // end WinJS.UI.processAll()
 })();
 
