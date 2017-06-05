@@ -16,6 +16,11 @@
                               // ALL (same position cannot be repeated), NONE (positions can be repeated)
       var board = new WGo.Board(document.getElementById("board"), {width: 600,});
 
+      // board addEventListener variables 
+      var lastHover = false;
+      var lastX = -1; 
+      var lastY = -1; 
+
 
       // Hide go board until game is initialized
       $('#board').hide();
@@ -288,10 +293,6 @@
         drawBoard(game, board);
       };  
 
-      var lastHover = false;
-      var lastX = -1; 
-      var lastY = -1; 
-
       board.addEventListener("click", function(x, y) {
 
         // check if it's the correct player's move
@@ -312,36 +313,57 @@
 
       });
 
-/*
-      board.addListener('mousemove', function(coord, ev) {
-        if(coord.i == -1 || coord.j == -1 || (coord.i == lastX && coord.j == lastY))
-          return;
 
-        if(lastHover)  {// clear previous hover if there was one
-          //jboard.setType(new JGO.Coordinate(lastX, lastY), JGO.CLEAR);
-        }
+      board.addEventListener('mousemove', function(x, y) {
 
-        lastX = coord.i;
-        lastY = coord.j;
+        // check if it's your move
+        if(( game.turn == 1 && username == serverGame.users.white ) ||
+           ( game.turn == -1 && username == serverGame.users.black) ) {
+  
+          if(x == -1 || y == -1 || (x == lastX && y == lastY))
+            return;
 
-        if(jboard.getType(coord) == JGO.CLEAR && jboard.getMark(coord) == JGO.MARK.NONE) {
-          //jboard.setType(coord, player == JGO.WHITE ? JGO.DIM_WHITE : JGO.DIM_BLACK);
-          lastHover = true;
-        } else {
-          lastHover = false;
+          console.log(x + ", " + y);
+
+          // clear previous hover if there was one
+          if( lastHover && game.getStone(lastX,lastY) == 0 )  {
+            board.removeObjectsAt(lastX,lastY);
+            //jboard.setType(new JGO.Coordinate(lastX, lastY), JGO.CLEAR);
+          }
+
+          // add stone if no stone legally placed there in current game 
+          if( game.getStone(x,y) == 0 ) {
+            board.addObject([{x: x, y: y, c: game.turn}]);
+            lastHover = true;
+          }
+
+
+          lastX = x;
+          lastY = y;
+
+
+          /*
+          if(jboard.getType(coord) == JGO.CLEAR && jboard.getMark(coord) == JGO.MARK.NONE) {
+            //jboard.setType(coord, player == JGO.WHITE ? JGO.DIM_WHITE : JGO.DIM_BLACK);
+            lastHover = true;
+          } else {
+            lastHover = false;
+          }
+          */
+
         }
 
       });
 
-      board.addListener('mouseout', function(ev) {
-        if(lastHover) {
-          jboard.setType(new JGO.Coordinate(lastX, lastY), JGO.CLEAR);
+      // clear hover if mouse leaves board
+      board.addEventListener('mouseout', function(x, y) {
+        if(lastHover && game.getStone(lastX,lastY) == 0) {
+          board.removeObjectsAt(lastX,lastY);
         }
 
         lastHover = false;
       });
   
-*/
 
     }); // end WinJS.UI.processAll()
 })();
