@@ -21,9 +21,14 @@
       var lastX = -1; 
       var lastY = -1; 
 
+      // UI handler
+      var calcScore_clickToggle = false;
+
 
       // Hide go board until game is initialized
+      $('#users').hide();
       $('#board').hide();
+      $('#capcount').hide();
 
            
       //////////////////////////////
@@ -39,6 +44,7 @@
       });
       
       socket.on('joinlobby', function (msg) {
+        //removeUser(msg); // in case the user is already in the lobby for whatever reason
         addUser(msg);
       });
       
@@ -56,7 +62,9 @@
 
           $('#page-lobby').show();
           $('#page-game').hide();
+          $('#users').hide();
           $('#board').hide();
+          $('#capcount').hide();
         }            
       });
                   
@@ -67,7 +75,9 @@
         
         $('#page-lobby').hide();
         $('#page-game').show();
+        $('#users').show();
         $('#board').show();
+        $('#capcount').show();
         
       });
 
@@ -106,7 +116,9 @@
         socket.emit('login', username);
 
         $('#page-game').hide();
+        $('#users').hide();
         $('#board').hide();
+        $('#capcount').hide();
         $('#page-lobby').show();
       });
       
@@ -115,7 +127,9 @@
         
         socket.emit('login', username);
         $('#page-game').hide();
+        $('#users').hide();
         $('#board').hide();
+        $('#capcount').hide();
         $('#page-lobby').show();
       });
       
@@ -155,6 +169,18 @@
                         }));
         });
       };
+
+
+      $('#calc-score').on('click', function() {
+        calcScore_clickToggle = (calcScore_clickToggle === true) ? false : true;
+
+        var position = game.getPosition();
+        if(calcScore_clickToggle == true) {
+          drawScoreBoard(getAreaScoringPosition(position), board);
+        } else {
+          drawBoard(game, board);
+        } 
+      });
 
 
            
@@ -255,13 +281,14 @@
       var drawBoard = function(game, board) {
         // clear board
         board.removeAllObjects();
-        //console.log( game.getPosition() );
         
         // draw all active stones
-        for(i=0; i < 361; i++) {
+        for(i=0; i < game.size * game.size; i++) {
           if(game.getPosition().schema[i] != 0) {
-            var y = i % gameSize;
-            var x = Math.round(i / game.size); 
+            var y = i % game.size;
+            var x = Math.floor(i / game.size); // need to round down, otherwise it moves the stone one spot to the right 
+                                               // at certain sections of the board (bottom half).
+                                               // Math.floor is very slow so this may be a place to optimize down the road
             var position = game.getPosition();
             if(position.schema[i] == 1) {
               board.addObject([{x: x, y: y, c: WGo.B}]);
@@ -270,7 +297,34 @@
             }
           }
         }
+
+        // update users and cap count every time board is drawn
+        updateUsers();
+        updateCapCount();
       };   
+
+      var drawScoreBoard = function(position, board) {
+        var blackCount = 0;
+        var whiteCount = 0;
+
+        // draw squares
+        for(i=0; i < position.size*position.size; i++) {
+          if(position.schema[i] != 0) {
+            var y = i % position.size;
+            var x = Math.floor(i / position.size); // need to round down, otherwise it moves the stone one spot to the right 
+                                                   // at certain sections of the board (bottom half).
+                                                   // Math.floor is very slow so this may be a place to optimize down the road
+            if(position.schema[i] == 1) {
+              board.addObject([{x: x, y: y, type: "SQ", c: WGo.B}]);
+              blackCount++;
+            } else if(position.schema[i] == -1) {
+              board.addObject([{x: x, y: y, type: "SQ", c: WGo.W}]);
+              whiteCount++;
+            }
+          }
+        }
+
+      }; 
 
       var initializeGame = function(serverGameState) {
 
@@ -282,7 +336,6 @@
           console.log("creating new game");
         } else {
           game = new WGo.Game(serverGame.game);
-          //game = WGo.Game.create(serverGame.game); 
           console.log("resuming game")
         }
 
@@ -291,13 +344,48 @@
 
         // draw board
         drawBoard(game, board);
-      };  
+      }; 
+
+      var updateUsers = function() {
+        $('#userB').text("Black: " + serverGame.users.black);
+        $('#userW').text("White: " + serverGame.users.white);
+      };
+
+      var updateCapCount = function() {
+        $('#capcountB').text("Black: " + game.getPosition().capCount.black);
+        $('#capcountW').text("White: " + game.getPosition().capCount.white);
+      };
+
+      var getAreaScoringPosition = function(pos) {
+        var position = new WGo.Position(pos.size);
+        position.color = pos.color;
+        position.size = pos.size;
+        position.capCount = {
+          black: pos.capCount.black,
+          white: pos.capCount.white
+        };
+
+        position.schema = estimateAreaScoring(pos);
+
+        return position;
+      };
+
+      var estimateAreaScoring = function(pos) {
+        var positionArray = new Array(pos.schema.length);
+        
+        for(var i = 0; i < pos.schema.length; i++) {
+          positionArray[i] = 1;
+        }
+
+        return positionArray;
+
+      };
 
       board.addEventListener("click", function(x, y) {
 
         // check if it's the correct player's move
-        if(( game.turn == 1 && username == serverGame.users.white ) ||
-           ( game.turn == -1 && username == serverGame.users.black) ) {
+        if(( game.turn == -1 && username == serverGame.users.white ) ||
+           ( game.turn == 1 && username == serverGame.users.black) ) {
 
           if( move(game, x, y, game.turn) == 1 ) { // legal move
             
@@ -311,24 +399,23 @@
           alert("not your turn");
         }
 
+        //console.log(new WGo.Goban(19));
+
       });
 
 
       board.addEventListener('mousemove', function(x, y) {
 
         // check if it's your move
-        if(( game.turn == 1 && username == serverGame.users.white ) ||
-           ( game.turn == -1 && username == serverGame.users.black) ) {
+        if(( game.turn == -1 && username == serverGame.users.white ) ||
+           ( game.turn == 1 && username == serverGame.users.black) ) {
   
           if(x == -1 || y == -1 || (x == lastX && y == lastY))
             return;
 
-          console.log(x + ", " + y);
-
           // clear previous hover if there was one
           if( lastHover && game.getStone(lastX,lastY) == 0 )  {
             board.removeObjectsAt(lastX,lastY);
-            //jboard.setType(new JGO.Coordinate(lastX, lastY), JGO.CLEAR);
           }
 
           // add stone if no stone legally placed there in current game 
@@ -340,16 +427,6 @@
 
           lastX = x;
           lastY = y;
-
-
-          /*
-          if(jboard.getType(coord) == JGO.CLEAR && jboard.getMark(coord) == JGO.MARK.NONE) {
-            //jboard.setType(coord, player == JGO.WHITE ? JGO.DIM_WHITE : JGO.DIM_BLACK);
-            lastHover = true;
-          } else {
-            lastHover = false;
-          }
-          */
 
         }
 

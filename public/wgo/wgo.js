@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * Copyright (c) 2013 Jan Prokop
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
@@ -1898,13 +1898,6 @@ Game.prototype = {
 
 	getPosition: function() {
 		return this.stack[this.stack.length-1];
-
-		/*
-		if( this.stack[this.stack.length-1] instanceof WGo.Position ) {
-			return this.stack[this.stack.length-1];
-		} else {
-			return Position.create(this.stack[this.stack.length-1]);
-		}*/
 	},
 
 	/**
@@ -2200,8 +2193,17 @@ Position.create = function (obj) {
 
 
 
+
+
+//!!! need to pass position.schema array into a function that can convert it into usable format for score calculator (goban.board[y][x])
+//!!! need to compile c++ score calculator into javacript
+//!!! need to add function in score calculator that accepts position.schema array and returns a new position.schema array
+
+
 // save Game
 WGo.Game = Game;
+
+//WGo.Goban = Goban;
 
 // register WGo
 window.WGo = WGo;
