@@ -59,6 +59,7 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     .function("estimate", &Goban::estimate)
     .function("score", &Goban::score)
     .function("print", &Goban::print)
+    .function("getScoreVector", &Goban::getScoreVector)
     .function("populateBoard", &Goban::populateBoard)
     //.property("x", &MyClass::getX, &MyClass::setX)
     //.class_function("getStringFromInstance", &MyClass::getStringFromInstance)
@@ -90,8 +91,8 @@ void Goban::populateBoard(std::vector<int> boardSchema, int boardSize) {
     int y;
 
     for (int i = 0; i < boardSchema.size(); i++) {
-      y = i % boardSize;
-      x = i / boardSize;
+      x = i % boardSize;
+      y = i / boardSize;
       this->board[x][y] = boardSchema.at(i);
 
     }
@@ -229,6 +230,18 @@ Goban Goban::estimate(Color player_to_move, int trials, float tolerance) {
 
 
     return ret;
+}
+
+std::vector<int> Goban::getScoreVector() {
+
+  std::vector<int> vec;
+  for (int y=0; y < this->height; ++y) {
+      for (int x=0; x < this->width; ++x) {
+        vec.push_back(board[x][y]);
+      }
+  }
+
+  return vec;
 }
 
 
@@ -665,11 +678,13 @@ Console instructions:
 /*
 Compiling instructions:
 
-  emcc --bind main.cc estimator.cc -o function.html -s NO_EXIT_RUNTIME=1
+  emcc --bind -O2 main.cc estimator.cc -o function.html -s NO_EXIT_RUNTIME=1
 
   --bind -> required by embind which allows C++ function calls from javascript
 
-  -o "function.html" -> output file in html form
+  -O2 -> optimizes the program for faster output
+
+  -o "function.html" -> output file in html form, not needed
 
   -s NO_EXIT_RUNTIME=1 -> doesn't exit main loop in c++
 

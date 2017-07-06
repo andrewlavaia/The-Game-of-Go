@@ -19,7 +19,7 @@
       // board addEventListener variables 
       var lastHover = false;
       var lastX = -1; 
-      var lastY = -1; 
+      var lastY = -1;
 
       // UI handler
       var calcScore_clickToggle = false;
@@ -170,79 +170,53 @@
         });
       };
 
+      var initializeGame = function(serverGameState) {
+
+        serverGame = serverGameState; 
+        //console.log (serverGame);
+
+        if (serverGame.game == null ) {
+          game = new WGo.Game(gameSize, gameRepeat);
+          console.log("creating new game");
+        } else {
+          game = new WGo.Game(serverGame.game);
+          console.log("resuming game")
+        }
+
+       
+        //console.log(game);
+
+        // draw board
+        drawBoard(game, board);
+      }; 
+
+      var updateUsers = function() {
+        $('#userB').text("Black: " + serverGame.users.black);
+        $('#userW').text("White: " + serverGame.users.white);
+      };
+
+      var updateCapCount = function() {
+        $('#capcountB').text("Black: " + game.getPosition().capCount.black);
+        $('#capcountW').text("White: " + game.getPosition().capCount.white);
+      };
+
 
       $('#calc-score').on('click', function() {
         calcScore_clickToggle = (calcScore_clickToggle === true) ? false : true;
 
         var position = game.getPosition();
         if(calcScore_clickToggle == true) {
-          drawScoreBoard(getAreaScoringPosition(position), board);
+          //drawScoreBoard(getAreaScoringPosition(position), board);
+          //estimateScore(); // calls goScoreEstimator
+          drawScoreBoardFromArray(estimateScore(), board, 19);
+          
         } else {
           drawBoard(game, board);
         } 
+
       });
 
 
-           
-      //////////////////////////////
-      // Chess Game
-      ////////////////////////////// 
-/*      
-      var initGame = function (serverGameState) {
-        serverGame = serverGameState; 
-        
-          var cfg = {
-            draggable: true,
-            showNotation: false,
-            orientation: playerColor,
-            position: serverGame.board ? serverGame.board : 'start',
-            onDragStart: onDragStart,
-            onDrop: onDrop,
-            onSnapEnd: onSnapEnd
-          };
-               
-          game = serverGame.board ? new Chess(serverGame.board) : new Chess();
-          board = new ChessBoard('game-board', cfg);
-
-      }
-       
-      // do not pick up pieces if the game is over
-      // only pick up pieces for the side to move
-      var onDragStart = function(source, piece, position, orientation) {
-        if (game.game_over() === true ||
-            (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-            (game.turn() === 'b' && piece.search(/^w/) !== -1) ||
-            (game.turn() !== playerColor[0])) {
-          return false;
-        }
-      };  
-      
-    
-      
-      var onDrop = function(source, target) {
-        // see if the move is legal
-        var move = game.move({
-          from: source,
-          to: target,
-          promotion: 'q' // NOTE: always promote to a queen for example simplicity
-        });
-      
-        // illegal move
-        if (move === null) { 
-          return 'snapback';
-        } else {
-           socket.emit('move', {move: move, gameId: serverGame.id, board: game.fen()});
-        }
-      
-      };
-      
-      // update the board position after the piece snap 
-      // for castling, en passant, pawn promotion
-      var onSnapEnd = function() {
-        board.position(game.fen());
-      };
-
-*/
       //////////////////////////////
       // WGo Game
       ////////////////////////////// 
@@ -301,9 +275,17 @@
         // update users and cap count every time board is drawn
         updateUsers();
         updateCapCount();
-      };   
+      };  
+
+      //////////////////////////////
+      // Go Score Estimator
+      //////////////////////////////  
 
       var drawScoreBoard = function(position, board) {
+
+        // clear board
+        board.removeAllObjects();
+
         var blackCount = 0;
         var whiteCount = 0;
 
@@ -323,39 +305,39 @@
             }
           }
         }
-
       }; 
 
-      var initializeGame = function(serverGameState) {
+      var drawScoreBoardFromArray = function(arr, board, boardSize) {
 
-        serverGame = serverGameState; 
-        //console.log (serverGame);
+        // clear board
+        // board.removeAllObjects();
 
-        if (serverGame.game == null ) {
-          game = new WGo.Game(gameSize, gameRepeat);
-          console.log("creating new game");
-        } else {
-          game = new WGo.Game(serverGame.game);
-          console.log("resuming game")
+        var blackCount = 0;
+        var whiteCount = 0;
+
+        // draw squares
+        for(i=0; i < arr.length; i++) {
+          if(arr[i] != 0) {
+            var y = i % boardSize;
+            var x = Math.floor(i / boardSize); // need to round down, otherwise it moves the stone one spot to the right 
+                                                   // at certain sections of the board (bottom half).
+                                                   // Math.floor is very slow so this may be a place to optimize down the road
+            if(arr[i] == 1) {
+              //board.addObject([{x: x, y: y, type: "SQ", c: WGo.B}]);
+              board.addObject([{x: x, y: y, c: WGo.B}]);
+              blackCount++;
+            } else if(arr[i] == -1) {
+              //board.addObject([{x: x, y: y, type: "SQ", c: WGo.W}]);
+              board.addObject([{x: x, y: y, c: WGo.W}]);
+              whiteCount++;
+            }
+          }
         }
-
-       
-        //console.log(game);
-
-        // draw board
-        drawBoard(game, board);
       }; 
 
-      var updateUsers = function() {
-        $('#userB').text("Black: " + serverGame.users.black);
-        $('#userW').text("White: " + serverGame.users.white);
-      };
 
-      var updateCapCount = function() {
-        $('#capcountB').text("Black: " + game.getPosition().capCount.black);
-        $('#capcountW').text("White: " + game.getPosition().capCount.white);
-      };
-
+/*
+      // No Longer Used
       var getAreaScoringPosition = function(pos) {
         var position = new WGo.Position(pos.size);
         position.color = pos.color;
@@ -365,15 +347,20 @@
           white: pos.capCount.white
         };
 
-        position.schema = estimateAreaScoring(pos);
+        position.schema = getAreaScoringArray(pos);
 
         return position;
       };
-
-      var estimateAreaScoring = function(pos) {
+      
+      // No Longer Used
+      var getAreaScoringArray = function(pos) {
         var positionArray = new Array(pos.schema.length);
         
         for(var i = 0; i < pos.schema.length; i++) {
+          
+          // !!! insert code here that grabs scoring vector from scoreestimator
+
+          // debug
           positionArray[i] = 1;
         }
 
@@ -381,7 +368,66 @@
 
       };
 
+      // No Longer Used
+      var convertPositionArrayToVector = function(pos) {
+        var vec = new Module.VectorInt;
+
+        for(var i = 0; i < pos.schema.length; i++) { 
+          vec.push_back(pos.schema[i]); 
+        }
+
+        return vec;
+
+      };
+*/
+
+      var convertVectorToArray = function(vec) {
+        var positionArray = new Array();
+        var positionVector = new Module.VectorInt;
+        positionVector = vec;
+
+        for(var i = 0; i < positionVector.size(); i++) {
+          positionArray.push(positionVector.get(i));
+        }
+
+        return positionArray;
+
+      };
+
+      var estimateScore = function() {
+        var instance = new Module.Goban;
+        var vec = new Module.VectorInt;
+        
+        for(var i = 0; i < 361; i++) { 
+          vec.push_back(game.getPosition().schema[i]); 
+        }
+        
+        instance.populateBoard(vec, 19);
+        instance.print();
+        console.log(instance.score());
+
+        var instance2 = new Module.Goban;
+        instance2 = instance.estimate(Module.Color.BLACK, 1000, .35); // !!! get current position color, change 1000 to 10000 once optimized
+        instance2.print();
+        console.log(instance2.score());
+
+        var scoreVec = new Module.VectorInt;
+        scoreVec = instance2.getScoreVector();
+        console.log(scoreVec);
+
+        var scoreArray = new Array();
+        scoreArray = convertVectorToArray(scoreVec);
+        console.log(scoreArray);
+
+        return scoreArray;
+
+      };
+
       board.addEventListener("click", function(x, y) {
+
+        // check if area scoring board is shown
+        if (calcScore_clickToggle == true)
+          return;
 
         // check if it's the correct player's move
         if(( game.turn == -1 && username == serverGame.users.white ) ||
@@ -405,6 +451,10 @@
 
 
       board.addEventListener('mousemove', function(x, y) {
+
+        // check if area scoring board is shown
+        if (calcScore_clickToggle == true)
+          return;
 
         // check if it's your move
         if(( game.turn == -1 && username == serverGame.users.white ) ||
@@ -444,4 +494,8 @@
 
     }); // end WinJS.UI.processAll()
 })();
+
+
+      
+
 

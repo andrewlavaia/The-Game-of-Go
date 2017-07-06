@@ -72,6 +72,7 @@ class Goban {
         Goban();
         Goban(const Goban &other);
         Goban estimate(Color player_to_move, int trials, float tolerance);
+        std::vector<int> getScoreVector();
         Point generateMove(Color player, int trials, float tolerance);
         inline int operator[](const Point &p) const { return board[p.y][p.x]; }
         inline int& operator[](const Point &p) { return board[p.y][p.x]; }
