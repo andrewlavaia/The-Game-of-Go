@@ -7,10 +7,6 @@ body {
 	align-items: center;
 }
 
-.page {
-	margin-top: 20px;
-}
-
 .page-login {
 	display: flex;
 	flex-direction: column;
@@ -19,7 +15,6 @@ body {
 	.page.login .logo {
 		display: block;
 		background-color: lightgray;
-		background-image: url('/img/chesslogo.jpg');
 		background-size: cover;
 		background-position: center center;
 
