@@ -3,8 +3,10 @@
     
     WinJS.UI.processAll().then(function () {
       
-      var socket, serverGame;
-      var username, playerColor;
+      var socket;
+      var serverGame;
+      //var username;
+      var playerColor;
       var usersOnline = [];
       var myGames = [];
       socket = io();
@@ -24,6 +26,8 @@
       // UI handler
       var calcScore_clickToggle = false;
 
+      console.log(username);
+      $('#page-lobby').show();
 
       // Hide go board until game is initialized
       $('#users').hide();

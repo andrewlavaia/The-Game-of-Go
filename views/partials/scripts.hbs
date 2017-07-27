@@ -30,12 +30,22 @@
             })
         </script>
 
-        <!-- BEGIN GO BOARD GAME SCRIPTS -->
         <script src="lib/socket.io-1.2.0.js"></script>
         <script src="lib/jquery-1.11.1.js"></script>
-        <script src="lib/WinJS.4.0/js/WinJS.min.js"></script>
-        <script type="text/javascript" src="wgo/wgo.js"></script>
-        <script type="text/javascript" src="scoreestimator.js"></script>
-        <!-- END GO BOARD GAME SCRIPTS -->
 
-        <script src="/default.js"></script>
+        <!-- Only load Go Board Game Scripts if route indicates they are needed-->
+        {{#if includeGoScripts }} 
+            <script src="lib/WinJS.4.0/js/WinJS.min.js"></script>
+            <script type="text/javascript" src="wgo/wgo.js"></script>
+            <script type="text/javascript" src="scoreestimator.js"></script>
+            <script type="text/javascript">
+                {{#if username}}
+                    var username = '{{username}}'; // loaded into global scope so that it can be used in default.js
+                {{else}}
+                    var username = null;
+                {{/if}}
+            </script>
+            <script type="text/javascript" src="/default.js"></script>
+        {{/if}}
+
+        
