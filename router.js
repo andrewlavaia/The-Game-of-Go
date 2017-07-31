@@ -106,7 +106,7 @@ module.exports = function(app, passport){
 	});
 
 	// =====================================
-	// LOGOUT ==============================
+	// PLAY - LIVE =========================
 	// =====================================
 	app.get('/gamelobby', isLoggedIn, function(req, res) {
 		res.render('gamelobby', {
@@ -118,7 +118,186 @@ module.exports = function(app, passport){
 	});
 
 	// =====================================
-	// 404 Error - Page Not Fou=============
+	// PLAY - TURN BASED ===================
+	// =====================================
+	app.get('/play_turnbased', isLoggedIn, function(req, res) {
+		res.render('play_turnbased', {
+			pageTitle : 'Turn Based Game Lobby',
+			includeGoScripts : 'true', // required to load go scripts in page
+			userid : req.user.userid, 
+			username : req.user.username 
+		});
+	});
+
+	// =====================================
+	// PLAY - COMPUTER =====================
+	// =====================================
+	app.get('/play_computer', isLoggedIn, function(req, res) {
+		res.render('play_computer', {
+			pageTitle : 'Play Computer',
+			includeGoScripts : 'true', // required to load go scripts in page
+			userid : req.user.userid, 
+			username : req.user.username 
+		});
+	});
+
+
+	// =====================================
+	// LEARN - INTRODUCTION ================
+	// =====================================
+	app.get('/learn_intro', function(req, res) {
+
+		if(req.user) {
+			res.render('learn_intro', {
+				pageTitle : 'Introduction to Go',
+				username : req.user.username
+			});
+		} else {
+			res.render('learn_intro', {
+				pageTitle : 'Introduction to Go'
+			});
+		}
+	});
+
+	// =====================================
+	// LEARN - BASICS ======================
+	// =====================================
+	app.get('/learn_basics', function(req, res) {
+		if(req.user) {
+			res.render('learn_basics', {
+				pageTitle : 'Basic Rules of Go',
+				username : req.user.username
+			});
+		} else {
+			res.render('learn_basics', {
+				pageTitle : 'Basic Rules of Go'
+			});
+		}
+	});
+
+	// =====================================
+	// LEARN - ADVANCED ====================
+	// =====================================
+	app.get('/learn_advanced', function(req, res) {
+		if(req.user) {
+			res.render('learn_advanced', {
+				pageTitle : 'Advanced Rules of Go',
+				username : req.user.username
+			});
+		} else {
+			res.render('learn_advanced', {
+				pageTitle : 'Advanced Rules of Go',
+			});
+		}
+	});
+
+	// =====================================
+	// LEARN - LESSONS =====================
+	// =====================================
+	app.get('/learn_lessons', function(req, res) {
+		if(req.user) {
+			res.render('learn_lessons', {
+				pageTitle : 'Lessons',
+				username : req.user.username
+			});
+		} else {
+			res.render('learn_lessons', {
+				pageTitle : 'Lessons'
+			});
+		}
+	});
+
+	// =====================================
+	// LEARN - OPENINGS ====================
+	// =====================================
+	app.get('/learn_openings', function(req, res) {
+		if(req.user) {		
+			res.render('learn_openings', {
+				pageTitle : 'Openings',
+				username : req.user.username
+			});
+		} else {
+			res.render('learn_openings', {
+				pageTitle : 'Openings'
+			});
+		}
+	});
+
+	// =====================================
+	// WATCH - LIVE ========================
+	// =====================================
+	app.get('/watch_live', isLoggedIn, function(req, res) {
+		res.render('watch_live', {
+			pageTitle : 'Watch Live Games',
+			includeGoScripts : 'true', // required to load go scripts in page
+			userid : req.user.userid, 
+			username : req.user.username 
+		});
+	});
+
+	// =====================================
+	// WATCH - ANNOTATED GAMES =============
+	// =====================================
+	app.get('/watch_annotated', isLoggedIn, function(req, res) {
+		res.render('watch_annotated', {
+			pageTitle : 'Watch Annotated Game Videos',
+			includeGoScripts : 'true', // required to load go scripts in page
+			userid : req.user.userid, 
+			username : req.user.username 
+		});
+	});
+
+	// =====================================
+	// WATCH - EVENT COVERAGE ==============
+	// =====================================
+	app.get('/watch_event', isLoggedIn, function(req, res) {
+		res.render('watch_event', {
+			pageTitle : 'Event Coverage',
+			includeGoScripts : 'true', // required to load go scripts in page
+			userid : req.user.userid, 
+			username : req.user.username 
+		});
+	});
+
+	// =====================================
+	// DISCUSS - FORUMS ====================
+	// =====================================
+	app.get('/discuss_forums', isLoggedIn, function(req, res) {
+		res.render('discuss_forums', {
+			pageTitle : 'Forums',
+			includeGoScripts : 'true', // required to load go scripts in page
+			userid : req.user.userid, 
+			username : req.user.username 
+		});
+	});
+
+	// =====================================
+	// DISCUSS - GROUPS ====================
+	// =====================================
+	app.get('/discuss_groups', isLoggedIn, function(req, res) {
+		res.render('discuss_groups', {
+			pageTitle : 'Groups',
+			includeGoScripts : 'true', // required to load go scripts in page
+			userid : req.user.userid, 
+			username : req.user.username 
+		});
+	});
+
+	// =====================================
+	// DISCUSS - MEMBERS ===================
+	// =====================================
+	app.get('/discuss_members', isLoggedIn, function(req, res) {
+		res.render('discuss_members', {
+			pageTitle : 'Members',
+			includeGoScripts : 'true', // required to load go scripts in page
+			userid : req.user.userid, 
+			username : req.user.username 
+		});
+	});
+
+
+	// =====================================
+	// 404 Error - Page Not Found ==========
 	// =====================================
 	
 	app.use(function(req,res){ // needs to be last route since it's a catch all
@@ -126,8 +305,8 @@ module.exports = function(app, passport){
 
 		if(req.user) {
 			res.render('404', {
-				pageTitle : 'Oops - Page Not Found',
-				username : req.user.username
+				pageTitle : 'Oops - Page Not Found', // needed for every page
+				username : req.user.username // needed to show top user navigation
 			});
 		} 
 		else {

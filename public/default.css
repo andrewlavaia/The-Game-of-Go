@@ -75,3 +75,21 @@ body {
 .circle.offline {
 	background-color: yellow;
 }
+
+#gameListContainer {
+	float: left;
+	width: 80%;
+}
+
+#userListContainer {
+	float: right;
+	width: 20%;
+}
+
+#users {
+	display: none;
+}
+
+#capcount {
+	display: none;
+}

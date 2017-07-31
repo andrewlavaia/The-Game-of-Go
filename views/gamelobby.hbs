@@ -1,19 +1,46 @@
-<!--
-<div class="page login" id='page-login'>
-	<input id='username'></input>
-	<button id='login'>Login</button>
-</div>
--->
-
 
 <div class="page lobby" id='page-lobby'>
-	<h3>Active games</h3>
-	<div id='gamesList'>
-		No active games
+	<div id='gameListContainer'>
+		<h3>My Active Games</h3>
+		<div id='gamesList'>
+			No active games
+		</div>
+
+		<h3>Available Games</h3>
+		<div id='availableGamesList'>
+			No available games
+		</div>
+
+		<h3>Create a New Game</h3>
+		<div id='quickStart'>
+			<button>Quick Start</button>
+		</div>
+		<div id='createPopularGame'>
+			<button>15s / 5</button> 
+			<button>30s / 5</button>
+			<button>30s / 5 + 15</button>
+		</div>
+		<div id='customCustomGame'> 
+			<form>
+			    <div class="form-group">
+                    <label># of seconds</label>
+                    <input type="text" class="form-customgame" name="customGameSeconds">
+                </div>
+                <div class="form-group">
+                    <label># of moves</label>
+                    <input type="password" class="form-customgame" name="customGameMoves">
+                </div>
+
+                <button type="submit" class="form-customgame">Create Game</button>
+			</form>
+		</div>
 	</div>
-	<h3>Online players</h3>
-	<div id='userList'>
-		No users online
+
+	<div id='userListContainer'>
+		<h3>Online players</h3>
+		<div id='userList'>
+			No users online
+		</div>	
 	</div>
 </div>
 <div class="page game" id='page-game'>

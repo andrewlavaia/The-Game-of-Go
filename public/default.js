@@ -5,7 +5,7 @@
       
       var socket;
       var serverGame;
-      //var username;
+      //var username; // now loaded into global scope from handlebars (scripts.hbs)
       var playerColor;
       var usersOnline = [];
       var myGames = [];
@@ -29,7 +29,8 @@
       console.log(username);
       $('#page-lobby').show();
 
-      // Hide go board until game is initialized
+      // Hide go board until game is 
+      $('#page-game').hide();
       $('#users').hide();
       $('#board').hide();
       $('#capcount').hide();
@@ -48,7 +49,7 @@
       });
       
       socket.on('joinlobby', function (msg) {
-        //removeUser(msg); // in case the user is already in the lobby for whatever reason
+        removeUser(msg); // in case the user is already in the lobby for whatever reason
         addUser(msg);
       });
       
@@ -155,7 +156,7 @@
       var updateGamesList = function() {
         document.getElementById('gamesList').innerHTML = '';
         myGames.forEach(function(game) {
-          $('#gamesList').append($('<button>')
+          $('#gamesList').append($('<button>') //!!! update CSS to make this nicer
                         .text('#'+ game)
                         .on('click', function() {
                           socket.emit('resumegame',  game);
@@ -166,7 +167,7 @@
       var updateUserList = function() {
         document.getElementById('userList').innerHTML = '';
         usersOnline.forEach(function(user) {
-          $('#userList').append($('<button>')
+          $('#userList').append($('<button>') //!!! update CSS to make this nicer
                         .text(user)
                         .on('click', function() {
                           socket.emit('invite',  user);
@@ -186,9 +187,6 @@
           game = new WGo.Game(serverGame.game);
           console.log("resuming game")
         }
-
-       
-        //console.log(game);
 
         // draw board
         drawBoard(game, board);
@@ -407,24 +405,26 @@
         }
         
         instance.populateBoard(vec, 19);
-        instance.print();
-        console.log(instance.score());
+        //instance.print();
+        //console.log(instance.score());
 
         var instance2 = new Module.Goban;
-        instance2 = instance.estimate(Module.Color.BLACK, 1000, .35); // !!! get current position color, change 1000 to 10000 once optimized
-        instance2.print();
-        console.log(instance2.score());
+        if(game.turn == 1)    // black's move
+          instance2 = instance.estimate(Module.Color.BLACK, 1000, .35); // change 1000 to 10000 once optimized
+        else                  // white's move
+          instance2 = instance.estimate(Module.Color.WHITE, 1000, .35); // change 1000 to 10000 once optimized
+        //instance2.print();
+        //console.log(instance2.score());
 
         var scoreVec = new Module.VectorInt;
         scoreVec = instance2.getScoreVector();
-        console.log(scoreVec);
+        //console.log(scoreVec);
 
         var scoreArray = new Array();
         scoreArray = convertVectorToArray(scoreVec);
-        console.log(scoreArray);
+        //console.log(scoreArray);
 
         return scoreArray;
-
       };
 
       board.addEventListener("click", function(x, y) {
@@ -477,7 +477,6 @@
             board.addObject([{x: x, y: y, c: game.turn}]);
             lastHover = true;
           }
-
 
           lastX = x;
           lastY = y;
