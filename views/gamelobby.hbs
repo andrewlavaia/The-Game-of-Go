@@ -38,6 +38,7 @@
 
 	<div id='userListContainer'>
 		<h3>Online players</h3>
+		<h4>Logged in as: {{ username }}</h4>
 		<div id='userList'>
 			No users online
 		</div>	
@@ -53,10 +54,17 @@
 	<p id="userB">Black: Guest</p>
 	<p id="userW">White: Guest</p>
 </div>
+
 <div id="board">
 </div>
+
 <div id="capcount">
 	<button id='calc-score'>Calculate Score</button>
 	<p id="capcountB">Black: 0</p>
 	<p id="capcountW">White: 0</p>
+	<div id="counter-black"></div>
+	<div id="counter-white"></div>  
+	<button id="reset">Reset!</button>  
 </div>
+
+

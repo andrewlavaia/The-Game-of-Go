@@ -91,6 +91,7 @@
           //console.log(msg.game);
           move(game, msg.x, msg.y, game.turn); 
           drawBoard(game, board); 
+          // !!! update timer
         } 
       });
     
@@ -98,6 +99,23 @@
       socket.on('logout', function (msg) {
         removeUser(msg.username);
       });
+
+    //////////////////////////////
+    // Game Timer
+    //////////////////////////////
+
+    socket.on('timer', function (data) {  
+      $('#counter-black').html("black: " + data.timer_black);
+      $('#counter-white').html("white: " + data.timer_white);
+    });
+
+    socket.on('ping', function() {
+      socket.emit('pong');
+    });
+
+    $('#reset').click(function() {
+        socket.emit('reset');
+    });
       
 
       
@@ -196,7 +214,23 @@
         $('#userB').text("Black: " + serverGame.users.black);
         $('#userW').text("White: " + serverGame.users.white);
       };
-
+/*
+var NanoTimer = require('nanotimer');
+var count = 10;
+var timer = new NanoTimer();
+timer.setInterval(countDown, '', '1s');
+timer.setTimeout(liftOff, [timer], '100s');
+ 
+function countDown(){
+    console.log('T - ' + count);
+    count--;
+}
+ 
+function liftOff(timer){
+    timer.clearInterval();
+    console.log('timer done');
+}
+*/
       var updateCapCount = function() {
         $('#capcountB').text("Black: " + game.getPosition().capCount.black);
         $('#capcountW').text("White: " + game.getPosition().capCount.white);
@@ -443,7 +477,7 @@
             drawBoard(game, board);
 
             // broadcast move to opponent
-            socket.emit('move', { x: x, y: y, color: game.turn, gameId: serverGame.id, game: game });
+            socket.emit('move', { x: x, y: y, color: game.turn, gameId: serverGame.id, game: game, moveTime: Date.now()});
           }
         } else {
           alert("not your turn");
@@ -498,6 +532,8 @@
     }); // end WinJS.UI.processAll()
 
 })();
+
+
 
 
       
