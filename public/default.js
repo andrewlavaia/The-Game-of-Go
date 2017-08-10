@@ -13,10 +13,10 @@
 
       // WGo variables
       var game;
-      var gameSize = 19;
+      var gameSize = 19; // default board game size
       var gameRepeat = "KO";  // options available: KO (ko is properly handled - new position cannot be same as previous position)
                               // ALL (same position cannot be repeated), NONE (positions can be repeated)
-      var board = new WGo.Board(document.getElementById("board"), {width: 600,});
+      var board = new WGo.Board(document.getElementById("board"), {size: gameSize, width: 600,});
 
       // board addEventListener variables 
       var lastHover = false;
@@ -91,7 +91,6 @@
           //console.log(msg.game);
           move(game, msg.x, msg.y, game.turn); 
           drawBoard(game, board); 
-          // !!! update timer
         } 
       });
     
@@ -199,9 +198,13 @@
         //console.log (serverGame);
 
         if (serverGame.game == null ) {
+          gameSize = serverGameState.boardSize;
+          board.setSize(gameSize);
           game = new WGo.Game(gameSize, gameRepeat);
           console.log("creating new game");
         } else {
+          gameSize = serverGameState.boardSize;
+          board.setSize(gameSize);
           game = new WGo.Game(serverGame.game);
           console.log("resuming game")
         }
@@ -214,23 +217,7 @@
         $('#userB').text("Black: " + serverGame.users.black);
         $('#userW').text("White: " + serverGame.users.white);
       };
-/*
-var NanoTimer = require('nanotimer');
-var count = 10;
-var timer = new NanoTimer();
-timer.setInterval(countDown, '', '1s');
-timer.setTimeout(liftOff, [timer], '100s');
- 
-function countDown(){
-    console.log('T - ' + count);
-    count--;
-}
- 
-function liftOff(timer){
-    timer.clearInterval();
-    console.log('timer done');
-}
-*/
+
       var updateCapCount = function() {
         $('#capcountB').text("Black: " + game.getPosition().capCount.black);
         $('#capcountW').text("White: " + game.getPosition().capCount.white);
@@ -244,7 +231,7 @@ function liftOff(timer){
         if(calcScore_clickToggle == true) {
           //drawScoreBoard(getAreaScoringPosition(position), board);
           //estimateScore(); // calls goScoreEstimator
-          drawScoreBoardFromArray(estimateScore(), board, 19);
+          drawScoreBoardFromArray(estimateScore(), board, gameSize);
           
         } else {
           drawBoard(game, board);
@@ -438,7 +425,7 @@ function liftOff(timer){
           vec.push_back(game.getPosition().schema[i]); 
         }
         
-        instance.populateBoard(vec, 19);
+        instance.populateBoard(vec, gameSize);
         //instance.print();
         //console.log(instance.score());
 
@@ -483,7 +470,7 @@ function liftOff(timer){
           alert("not your turn");
         }
 
-        //console.log(new WGo.Goban(19));
+        //console.log(new WGo.Goban(gameSize));
 
       });
 
