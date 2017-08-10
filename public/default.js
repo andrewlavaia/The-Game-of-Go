@@ -104,8 +104,8 @@
     //////////////////////////////
 
     socket.on('timer', function (data) {  
-      $('#counter-black').html("black: " + data.timer_black);
-      $('#counter-white').html("white: " + data.timer_white);
+      $('#counter-black').html("black: " + data.timer_black + "|" + data.periods_black);
+      $('#counter-white').html("white: " + data.timer_white + "|" + data.periods_white);
     });
 
     socket.on('ping', function() {
