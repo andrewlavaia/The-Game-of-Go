@@ -99,23 +99,23 @@
         removeUser(msg.username);
       });
 
-    //////////////////////////////
-    // Game Timer
-    //////////////////////////////
+      //////////////////////////////
+      // Game Timer
+      //////////////////////////////
 
-    socket.on('timer', function (data) {  
-      $('#counter-black').html("black: " + data.timer_black + "|" + data.periods_black);
-      $('#counter-white').html("white: " + data.timer_white + "|" + data.periods_white);
-    });
+      socket.on('timer', function (data) {  
+        $('#counter-black').html("black: " + data.timer_black + "|" + data.periods_black);
+        $('#counter-white').html("white: " + data.timer_white + "|" + data.periods_white);
+      });
 
-    socket.on('ping', function() {
-      socket.emit('pong');
-    });
+      socket.on('ping', function() {
+        socket.emit('pong');
+      });
 
-    $('#reset').click(function() {
-        socket.emit('reset');
-    });
-      
+      $('#reset').click(function() {
+          socket.emit('reset');
+      });
+        
 
       
       //////////////////////////////
@@ -187,10 +187,12 @@
           $('#userList').append($('<button>') //!!! update CSS to make this nicer
                         .text(user)
                         .on('click', function() {
-                          socket.emit('invite',  user);
+                          socket.emit('invite',  {opponentId: user, time: { type: "sudden_death", seconds: 30, periods: 0 }});
                         }));
         });
       };
+
+
 
       var initializeGame = function(serverGameState) {
 
@@ -238,7 +240,61 @@
         } 
 
       });
+     
+      //////////////////////////////
+      // Seek Graph
+      ////////////////////////////// 
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
+      function drawChart() {
+        var chartData = google.visualization.arrayToDataTable([
+          ['Time', 'Rank', 'TimeType',     'Seconds', 'Periods', 'SeekID', 'Username'],
+          [ 8,      -24,    'Sudden Death',   60,         0,        4420,     'test1'],
+          [ 4,      5,      'Sudden Death',   60,         0,        2330,     'test2'],
+          [ 11,     -5,     'Sudden Death',   60,         0,        2301,     'test3'],
+          [ 1,      5,      'Sudden Death',   60,         0,        10,       'test4'],
+          [ 3,      3,      'Sudden Death',   60,         0,        12309,    'test5'],
+          [ 6.5,    7,      'Sudden Death',   60,         0,        1004,     'test6']
+        ]);
+
+        var chartOptions = {
+          title: 'Available Games',
+          hAxis: {title: 'Time', minValue: 1, maxValue: 90, ticks: [1, 3, 15, 90], logScale: true, viewWindowMode: 'maximized', viewWindow: {min: 1, max: 90} },
+          vAxis: {title: 'Rank', minValue: -30, maxValue: 10, ticks: 
+            [{v:-30, f:'30k'},{v:-20, f:'20k'},{v:-10, f:'10k'}, {v:-5, f:'5k'}, {v:5, f:'5d'}] },
+          legend: 'none',
+          tooltip: { isHtml: true }
+          
+        };
+
+        var chartView = new google.visualization.DataView(chartData);
+        
+        chartView.setColumns([0, 1, {
+            type: 'string',
+            role: 'tooltip',
+            properties: {
+                html: true  
+            },
+            calc: function (dt, row) {
+                var totalTime = dt.getFormattedValue(row, 0),
+                    rank = dt.getFormattedValue(row, 1),
+                    timeType = dt.getFormattedValue(row, 2);
+                    seconds = dt.getFormattedValue(row, 3),
+                    periods = dt.getFormattedValue(row, 4),
+                    seekID = dt.getFormattedValue(row, 5);
+                    username = dt.getFormattedValue(row, 6);
+                return  '<div class="chart-tooltip">' +
+                        '<span class="tooltipHeader">Type</span>: ' + timeType + '<br />' +
+                        '<span class="tooltipHeader">Time</span>: ' + seconds + ' | ' + periods + '<br />' +
+                        '<span class="tooltipHeader">User</span>: ' + username + '(' + rank + ') <br />' +
+                        '</div>'
+            }
+        }]);
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        chart.draw(chartView, chartOptions);
+      }
 
       //////////////////////////////
       // WGo Game

@@ -8,7 +8,7 @@
 
 		<h3>Available Games</h3>
 		<div id='availableGamesList'>
-			No available games
+       		<div id="chart_div" style="width: 900px; height: 500px;"></div>
 		</div>
 
 		<h3>Create a New Game</h3>
@@ -16,9 +16,9 @@
 			<button>Quick Start</button>
 		</div>
 		<div id='createPopularGame'>
-			<button>15s / 5</button> 
-			<button>30s / 5</button>
-			<button>30s / 5 + 15</button>
+			<button id="5m">5m</button>
+			<button id="15s5">15s / 5</button> 
+			<button id="30s5">30s / 5</button>
 		</div>
 		<div id='customCustomGame'> 
 			<form>
@@ -27,8 +27,8 @@
                     <input type="text" class="form-customgame" name="customGameSeconds">
                 </div>
                 <div class="form-group">
-                    <label># of moves</label>
-                    <input type="password" class="form-customgame" name="customGameMoves">
+                    <label># of periods</label>
+                    <input type="text" class="form-customgame" name="customGamePeriods">
                 </div>
 
                 <button type="submit" class="form-customgame">Create Game</button>

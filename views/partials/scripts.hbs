@@ -36,6 +36,11 @@
         <!-- Only load Go Board Game Scripts if route indicates they are needed-->
         {{#if includeGoScripts }} 
             <script src="lib/WinJS.4.0/js/WinJS.min.js"></script>
+
+            <!-- Google Charts -->
+            <!-- https://google-developers.appspot.com/chart/interactive/docs/gallery/scatterchart -->
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
             <script type="text/javascript" src="wgo/wgo.js"></script>
             <script type="text/javascript" src="scoreestimator.js"></script>
             <script type="text/javascript">
@@ -45,7 +50,9 @@
                     var username = null;
                 {{/if}}
             </script>
+
             <script type="text/javascript" src="/default.js"></script>
+
         {{/if}}
 
         
