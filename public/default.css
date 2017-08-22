@@ -93,3 +93,7 @@ body {
 #capcount {
 	display: none;
 }
+
+.chart-tooptip span {
+	white-space: nowrap;
+}

@@ -39,15 +39,19 @@
 
             <!-- Google Charts -->
             <!-- https://google-developers.appspot.com/chart/interactive/docs/gallery/scatterchart -->
-            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <!-- https://www.gstatic.com/charts/loader.js -->
+            <!--<script type="text/javascript" src="https://www.gstatic.com/chartloader.js"></script>-->
+            <script type="text/javascript" src="lib/chartloader.js"></script>
 
             <script type="text/javascript" src="wgo/wgo.js"></script>
             <script type="text/javascript" src="scoreestimator.js"></script>
             <script type="text/javascript">
                 {{#if username}}
                     var username = '{{username}}'; // loaded into global scope so that it can be used in default.js
+                    var userid = '{{userid}}'; // loaded into global scope so that it can be used in default.js
                 {{else}}
                     var username = null;
+                    var userid = null;
                 {{/if}}
             </script>
 

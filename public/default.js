@@ -122,6 +122,7 @@
       // Menus
       ////////////////////////////// 
       $('#login').on('click', function() {
+        /*
         username = $('#username').val();
         
         if (username.length > 0) {
@@ -131,6 +132,7 @@
             $('#page-login').hide();
             $('#page-lobby').show();
         } 
+        */
       });
       
       $('#game-back').on('click', function() {
@@ -171,7 +173,10 @@
       };
       
       var updateGamesList = function() {
+        // reset all elements
         document.getElementById('gamesList').innerHTML = '';
+
+
         myGames.forEach(function(game) {
           $('#gamesList').append($('<button>') //!!! update CSS to make this nicer
                         .text('#'+ game)
@@ -248,12 +253,13 @@
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
+
         var chartData = google.visualization.arrayToDataTable([
           ['Time', 'Rank', 'TimeType',     'Seconds', 'Periods', 'SeekID', 'Username'],
           [ 8,      -24,    'Sudden Death',   60,         0,        4420,     'test1'],
           [ 4,      5,      'Sudden Death',   60,         0,        2330,     'test2'],
-          [ 11,     -5,     'Sudden Death',   60,         0,        2301,     'test3'],
-          [ 1,      5,      'Sudden Death',   60,         0,        10,       'test4'],
+          [ 11,     5,      'Sudden Death',   60,         0,        2301,     'test3'],
+          [ 8,      5,      'Sudden Death',   60,         0,        10,       'test4'],
           [ 3,      3,      'Sudden Death',   60,         0,        12309,    'test5'],
           [ 6.5,    7,      'Sudden Death',   60,         0,        1004,     'test6']
         ]);
@@ -264,12 +270,15 @@
           vAxis: {title: 'Rank', minValue: -30, maxValue: 10, ticks: 
             [{v:-30, f:'30k'},{v:-20, f:'20k'},{v:-10, f:'10k'}, {v:-5, f:'5k'}, {v:5, f:'5d'}] },
           legend: 'none',
-          tooltip: { isHtml: true }
-          
+          tooltip: { 
+            isHtml: true
+            //trigger: 'selection' 
+          },
+          focusTarget: 'datum'      
         };
 
         var chartView = new google.visualization.DataView(chartData);
-        
+
         chartView.setColumns([0, 1, {
             type: 'string',
             role: 'tooltip',
@@ -283,16 +292,25 @@
                     seconds = dt.getFormattedValue(row, 3),
                     periods = dt.getFormattedValue(row, 4),
                     seekID = dt.getFormattedValue(row, 5);
-                    username = dt.getFormattedValue(row, 6);
+                    chartusername = dt.getFormattedValue(row, 6);
                 return  '<div class="chart-tooltip">' +
-                        '<span class="tooltipHeader">Type</span>: ' + timeType + '<br />' +
+                        '<span>' + timeType + '</span><br />' +
                         '<span class="tooltipHeader">Time</span>: ' + seconds + ' | ' + periods + '<br />' +
-                        '<span class="tooltipHeader">User</span>: ' + username + '(' + rank + ') <br />' +
+                        '<span class="tooltipHeader">User</span>: ' + chartusername + '(' + rank + ') <br />' +
                         '</div>'
             }
         }]);
 
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+
+        function selectHandler(e) {
+          var dataRow = chart.getSelection()[0].row;
+          var dataCol = 5; // SeekID
+          alert('SeekID ' + chartData.getValue(dataRow, dataCol) + ' selected');
+        }
+     
         chart.draw(chartView, chartOptions);
       }
 
