@@ -1,4 +1,3 @@
-
 (function () {
     
     WinJS.UI.processAll().then(function () {
@@ -41,11 +40,11 @@
       ////////////////////////////// 
       
       socket.on('login', function(msg) {
-            usersOnline = msg.users;
-            updateUserList();
-            
-            myGames = msg.games;
-            updateGamesList();
+        usersOnline = msg.users;
+        updateUserList();
+        
+        myGames = msg.games;
+        updateGamesList();
       });
       
       socket.on('joinlobby', function (msg) {
@@ -59,11 +58,38 @@
       
       socket.on('gameadd', function(msg) {
       });
+
+      socket.on('addSeeks', function(msg) {
+        seekChartDataTable = msg;
+        google.charts.setOnLoadCallback(drawChart); //needs to be on callback
+
+        /*
+        seekChartDataTable.push([ 8,      -24,    'Sudden Death',   60,         0,        4420,     'test1']);
+        seekChartDataTable.push([ 4,      5,      'Sudden Death',   60,         0,        2330,     'test2']);
+        seekChartDataTable.push([ 11,     5,      'Sudden Death',   60,         0,        2301,     'test3']);
+        seekChartDataTable.push([ 8,      5,      'Sudden Death',   60,         0,        10,       'test4']);
+        seekChartDataTable.push([ 3,      3,      'Sudden Death',   60,         0,        12309,    'test5']);
+        seekChartDataTable.push([ 40,     -7,      'Sudden Death',   60,         0,        1004,     'test6']);
+        */
+
+        /*
+        // !!! This needs to be in socket.on('login') so it is before Add Seeks
+        if (canAccessGoogleVisualization()) {
+          drawChart();
+        } else {           
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+        }
+        */
+        //console.log("Seek added - " + msg);
+      });
       
       socket.on('resign', function(msg) {
         if (msg.gameId == serverGame.id) {
 
           socket.emit('login', username);
+
+          updateGamesList(); // used when resign is broadcasted
 
           $('#page-lobby').show();
           $('#page-game').hide();
@@ -112,6 +138,11 @@
         socket.emit('pong');
       });
 
+/*
+      socket.on('drawChart', function() {
+        drawChart();
+      });
+*/
       $('#reset').click(function() {
           socket.emit('reset');
       });
@@ -133,6 +164,42 @@
             $('#page-lobby').show();
         } 
         */
+      });
+
+      $('#5m').on('click', function() {
+        socket.emit('createSeek',  {  seekuserid: userid,
+                                      seekusername: username, 
+                                      seekuserrank: 5,
+                                      time: {   type: "Sudden Death", 
+                                                seconds: 60*5, 
+                                                periods: 0 
+                                            }
+                                    }
+                    );
+      });
+
+      $('#15s5').on('click', function() {
+        socket.emit('createSeek',  {  seekuserid: userid,
+                                      seekusername: username, 
+                                      seekuserrank: 5,
+                                      time: {   type: "Japanese", 
+                                                seconds: 15, 
+                                                periods: 5 
+                                            }
+                                    }
+                    );
+      });
+
+      $('#30s5').on('click', function() {
+        socket.emit('createSeek',  {  seekuserid: userid,
+                                      seekusername: username, 
+                                      seekuserrank: 5,
+                                      time: {   type: "Japanese", 
+                                                seconds: 30, 
+                                                periods: 5 
+                                            }
+                                    }
+                    );
       });
       
       $('#game-back').on('click', function() {
@@ -174,16 +241,20 @@
       
       var updateGamesList = function() {
         // reset all elements
-        document.getElementById('gamesList').innerHTML = '';
 
-
-        myGames.forEach(function(game) {
-          $('#gamesList').append($('<button>') //!!! update CSS to make this nicer
-                        .text('#'+ game)
-                        .on('click', function() {
-                          socket.emit('resumegame',  game);
-                        }));
-        });
+        if(myGames.length == 0) {
+          document.getElementById('gamesList').innerHTML = 'No Active Games';
+        } else {
+          document.getElementById('gamesList').innerHTML = '';
+        
+          myGames.forEach(function(game) {
+            $('#gamesList').append($('<button>') //!!! update CSS to make this nicer
+                          .text('#'+ game)
+                          .on('click', function() {
+                            socket.emit('resumegame',  game);
+                          }));
+          });
+        }
       };
       
       var updateUserList = function() {
@@ -192,11 +263,10 @@
           $('#userList').append($('<button>') //!!! update CSS to make this nicer
                         .text(user)
                         .on('click', function() {
-                          socket.emit('invite',  {opponentId: user, time: { type: "sudden_death", seconds: 30, periods: 0 }});
+                          socket.emit('invite',  {opponentId: user, time: { type: "sudden_death", seconds: 30, periods: 0 }, seekId: 0});
                         }));
         });
       };
-
 
 
       var initializeGame = function(serverGameState) {
@@ -245,24 +315,31 @@
         } 
 
       });
-     
+
       //////////////////////////////
       // Seek Graph
       ////////////////////////////// 
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
 
+      // seek chart variables
+      var seekChartDataTable =           
+        [
+          ['Time', 'Rank', 'TimeType',     'Seconds', 'Periods', 'SeekID', 'Username']
+        ];
+
+      function canAccessGoogleVisualization() {
+        if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) 
+          return false;
+        else 
+          return true;
+      }
+
       function drawChart() {
 
-        var chartData = google.visualization.arrayToDataTable([
-          ['Time', 'Rank', 'TimeType',     'Seconds', 'Periods', 'SeekID', 'Username'],
-          [ 8,      -24,    'Sudden Death',   60,         0,        4420,     'test1'],
-          [ 4,      5,      'Sudden Death',   60,         0,        2330,     'test2'],
-          [ 11,     5,      'Sudden Death',   60,         0,        2301,     'test3'],
-          [ 8,      5,      'Sudden Death',   60,         0,        10,       'test4'],
-          [ 3,      3,      'Sudden Death',   60,         0,        12309,    'test5'],
-          [ 6.5,    7,      'Sudden Death',   60,         0,        1004,     'test6']
-        ]);
+       if(canAccessGoogleVisualization()) {
+
+        var chartData = google.visualization.arrayToDataTable(seekChartDataTable);
 
         var chartOptions = {
           title: 'Available Games',
@@ -307,12 +384,32 @@
 
         function selectHandler(e) {
           var dataRow = chart.getSelection()[0].row;
-          var dataCol = 5; // SeekID
-          alert('SeekID ' + chartData.getValue(dataRow, dataCol) + ' selected');
+          var dataColTimeType = 2; // Time Type column #
+          var dataColSeconds = 3; // Seconds column #
+          var dataColPeriods = 4; // Periods column #
+          var dataColSeekID = 5; // SeekID column #
+          var dataColOpponent = 6; // seek username column #
+          if(username != chartData.getValue(dataRow, dataColOpponent)) {
+            //alert('SeekID ' + chartData.getValue(dataRow, dataSeekID) + ' selected');
+            socket.emit('invite',  {  opponentId: chartData.getValue(dataRow, dataColOpponent), 
+                                      time: {   type: chartData.getValue(dataRow, dataColTimeType), 
+                                                seconds: chartData.getValue(dataRow, dataColSeconds), 
+                                                periods: chartData.getValue(dataRow, dataColPeriods) 
+                                            },
+                                      seekId: chartData.getValue(dataRow, dataColSeekID)
+                                    });
+          } else {
+            alert('Can not start your own seek');
+          }
+          
+          
         }
-     
+
         chart.draw(chartView, chartOptions);
+       }
       }
+     
+
 
       //////////////////////////////
       // WGo Game
