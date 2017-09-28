@@ -21,7 +21,7 @@
 			<button id="30s5">30s / 5</button>
 		</div>
 		<div id='customCustomGame'> 
-			<form>
+			
 			    <div class="form-group">
                     <label># of seconds</label>
                     <input type="text" class="form-customgame" name="customGameSeconds">
@@ -31,8 +31,8 @@
                     <input type="text" class="form-customgame" name="customGamePeriods">
                 </div>
 
-                <button type="submit" class="form-customgame">Create Seek</button>
-			</form>
+                <button id="createCustomSeek" class="form-customgame">Create Seek</button>
+			
 		</div>
 	</div>
 
@@ -49,22 +49,63 @@
 	<button id='game-resign'>Resign</button>
 </div>
 
-
-<div id="users">
-	<p id="userB">Black: Guest</p>
-	<p id="userW">White: Guest</p>
-</div>
-
 <div id="board">
-</div>
+<!--
+	<p><span id="userB">Black: Guest</span> <span id="counter-black">00:00 | 0</span></p>
+	<p><span id="userW">White: Guest</span> <span id="counter-white">00:00 | 0</span></p> 
+-->
+		<div class="wgo-infobox"> 
 
-<div id="capcount">
-	<button id='calc-score'>Calculate Score</button>
-	<p id="capcountB">Black: 0</p>
-	<p id="capcountW">White: 0</p>
-	<div id="counter-black"></div>
-	<div id="counter-white"></div>  
-	<button id="reset">Reset!</button>  
+			<div class="wgo-box-wrapper wgo-player-wrapper wgo-white">
+				<div class="wgo-box-title" id="userW">Guest 1</div>
+				<div class="wgo-player-info">
+					<div class="wgo-player-info-box-wrapper">
+						<div class="wgo-player-info-box">
+							<div class="wgo-player-info-title">Rank</div>
+							<div class="wgo-player-info-value">5p</div>
+						</div>
+					</div>
+					<div class="wgo-player-info-box-wrapper">
+						<div class="wgo-player-info-box">
+							<div class="wgo-player-info-title">Caps</div>
+							<div class="wgo-player-info-value" id="capcountW">0</div>
+						</div>
+					</div>
+					<div class="wgo-player-info-box-wrapper">
+						<div class="wgo-player-info-box">
+							<div class="wgo-player-info-title">Time</div>
+							<div class="wgo-player-info-value" id="counter-white">--:--</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="wgo-box-wrapper wgo-player-wrapper wgo-black">
+				<div class="wgo-box-title" id="userB">Guest 2</div>
+				<div class="wgo-player-info">
+					<div class="wgo-player-info-box-wrapper">
+						<div class="wgo-player-info-box">
+							<div class="wgo-player-info-title">Rank</div>
+							<div class="wgo-player-info-value">9p</div>
+						</div>
+					</div>
+					<div class="wgo-player-info-box-wrapper">
+						<div class="wgo-player-info-box">
+							<div class="wgo-player-info-title">Caps</div>
+							<div class="wgo-player-info-value" id="capcountB">0</div>
+						</div>
+					</div>
+					<div class="wgo-player-info-box-wrapper">
+						<div class="wgo-player-info-box">
+							<div class="wgo-player-info-title">Time</div>
+							<div class="wgo-player-info-value" id="counter-black">--:--</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<button id='calc-score'>Estimate Score</button>
+
 </div>
 
 

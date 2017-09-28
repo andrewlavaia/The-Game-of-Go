@@ -92,6 +92,7 @@
     border-bottom: #665926 solid 3px;
     /*border-right: #665926 solid 3px;*/
     border-radius: 3px;
+    clear: both;
 }
 
 /*--- /Board --------------------------------------------------------------------------*/
@@ -103,6 +104,9 @@
 	border: 1px solid rgba(200,200,200,0.5);
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
+	width: 50%;
+	float: left;
+	margin-bottom: 10px;
 }
 
 .wgo-box-title {
@@ -154,7 +158,7 @@
 }
 
 .wgo-player-info-box-wrapper {
-	width: 33.3%;
+	width: 32%;
 	display: inline-block;
 }
 
@@ -171,6 +175,12 @@
 .wgo-player-info-title {
 	font-size: 11px;
 	overflow: hidden;
+
+}
+
+.wgo-infobox {
+	margin: 10px auto;
+
 }
 
 /* right and left modifications*/

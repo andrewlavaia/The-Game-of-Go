@@ -129,9 +129,19 @@
       // Game Timer
       //////////////////////////////
 
+      function secondsToHms(d) {
+          d = Number(d);
+
+          //var h = Math.floor(d / 3600);
+          var m = Math.floor(d % 3600 / 60);
+          var s = Math.floor(d % 3600 % 60);
+
+          return ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
+      }
+
       socket.on('timer', function (data) {  
-        $('#counter-black').html("black: " + data.timer_black + "|" + data.periods_black);
-        $('#counter-white').html("white: " + data.timer_white + "|" + data.periods_white);
+        $('#counter-black').html( secondsToHms(data.timer_black) + "|" + data.periods_black);
+        $('#counter-white').html( secondsToHms(data.timer_white) + "|" + data.periods_white);
       });
 
       socket.on('ping', function() {
@@ -200,6 +210,47 @@
                                             }
                                     }
                     );
+      });
+
+      $('#createCustomSeek').on('click', function() {
+
+        var customGameSeconds = parseInt($("input[name=customGameSeconds]").val());
+        var customGamePeriods = $("input[name=customGamePeriods]").val();
+        var customGameType;
+
+        if(customGamePeriods == "" || customGamePeriods == 0) {
+          customGameType = "Sudden Death";
+          customGamePeriods = parseInt(0);
+          if(customGameSeconds < 60) {// can't be less than 1 min sudden death
+            alert("Game cannot be less than 1 minute with 0 periods");
+            return;  
+          }
+        } else {
+          customGameType = "Japanese";
+          customGamePeriods = parseInt(customGamePeriods); // convert string to number
+        }
+
+        if (typeof customGameSeconds === 'number' && 
+            typeof customGamePeriods === 'number' && 
+            customGameSeconds != null && 
+            customGamePeriods != null) {
+
+          socket.emit('createSeek',  {  seekuserid: userid,
+                                        seekusername: username, 
+                                        seekuserrank: 5,
+                                        time: {   type: customGameType, 
+                                                  seconds: customGameSeconds, 
+                                                  periods: customGamePeriods 
+                                              }
+                                      });
+
+          $("input[name=customGameSeconds]").val('');
+          $("input[name=customGamePeriods]").val('');
+
+        } else {
+          alert("Not a valid entry");
+        }
+
       });
       
       $('#game-back').on('click', function() {
@@ -291,13 +342,13 @@
       }; 
 
       var updateUsers = function() {
-        $('#userB').text("Black: " + serverGame.users.black);
-        $('#userW').text("White: " + serverGame.users.white);
+        $('#userB').text(serverGame.users.black);
+        $('#userW').text(serverGame.users.white);
       };
 
       var updateCapCount = function() {
-        $('#capcountB').text("Black: " + game.getPosition().capCount.black);
-        $('#capcountW').text("White: " + game.getPosition().capCount.white);
+        $('#capcountB').text(game.getPosition().capCount.black);
+        $('#capcountW').text(game.getPosition().capCount.white);
       };
 
 
@@ -325,7 +376,7 @@
       // seek chart variables
       var seekChartDataTable =           
         [
-          ['Time', 'Rank', 'TimeType',     'Seconds', 'Periods', 'SeekID', 'Username']
+          ['Time', 'Rank', 'TimeType', 'Seconds', 'Periods', 'SeekID', 'Username']
         ];
 
       function canAccessGoogleVisualization() {
