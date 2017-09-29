@@ -469,6 +469,17 @@ a.wgo-move-link {
 	margin: 0 auto;
 }
 
+.wgo-buttons {
+	width: 100%;
+	margin: 10px auto;
+	vertical-align: middle;
+
+}
+
+.wgo-buttons .wgo-button {
+	width: 31.5%;
+}
+
 /* button widget */
 
 button.wgo-button {

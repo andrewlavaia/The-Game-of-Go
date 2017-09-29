@@ -15,7 +15,7 @@
       var gameSize = 19; // default board game size
       var gameRepeat = "KO";  // options available: KO (ko is properly handled - new position cannot be same as previous position)
                               // ALL (same position cannot be repeated), NONE (positions can be repeated)
-      var board = new WGo.Board(document.getElementById("board"), {size: gameSize, width: 600,});
+      var board = new WGo.Board(document.getElementById("game-board"), {size: gameSize, width: 600,});
 
       // board addEventListener variables 
       var lastHover = false;
