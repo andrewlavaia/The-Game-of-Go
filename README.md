@@ -18,4 +18,4 @@ node app.js
 
 ## Author
 
-* **Andrew Lavaia**
+Andrew Lavaia
