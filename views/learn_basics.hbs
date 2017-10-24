@@ -1,0 +1,74 @@
+<p> This short tutorial is designed to teach you the basics of Go. Upon completion, you will have a basic understanding of the game and will have enough knowledge to play through a game. </p> 
+
+<h3> Preparation </h3>
+<p> A game of Go requires :
+<ul>
+<li> Two players. </li>
+<li> An empty game board. The most common game board size is 19x19 (19 rows and 19 columns), but 13x13 and 9x9 games are also popular. <!--For the purposes of this tutorial we will start with a 9x9 board (9 rows by 9 columns) as it is the easiest to learn on.--></li> 
+<li> Two sets of playing pieces, called stones. One set is colored white and the other set is colored black. <!--The number of stones required depends on the board size. A full set typically contains 361 stones (181 black, 180 white), which is enough to fill each space on a 19x19 board. However an average game on a 19x19 board requires about 250 stones and 99% of games are completed with less than 320 stones played.--> </li>
+</ul>
+
+<!--For this tutorial we will start the game with a completely empty board. However, please note that it is very common for 1-9 black stones to be placed on the board before the game begins as a way to handicap two players of unequal skill. -->
+</p>
+
+<h3> Objective </h3>
+<p> Use your stones to acquire territory and/or capture your oppenent's stones. Whoever has the most combined points of territory and captures wins the game.</p>
+
+<h3> How to Play </h3>
+<p> Players take turns placing one stone at a time on an empty intersection of the gameboard, with Black getting the first move. Once played the stones never move but they may be captured, in which case they are removed from the board and kept by the capturing player. A player may also choose to pass rather than placing a stone, which effectively skips his turn. The stones continue to get placed each turn until both players agree to end the game or after each player passes on consecutive moves. 
+</p>
+
+<p>
+At the end of the game, players get one point for each vacant point within their territory and one point for each capture. Whoever has the most points wins the game.  
+
+<!-- include diagram with scoring explanation -->
+</p>
+
+<h3> Komi </h3>
+<p>
+To compensate Black's advantage of moving first, additional points are usually awarded to the White player. These points are called Komi and are added to the White player's score at the end of the game. Experience has shown the value of playing first is generally worth about 7 points, but Komi is usually set to 7.5 points to avoid draws.   
+
+<!-- include same scoring diagram with Komi -->
+</p>
+
+<h3> Liberties </h3>
+<p>
+A stone placed all by itself has free spaces to the north, south, east, and west. These free spaces are called liberties. The spaces diagonal to the stone (ie North West, North East, South West, and South East) are just empty spaces and are not considered liberties. For example, a stone all by itself in the middle of the board has 4 liberties. A stone by itself on the edge of the board has 3 liberties and a stone in the corner has 2 liberties.
+
+<!-- show image of stone with 4 liberties, 3 liberties, 2 liberties -->  
+
+Liberties are also shared by groups of stones. For example, two stones connected side by side are considered one unit with 6 liberties. Three stones connected in a row is a group with 8 liberties. 
+
+<!-- show images of groups of stones with varying numbers of liberties -->
+
+</p>
+
+<h3> Capturing Stones </h3>
+<p>
+A stone becomes captured when it no longer has any liberties remaining. In other words it has become surrounded by the enemy stones and cannot escape.  ,
+
+<!-- show examples of capturing a single stone in the middle of the board, side of the board, and corner -->
+
+Similarly, a group of stones are captured when all of their liberties become occupied by enemy stones. 
+
+<!-- show examples of a group of stones being captured in various diagrams -->
+
+A stone or group of stones that have only one liberty and that can be captured on the opponent's next move are said to be in "atari". Some amateur players believe that it is polite that you alert your opponent whenever they are in atari (similar to calling "check" in chess), but this is unnecessary and is actually considered poor etiquette in higher level play.  
+
+</p>
+
+<h3> Self-Capture </h3>
+<p>
+A player cannot play a stone into a situation where it has no liberties as it would result in an immediate capture by the enemy. This is an illegal move is known as a self-capture or a suicide. There is one important exception to this rule - if the stone that is played into a self-capture situation would result in the capture of enemy stones, then it is a legal move and it is allowed. Why is this legal? The idea is that if the stone will result in the capture of enemy stones, then the stone is no longer in a self-capture situation and has just created liberties for itself.
+
+
+</p>
+
+
+
+
+
+
+
+
+

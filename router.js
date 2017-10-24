@@ -33,11 +33,12 @@ module.exports = function(app, passport){
 			pageTitle : 'Login',
 			loginMessage,
 			helpers: {
-				/*
+				
 				loginMessage: function () { return req.flash('loginMessage'); },
 				loginMessageExists: function() { 
 						return true;
-						*/
+						
+				}
 			}
 		});
 	});
@@ -72,7 +73,7 @@ module.exports = function(app, passport){
 			pageTitle : 'Register',
 			signupMessage,
 			helpers: {
-				// signupMessage: function() { return req.flash('signupMessage'); }
+				signupMessage: function() { return req.flash('signupMessage'); }
 			}
 		});
 	});
@@ -165,12 +166,12 @@ module.exports = function(app, passport){
 	app.get('/learn_basics', function(req, res) {
 		if(req.user) {
 			res.render('learn_basics', {
-				pageTitle : 'Basic Rules of Go',
+				pageTitle : 'Basics',
 				username : req.user.username
 			});
 		} else {
 			res.render('learn_basics', {
-				pageTitle : 'Basic Rules of Go'
+				pageTitle : 'Basics'
 			});
 		}
 	});
@@ -181,12 +182,60 @@ module.exports = function(app, passport){
 	app.get('/learn_advanced', function(req, res) {
 		if(req.user) {
 			res.render('learn_advanced', {
-				pageTitle : 'Advanced Rules of Go',
+				pageTitle : 'Advanced Rules',
 				username : req.user.username
 			});
 		} else {
 			res.render('learn_advanced', {
-				pageTitle : 'Advanced Rules of Go',
+				pageTitle : 'Advanced Rules',
+			});
+		}
+	});
+
+	// =====================================
+	// LEARN - SCORING ================
+	// =====================================
+	app.get('/learn_scoring', function(req, res) {
+		if(req.user) {
+			res.render('learn_scoring', {
+				pageTitle : 'How to Score a Game',
+				username : req.user.username
+			});
+		} else {
+			res.render('learn_scoring', {
+				pageTitle : 'How to Score a Game',
+			});
+		}
+	});
+
+	// =====================================
+	// LEARN - HANDICAPPING ================
+	// =====================================
+	app.get('/learn_handicapping', function(req, res) {
+		if(req.user) {
+			res.render('learn_handicapping', {
+				pageTitle : 'Handicapping',
+				username : req.user.username
+			});
+		} else {
+			res.render('learn_handicapping', {
+				pageTitle : 'Handicapping',
+			});
+		}
+	});
+
+	// =====================================
+	// LEARN - RANKS =======================
+	// =====================================
+	app.get('/learn_ranks', function(req, res) {
+		if(req.user) {
+			res.render('learn_ranks', {
+				pageTitle : 'Ranks Explained',
+				username : req.user.username
+			});
+		} else {
+			res.render('learn_ranks', {
+				pageTitle : 'Ranks Explained',
 			});
 		}
 	});
@@ -306,6 +355,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('404', {
 				pageTitle : 'Oops - Page Not Found', // needed for every page
+				userid : req.user.userid,
 				username : req.user.username // needed to show top user navigation
 			});
 		} 
@@ -321,6 +371,8 @@ function isLoggedIn(req, res, next) {
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
 		return next();
+
+	console.log("user is not logged in");
 
 	// if they aren't redirect them to the Login page
 	res.redirect('/login');

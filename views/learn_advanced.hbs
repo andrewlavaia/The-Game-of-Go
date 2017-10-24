@@ -1,0 +1,46 @@
+This section attempts to explain some of the more complicated aspects of Go in more detail. These rules are best learned once one has a good understanding of the basics.
+
+<h3> Life and Death </h3>
+<p>
+Whether or not a group of stones can be eventually captured is known as life and death. If a group of stones cannot be captured, it is considered to be alive. A group of stones that can be captured at will by the opponent is considered dead. 
+
+<!-- simple example of dead stones that can be captured at any time -->
+
+For a group of stones to be considered alive it must have at least two permanent liberties, known as eyes. 
+
+<!-- examples of eyes --> 
+
+</p>
+
+<h3> Seki </h3>
+<p>
+A situation where two sets of stones are both alive but share liberties is known as seki, or mutual life. Neither player can commit a stone to one of the liberties because that would put that player's stones in atari (can be captured next move). 
+
+<!-- example of seki -->
+
+
+</p>
+
+<h3> Ko </h3>
+<p>
+Ko is a situation where an inifinite loop can be created from endlessly alternating single stone captures that repeat the board position. The ko rule is a specific rule used to resolve this situation. 
+
+<!-- example of ko -->
+
+The ko rule states that if a player captures the ko, his opponent is prohibited from recapturing the ko on the very next move. 
+
+<!-- example of ko rule in action -->
+
+Ko positions can become very complex once they start to involve around multiple stone. This can lead to complex ko fights where the difference between winning and losing the ko can determine the game. 
+
+<!-- examples of big ko fights/positions -->
+
+Even with the ko rule, there are still situations that can have an infinite loop and thus result in the game ending with no winner (no result). One such situation is known as triple ko where three ko positions exist at the same time and the players can endlessly alternate capturing kos. 
+
+<!-- example of triple ko --> 
+
+In addition to triple ko there are even more complex infinite loop situations that can exist, which are known as eternal life. Superko rules are used to help resolve and prevent these endless cycle situations. There are varying versions of the superko rules but generally they prohibit the repetition of the same board position more than a predetermined number of times so that a player is forced to play elsewhere on the board.
+
+</p>
+
+

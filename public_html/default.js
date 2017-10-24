@@ -1,6 +1,10 @@
 (function () {
     
     WinJS.UI.processAll().then(function () {
+
+      console.log(username);
+
+
       
       var socket;
       var serverGame;
@@ -24,16 +28,6 @@
 
       // UI handler
       var calcScore_clickToggle = false;
-
-      console.log(username);
-      $('#page-lobby').show();
-
-      // Hide go board until game is 
-      $('#page-game').hide();
-      $('#users').hide();
-      $('#board').hide();
-      $('#capcount').hide();
-
            
       //////////////////////////////
       // Socket.io handlers

@@ -1,0 +1,1164 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"conv",
+				"convertVectorToPositionArray"
+			],
+			[
+				"convertPositionArr",
+				"convertPositionArrayToVector"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app.js",
+			"settings":
+			{
+				"buffer_size": 16134,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "public_html/default.js",
+			"settings":
+			{
+				"buffer_size": 24466,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "database.js",
+			"settings":
+			{
+				"buffer_size": 2166,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "router.js",
+			"settings":
+			{
+				"buffer_size": 10814,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "config/passport.js",
+			"settings":
+			{
+				"buffer_size": 5481,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/learn_handicapping.hbs",
+			"settings":
+			{
+				"buffer_size": 319,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/learn_basics.hbs",
+			"settings":
+			{
+				"buffer_size": 4900,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/learn_advanced.hbs",
+			"settings":
+			{
+				"buffer_size": 2383,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/layouts/main.hbs",
+			"settings":
+			{
+				"buffer_size": 613,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/partials/scripts.hbs",
+			"settings":
+			{
+				"buffer_size": 3326,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/partials/header.hbs",
+			"settings":
+			{
+				"buffer_size": 1210,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/partials/head.hbs",
+			"settings":
+			{
+				"buffer_size": 2227,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/partials/topusernav.hbs",
+			"settings":
+			{
+				"buffer_size": 30586,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/partials/topnavbar.hbs",
+			"settings":
+			{
+				"buffer_size": 58671,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/partials/footer.hbs",
+			"settings":
+			{
+				"buffer_size": 5194,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/partials/content.hbs",
+			"settings":
+			{
+				"buffer_size": 49351,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/home.hbs",
+			"settings":
+			{
+				"buffer_size": 26,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/profile.hbs",
+			"settings":
+			{
+				"buffer_size": 472,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "<div class=\"page-header text-center\">"
+			}
+		},
+		{
+			"file": "views/signup.hbs",
+			"settings":
+			{
+				"buffer_size": 756,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "<div class=\"col-sm-6 col-sm-offset-3\">"
+			}
+		},
+		{
+			"file": "views/login.hbs",
+			"settings":
+			{
+				"buffer_size": 1236,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Game Dev/go/views/gamelobby.hbs",
+		"/C/Game Dev/go/config/database.js",
+		"/C/Game Dev/go/public/assets/layouts/layout3/css/layout.css",
+		"/C/Game Dev/go/public/lib/chartloader.js",
+		"/C/Game Dev/go/public/default.css",
+		"/C/Game Dev/go/public/wgo/wgo.player.css",
+		"/C/Game Dev/go/public/default.js",
+		"/C/Game Dev/go/database.js",
+		"/C/Users/alavaia/Downloads/app.js",
+		"/C/Users/alavaia/Downloads/database.js",
+		"/C/Game Dev/go/utility/ratings.js",
+		"/C/Game Dev/go/views/learn_ranks.hbs",
+		"/C/Game Dev/go/public/assets/global/scripts/app.min.js",
+		"/C/Game Dev/go/public/wgo/basicplayer.infobox.js",
+		"/C/Game Dev/go/public/wgo/wgo.js",
+		"/C/Game Dev/go/ratings.js",
+		"/C/Game Dev/go/timer.js",
+		"/C/Game Dev/go/views/play_computer.hbs",
+		"/C/Game Dev/go/views/discuss_members.hbs",
+		"/C/Game Dev/go/views/learn_openings.hbs",
+		"/C/Game Dev/go/node_modules/bcrypt-nodejs/bCrypt.js",
+		"/C/Game Dev/go/node_modules/mysql/lib/protocol/Parser.js",
+		"/C/Game Dev/go/views/partials/head.hbs",
+		"/C/wamp/www/metronic_v4.7.5/start.html",
+		"/C/wamp/www/metronic_v4.7.5/theme/admin_3/layout_blank_page.html",
+		"/C/Game Dev/go/public/hidden/index.html",
+		"/C/Game Dev/go/public/test.html",
+		"/C/Game Dev/go/views/partials/scripts.hbs",
+		"/C/Game Dev/go/public/initiate.js",
+		"/C/Game Dev/go/views/404.hbs",
+		"/C/Game Dev/go/views/layouts/main.html",
+		"/C/Game Dev/go/views/partials/footer.html",
+		"/C/Game Dev/go/public/index.html",
+		"/C/Game Dev/go/views/partials/footer.hbs",
+		"/C/Game Dev/ajaxtest/www/index.html",
+		"/C/Game Dev/ajaxtest/server.js",
+		"/C/Game Dev/ajaxtest/www/js/form-handler.js",
+		"/C/Game Dev/go/dashboard/dashboard.html",
+		"/C/Game Dev/go/public/database.js",
+		"/C/Game Dev/go/public/layout_blank_page.html",
+		"/C/Game Dev/go/public/theme/admin_3/layout_blank_page.html",
+		"/C/Game Dev/goScoreEstimator/score-estimator/function2.html",
+		"/C/Game Dev/go/public/a.out.js",
+		"/C/Game Dev/goScoreEstimator/score-estimator/function2.js",
+		"/C/Game Dev/go/public/function2.js",
+		"/C/Game Dev/go/public/quick_test.js",
+		"/C/Game Dev/go/public/wgo/scoreestimator.js",
+		"/C/Game Dev/goScoreEstimator/score-estimator/function.html",
+		"/C/Program Files/Emscripten/tests/quick_test.js",
+		"/C/Program Files/Emscripten/tests/a.out.js",
+		"/C/Program Files/Emscripten/tests/hello.html",
+		"/C/Users/alavaia/AppData/Local/Temp/Temp1_wgo.js-master.zip/wgo.js-master/docs/docs.html",
+		"/C/Game Dev/go/public/lib/jgoboard-latest.js",
+		"/C/Game Dev/go/public/board.js",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/docs.html",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/player.html",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/demo1.html",
+		"/C/Game Dev/go/public/wgo/wgo.min.js",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/demo4.html",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/tutorials/tutorial-player-3.html",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/tutorials/tutorial-player-6.html",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/tutorials/tutorial-board-5.html",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/tutorial-board.html",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/test/test03.html",
+		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/demo3.html",
+		"/C/Game Dev/go/public/lib/chess.min.js",
+		"/C/Game Dev/go/public/lib/chessboard-0.3.0.min.js",
+		"/C/Game Dev/go/public/demoPlay.html",
+		"/C/Game Dev/chess/app.js",
+		"/C/Game Dev/chess/public/default.js",
+		"/C/Game Dev/GO Online/main.js",
+		"/C/Game Dev/GO Online/src/common/MyGameEngine.js",
+		"/C/Game Dev/GO Online/dist/bundle.js",
+		"/C/wamp/www/index.php",
+		"/C/Users/alavaia/Downloads/jgoboard-master/jgoboard-master/main.js",
+		"/C/Users/alavaia/Downloads/jgoboard-master/jgoboard-master/large/board.js",
+		"/C/wamp/www/demoPlay.html",
+		"/C/wamp/www/go/dist/jgoboard-latest.js",
+		"/C/Game Dev/pong/index.html",
+		"/C/Game Dev/pong/src/common/MyGameEngine.js",
+		"/C/Users/alavaia/Downloads/jgoboard-master/jgoboard-master/Gruntfile.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			"C:\\Game Dev\\go"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"assert",
+			"config/datab",
+			"config/d",
+			"db.",
+			"andrewlavaia",
+			"');\n",
+			"sessionS",
+			"isLog",
+			"test",
+			"login",
+			"mysql",
+			"not logged",
+			"isNotLogg",
+			"isLoggedIn",
+			"isLoggedIn ",
+			"isNotLogge",
+			"public",
+			"connection to socket.io rejected",
+			"admin",
+			".    ",
+			"$('#bo",
+			"\"board\"",
+			"$('board",
+			"app.min.js",
+			"invit",
+			"DELETE FROM seekgam",
+			"rank",
+			"Back",
+			"back",
+			"float:",
+			"wgo-board",
+			"wgo-info",
+			".text",
+			"Black:",
+			"wgo-player-info-value",
+			"wgo-bo",
+			"wgo-board",
+			"test -",
+			";\n",
+			"resign",
+			"updateGa",
+			"resign",
+			"addSee",
+			"{\n",
+			"addSe",
+			"drawChart",
+			"canAcce",
+			"drawChart",
+			"updateGame",
+			"drawCh",
+			"myGames",
+			"gamesL",
+			"japa",
+			"socket.req",
+			"socket.request",
+			"doLogin",
+			"socket.userId",
+			"gstat",
+			"addSe",
+			"doLo",
+			"login",
+			"userI",
+			"console.log",
+			"seekga",
+			"addSee",
+			"seekCh",
+			"drawCh",
+			"seekgame",
+			"char",
+			"addS",
+			"drawCh",
+			"INSERT",
+			"seek",
+			"char",
+			"insert",
+			"invit",
+			"invi",
+			"db.query('",
+			"invite",
+			"onCli",
+			"drawChart()",
+			"gameadd",
+			"activeGames",
+			"activ",
+			"Activ",
+			"Avail",
+			"Black l",
+			"black loses",
+			"db.q",
+			"mysql.",
+			"username",
+			"move",
+			"username",
+			"mysql.",
+			"mysql.e",
+			"games",
+			"users[userId].games",
+			"mysql",
+			"each",
+			"db",
+			");\n",
+			"query",
+			"myGames",
+			"updateGamesList",
+			"gameId",
+			"db.",
+			"invite",
+			"userId",
+			"username",
+			"userid",
+			"username",
+			"userid",
+			"username",
+			"socket.userId",
+			"config/database",
+			"/><",
+			"opponentId",
+			"timer",
+			"invit",
+			"invite',",
+			"timer",
+			"});\n",
+			"game ",
+			"60",
+			"countdown",
+			"timer_",
+			"countdown_bl",
+			"60"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"thegameofgo.com",
+			"TheGameOfGo.com",
+			"",
+			"getAreaScoringArray",
+			"color",
+			"move",
+			"game",
+			"board"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16134,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								89,
+								89
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "public_html/default.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 24466,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								65,
+								65
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "database.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2166,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1982,
+								1982
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1022.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "router.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10814,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10149,
+								10149
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "config/passport.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5481,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								288,
+								288
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 1140.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "views/learn_handicapping.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 319,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								254,
+								254
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"wrap_width": 80
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "views/learn_basics.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4900,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								331,
+								331
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "views/learn_advanced.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2383,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1373,
+								1373
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 377.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "views/layouts/main.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 613,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								200,
+								200
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 33.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 17,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "views/partials/scripts.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3326,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3227,
+								3161
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 717.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "views/partials/header.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1210,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								464,
+								464
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "views/partials/head.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2227,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								643,
+								643
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "views/partials/topusernav.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 30586,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								27169,
+								27169
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7046.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "views/partials/topnavbar.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 58671,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4728,
+								4728
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1075.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "views/partials/footer.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5194,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4929,
+								4929
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "views/partials/content.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 49351,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								48868,
+								48868
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 29.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "views/home.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								26,
+								26
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "views/profile.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 472,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								330,
+								330
+							]
+						],
+						"settings":
+						{
+							"auto_name": "<div class=\"page-header text-center\">",
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 18,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "views/signup.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 756,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								338,
+								338
+							]
+						],
+						"settings":
+						{
+							"auto_name": "<div class=\"col-sm-6 col-sm-offset-3\">",
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "views/login.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1236,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								592,
+								592
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "thegameofgo.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"game",
+				"C:\\Game Dev\\go\\app.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
