@@ -14,6 +14,7 @@
       var myGames = [];
       socket = io();
 
+
       // WGo variables
       var game;
       var gameSize = 19; // default board game size
