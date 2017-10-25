@@ -1,11 +1,11 @@
 (function () {
-    
+
     WinJS.UI.processAll().then(function () {
 
       console.log(username);
 
 
-      
+
       var socket;
       var serverGame;
       //var username; // now loaded into global scope from handlebars (scripts.hbs)
@@ -21,35 +21,35 @@
                               // ALL (same position cannot be repeated), NONE (positions can be repeated)
       var board = new WGo.Board(document.getElementById("game-board"), {size: gameSize, width: 600,});
 
-      // board addEventListener variables 
+      // board addEventListener variables
       var lastHover = false;
-      var lastX = -1; 
+      var lastX = -1;
       var lastY = -1;
 
       // UI handler
       var calcScore_clickToggle = false;
-           
+
       //////////////////////////////
       // Socket.io handlers
-      ////////////////////////////// 
-      
+      //////////////////////////////
+
       socket.on('login', function(msg) {
         usersOnline = msg.users;
         updateUserList();
-        
+
         myGames = msg.games;
         updateGamesList();
       });
-      
+
       socket.on('joinlobby', function (msg) {
         removeUser(msg); // in case the user is already in the lobby for whatever reason
         addUser(msg);
       });
-      
+
        socket.on('leavelobby', function (msg) {
         removeUser(msg);
       });
-      
+
       socket.on('gameadd', function(msg) {
       });
 
@@ -70,14 +70,14 @@
         // !!! This needs to be in socket.on('login') so it is before Add Seeks
         if (canAccessGoogleVisualization()) {
           drawChart();
-        } else {           
+        } else {
           google.charts.load('current', {'packages':['corechart']});
           google.charts.setOnLoadCallback(drawChart);
         }
         */
         //console.log("Seek added - " + msg);
       });
-      
+
       socket.on('resign', function(msg) {
         if (msg.gameId == serverGame.id) {
 
@@ -90,31 +90,31 @@
           $('#users').hide();
           $('#board').hide();
           $('#capcount').hide();
-        }            
+        }
       });
-                  
+
       socket.on('joingame', function(msg) {
-        console.log("joined as game id: " + msg.game.id );   
+        console.log("joined as game id: " + msg.game.id );
         playerColor = msg.color;
         initializeGame(msg.game);
-        
+
         $('#page-lobby').hide();
         $('#page-game').show();
         $('#users').show();
         $('#board').show();
         $('#capcount').show();
-        
+
       });
 
       socket.on('move', function (msg) {
         if (serverGame && msg.gameId === serverGame.id) {
           //console.log(msg.game);
-          move(game, msg.x, msg.y, game.turn); 
-          drawBoard(game, board); 
-        } 
+          move(game, msg.x, msg.y, game.turn);
+          drawBoard(game, board);
+        }
       });
-    
-      
+
+
       socket.on('logout', function (msg) {
         removeUser(msg.username);
       });
@@ -133,7 +133,7 @@
           return ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
       }
 
-      socket.on('timer', function (data) {  
+      socket.on('timer', function (data) {
         $('#counter-black').html( secondsToHms(data.timer_black) + "|" + data.periods_black);
         $('#counter-white').html( secondsToHms(data.timer_white) + "|" + data.periods_white);
       });
@@ -150,33 +150,33 @@
       $('#reset').click(function() {
           socket.emit('reset');
       });
-        
 
-      
+
+
       //////////////////////////////
       // Menus
-      ////////////////////////////// 
+      //////////////////////////////
       $('#login').on('click', function() {
         /*
         username = $('#username').val();
-        
+
         if (username.length > 0) {
             $('#userLabel').text(username);
             socket.emit('login', username);
-            
+
             $('#page-login').hide();
             $('#page-lobby').show();
-        } 
+        }
         */
       });
 
       $('#5m').on('click', function() {
         socket.emit('createSeek',  {  seekuserid: userid,
-                                      seekusername: username, 
+                                      seekusername: username,
                                       seekuserrank: 5,
-                                      time: {   type: "Sudden Death", 
-                                                seconds: 60*5, 
-                                                periods: 0 
+                                      time: {   type: "Sudden Death",
+                                                seconds: 60*5,
+                                                periods: 0
                                             }
                                     }
                     );
@@ -184,11 +184,11 @@
 
       $('#15s5').on('click', function() {
         socket.emit('createSeek',  {  seekuserid: userid,
-                                      seekusername: username, 
+                                      seekusername: username,
                                       seekuserrank: 5,
-                                      time: {   type: "Japanese", 
-                                                seconds: 15, 
-                                                periods: 5 
+                                      time: {   type: "Japanese",
+                                                seconds: 15,
+                                                periods: 5
                                             }
                                     }
                     );
@@ -196,11 +196,11 @@
 
       $('#30s5').on('click', function() {
         socket.emit('createSeek',  {  seekuserid: userid,
-                                      seekusername: username, 
+                                      seekusername: username,
                                       seekuserrank: 5,
-                                      time: {   type: "Japanese", 
-                                                seconds: 30, 
-                                                periods: 5 
+                                      time: {   type: "Japanese",
+                                                seconds: 30,
+                                                periods: 5
                                             }
                                     }
                     );
@@ -217,24 +217,24 @@
           customGamePeriods = parseInt(0);
           if(customGameSeconds < 60) {// can't be less than 1 min sudden death
             alert("Game cannot be less than 1 minute with 0 periods");
-            return;  
+            return;
           }
         } else {
           customGameType = "Japanese";
           customGamePeriods = parseInt(customGamePeriods); // convert string to number
         }
 
-        if (typeof customGameSeconds === 'number' && 
-            typeof customGamePeriods === 'number' && 
-            customGameSeconds != null && 
+        if (typeof customGameSeconds === 'number' &&
+            typeof customGamePeriods === 'number' &&
+            customGameSeconds != null &&
             customGamePeriods != null) {
 
           socket.emit('createSeek',  {  seekuserid: userid,
-                                        seekusername: username, 
+                                        seekusername: username,
                                         seekuserrank: 5,
-                                        time: {   type: customGameType, 
-                                                  seconds: customGameSeconds, 
-                                                  periods: customGamePeriods 
+                                        time: {   type: customGameType,
+                                                  seconds: customGameSeconds,
+                                                  periods: customGamePeriods
                                               }
                                       });
 
@@ -246,7 +246,7 @@
         }
 
       });
-      
+
       $('#game-back').on('click', function() {
 
         socket.emit('login', username);
@@ -257,10 +257,10 @@
         $('#capcount').hide();
         $('#page-lobby').show();
       });
-      
+
       $('#game-resign').on('click', function() {
         socket.emit('resign', {userId: username, gameId: serverGame.id});
-        
+
         socket.emit('login', username);
         $('#page-game').hide();
         $('#users').hide();
@@ -268,22 +268,22 @@
         $('#capcount').hide();
         $('#page-lobby').show();
       });
-      
+
       var addUser = function(userId) {
         usersOnline.push(userId);
         updateUserList();
       };
-    
+
      var removeUser = function(userId) {
           for (var i=0; i<usersOnline.length; i++) {
             if (usersOnline[i] === userId) {
                 usersOnline.splice(i, 1);
             }
          }
-         
+
          updateUserList();
       };
-      
+
       var updateGamesList = function() {
         // reset all elements
 
@@ -291,7 +291,7 @@
           document.getElementById('gamesList').innerHTML = 'No Active Games';
         } else {
           document.getElementById('gamesList').innerHTML = '';
-        
+
           myGames.forEach(function(game) {
             $('#gamesList').append($('<button>') //!!! update CSS to make this nicer
                           .text('#'+ game)
@@ -301,7 +301,7 @@
           });
         }
       };
-      
+
       var updateUserList = function() {
         document.getElementById('userList').innerHTML = '';
         usersOnline.forEach(function(user) {
@@ -316,7 +316,7 @@
 
       var initializeGame = function(serverGameState) {
 
-        serverGame = serverGameState; 
+        serverGame = serverGameState;
         //console.log (serverGame);
 
         if (serverGame.game == null ) {
@@ -333,7 +333,7 @@
 
         // draw board
         drawBoard(game, board);
-      }; 
+      };
 
       var updateUsers = function() {
         $('#userB').text(serverGame.users.black);
@@ -354,29 +354,29 @@
           //drawScoreBoard(getAreaScoringPosition(position), board);
           //estimateScore(); // calls goScoreEstimator
           drawScoreBoardFromArray(estimateScore(), board, gameSize);
-          
+
         } else {
           drawBoard(game, board);
-        } 
+        }
 
       });
 
       //////////////////////////////
       // Seek Graph
-      ////////////////////////////// 
+      //////////////////////////////
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
 
       // seek chart variables
-      var seekChartDataTable =           
+      var seekChartDataTable =
         [
           ['Time', 'Rank', 'TimeType', 'Seconds', 'Periods', 'SeekID', 'Username']
         ];
 
       function canAccessGoogleVisualization() {
-        if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) 
+        if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined'))
           return false;
-        else 
+        else
           return true;
       }
 
@@ -389,14 +389,14 @@
         var chartOptions = {
           title: 'Available Games',
           hAxis: {title: 'Time', minValue: 1, maxValue: 90, ticks: [1, 3, 15, 90], logScale: true, viewWindowMode: 'maximized', viewWindow: {min: 1, max: 90} },
-          vAxis: {title: 'Rank', minValue: -30, maxValue: 10, ticks: 
+          vAxis: {title: 'Rank', minValue: -30, maxValue: 10, ticks:
             [{v:-30, f:'30k'},{v:-20, f:'20k'},{v:-10, f:'10k'}, {v:-5, f:'5k'}, {v:5, f:'5d'}] },
           legend: 'none',
-          tooltip: { 
+          tooltip: {
             isHtml: true
-            //trigger: 'selection' 
+            //trigger: 'selection'
           },
-          focusTarget: 'datum'      
+          focusTarget: 'datum'
         };
 
         var chartView = new google.visualization.DataView(chartData);
@@ -405,7 +405,7 @@
             type: 'string',
             role: 'tooltip',
             properties: {
-                html: true  
+                html: true
             },
             calc: function (dt, row) {
                 var totalTime = dt.getFormattedValue(row, 0),
@@ -436,29 +436,29 @@
           var dataColOpponent = 6; // seek username column #
           if(username != chartData.getValue(dataRow, dataColOpponent)) {
             //alert('SeekID ' + chartData.getValue(dataRow, dataSeekID) + ' selected');
-            socket.emit('invite',  {  opponentId: chartData.getValue(dataRow, dataColOpponent), 
-                                      time: {   type: chartData.getValue(dataRow, dataColTimeType), 
-                                                seconds: chartData.getValue(dataRow, dataColSeconds), 
-                                                periods: chartData.getValue(dataRow, dataColPeriods) 
+            socket.emit('invite',  {  opponentId: chartData.getValue(dataRow, dataColOpponent),
+                                      time: {   type: chartData.getValue(dataRow, dataColTimeType),
+                                                seconds: chartData.getValue(dataRow, dataColSeconds),
+                                                periods: chartData.getValue(dataRow, dataColPeriods)
                                             },
                                       seekId: chartData.getValue(dataRow, dataColSeekID)
                                     });
           } else {
             alert('Can not start your own seek');
           }
-          
-          
+
+
         }
 
         chart.draw(chartView, chartOptions);
        }
       }
-     
+
 
 
       //////////////////////////////
       // WGo Game
-      ////////////////////////////// 
+      //////////////////////////////
 
       var move = function(game, x, y, color) {
         // test legality of move
@@ -482,24 +482,24 @@
             break;
           default:
             break;
-        } 
+        }
 
         //remove dead stones from game
-        game.validatePosition(WGo.B); 
-        game.validatePosition(WGo.W); 
-        
+        game.validatePosition(WGo.B);
+        game.validatePosition(WGo.W);
+
         return 1;
       };
 
       var drawBoard = function(game, board) {
         // clear board
         board.removeAllObjects();
-        
+
         // draw all active stones
         for(i=0; i < game.size * game.size; i++) {
           if(game.getPosition().schema[i] != 0) {
             var y = i % game.size;
-            var x = Math.floor(i / game.size); // need to round down, otherwise it moves the stone one spot to the right 
+            var x = Math.floor(i / game.size); // need to round down, otherwise it moves the stone one spot to the right
                                                // at certain sections of the board (bottom half).
                                                // Math.floor is very slow so this may be a place to optimize down the road
             var position = game.getPosition();
@@ -514,11 +514,11 @@
         // update users and cap count every time board is drawn
         updateUsers();
         updateCapCount();
-      };  
+      };
 
       //////////////////////////////
       // Go Score Estimator
-      //////////////////////////////  
+      //////////////////////////////
 
       var drawScoreBoard = function(position, board) {
 
@@ -532,7 +532,7 @@
         for(i=0; i < position.size*position.size; i++) {
           if(position.schema[i] != 0) {
             var y = i % position.size;
-            var x = Math.floor(i / position.size); // need to round down, otherwise it moves the stone one spot to the right 
+            var x = Math.floor(i / position.size); // need to round down, otherwise it moves the stone one spot to the right
                                                    // at certain sections of the board (bottom half).
                                                    // Math.floor is very slow so this may be a place to optimize down the road
             if(position.schema[i] == 1) {
@@ -544,7 +544,7 @@
             }
           }
         }
-      }; 
+      };
 
       var drawScoreBoardFromArray = function(arr, board, boardSize) {
 
@@ -558,7 +558,7 @@
         for(i=0; i < arr.length; i++) {
           if(arr[i] != 0) {
             var y = i % boardSize;
-            var x = Math.floor(i / boardSize); // need to round down, otherwise it moves the stone one spot to the right 
+            var x = Math.floor(i / boardSize); // need to round down, otherwise it moves the stone one spot to the right
                                                    // at certain sections of the board (bottom half).
                                                    // Math.floor is very slow so this may be a place to optimize down the road
             if(arr[i] == 1) {
@@ -572,7 +572,7 @@
             }
           }
         }
-      }; 
+      };
 
 
 /*
@@ -590,13 +590,13 @@
 
         return position;
       };
-      
+
       // No Longer Used
       var getAreaScoringArray = function(pos) {
         var positionArray = new Array(pos.schema.length);
-        
+
         for(var i = 0; i < pos.schema.length; i++) {
-          
+
           // !!! insert code here that grabs scoring vector from scoreestimator
 
           // debug
@@ -611,8 +611,8 @@
       var convertPositionArrayToVector = function(pos) {
         var vec = new Module.VectorInt;
 
-        for(var i = 0; i < pos.schema.length; i++) { 
-          vec.push_back(pos.schema[i]); 
+        for(var i = 0; i < pos.schema.length; i++) {
+          vec.push_back(pos.schema[i]);
         }
 
         return vec;
@@ -636,11 +636,11 @@
       var estimateScore = function() {
         var instance = new Module.Goban;
         var vec = new Module.VectorInt;
-        
-        for(var i = 0; i < 361; i++) { 
-          vec.push_back(game.getPosition().schema[i]); 
+
+        for(var i = 0; i < 361; i++) {
+          vec.push_back(game.getPosition().schema[i]);
         }
-        
+
         instance.populateBoard(vec, gameSize);
         //instance.print();
         //console.log(instance.score());
@@ -675,7 +675,7 @@
            ( game.turn == 1 && username == serverGame.users.black) ) {
 
           if( move(game, x, y, game.turn) == 1 ) { // legal move
-            
+
             // draw updated position
             drawBoard(game, board);
 
@@ -700,7 +700,7 @@
         // check if it's your move
         if(( game.turn == -1 && username == serverGame.users.white ) ||
            ( game.turn == 1 && username == serverGame.users.black) ) {
-  
+
           if(x == -1 || y == -1 || (x == lastX && y == lastY))
             return;
 
@@ -709,7 +709,7 @@
             board.removeObjectsAt(lastX,lastY);
           }
 
-          // add stone if no stone legally placed there in current game 
+          // add stone if no stone legally placed there in current game
           if( game.getStone(x,y) == 0 ) {
             board.addObject([{x: x, y: y, c: game.turn}]);
             lastHover = true;
@@ -730,7 +730,7 @@
 
         lastHover = false;
       });
-  
+
 
     }); // end WinJS.UI.processAll()
 
@@ -739,6 +739,6 @@
 
 
 
-      
+
 
 
