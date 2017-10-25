@@ -16,7 +16,7 @@ node app.js
 ## Tests
 
 ## Config
-* git config --get core.autocrlf = false - preserves LF line endings used by EditorConfig
+* git config core.autocrlf true - use on Windows 
 
 ## Author
 
