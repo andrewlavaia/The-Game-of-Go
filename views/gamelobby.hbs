@@ -1,13 +1,3 @@
-<script type="text/javascript">
-	$('#page-lobby').show();
-
-	// Hide go board until game is started
-	$('#page-game').hide();
-	$('#users').hide();
-	$('#board').hide();
-	$('#capcount').hide();
-
-</script>
 <div class="page lobby" id='page-lobby'>
 	<div id='gameListContainer'>
 		<h3>My Active Games</h3>
@@ -26,11 +16,11 @@
 		</div>
 		<div id='createPopularGame'>
 			<button id="5m">5m</button>
-			<button id="15s5">15s / 5</button> 
+			<button id="15s5">15s / 5</button>
 			<button id="30s5">30s / 5</button>
 		</div>
-		<div id='customCustomGame'> 
-			
+		<div id='customCustomGame'>
+
 			    <div class="form-group">
                     <label># of seconds</label>
                     <input type="text" class="form-customgame" name="customGameSeconds">
@@ -41,7 +31,7 @@
                 </div>
 
                 <button id="createCustomSeek" class="form-customgame">Create Seek</button>
-			
+
 		</div>
 	</div>
 
@@ -50,12 +40,12 @@
 		<h4>Logged in as: {{ username }}</h4>
 		<div id='userList'>
 			No users online
-		</div>	
+		</div>
 	</div>
 </div>
 <div id="board">
 
-		<div class="wgo-infobox"> 
+		<div class="wgo-infobox">
 
 			<div class="wgo-box-wrapper wgo-player-wrapper wgo-white">
 				<div class="wgo-box-title" id="userW">Guest 1</div>
@@ -87,7 +77,7 @@
 					<div class="wgo-player-info-box-wrapper">
 						<div class="wgo-player-info-box">
 							<div class="wgo-player-info-title">Rank</div>
-							<div class="wgo-player-info-value">9p</div> 
+							<div class="wgo-player-info-value">9p</div>
 							<!-- !!! Figure out how to get Rank in here -->
 						</div>
 					</div>

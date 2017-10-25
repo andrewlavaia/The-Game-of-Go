@@ -3,7 +3,13 @@
     WinJS.UI.processAll().then(function () {
 
       console.log(username);
+      $('#page-lobby').show();
 
+      // Hide go board until game is started
+      $('#page-game').hide();
+      $('#users').hide();
+      $('#board').hide();
+      $('#capcount').hide();
 
 
       var socket;
@@ -13,7 +19,6 @@
       var usersOnline = [];
       var myGames = [];
       socket = io();
-
 
       // WGo variables
       var game;
