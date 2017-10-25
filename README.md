@@ -16,8 +16,9 @@ node app.js
 ## Tests
 
 ## Config
-* git config core.autocrlf true - use on Windows 
+* git config core.autocrlf input - Will only convert LF to CRLF on commit and not the reverse on checkout
 
 ## Author
 
 Andrew Lavaia
+
