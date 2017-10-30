@@ -1,4 +1,7 @@
 /* globals username, userid, io, google, Module, WGo */
+
+'use strict'; // strict mode directive for eslint
+
 (function () {
   WinJS.UI.processAll().then(function () { // eslint-disable-line
     var socket;
@@ -89,19 +92,19 @@
         case 1:
           alert('given coordinates are not on board');
           return 0;
-          break;
+
         case 2:
           alert('stone already on given coordinates');
           return 0;
-          break;
+
         case 3:
           alert('suicide not allowed');
           return 0;
-          break;
+
         case 4:
           alert('repeated position');
           return 0;
-          break;
+
         default:
           break;
       }
@@ -181,6 +184,7 @@
             }
           }
         }
+        console.log('score estimate: ' + blackCount + ' - ' + whiteCount);
       }
 
       // update users and cap count every time board is drawn
@@ -194,8 +198,8 @@
 
     function convertVectorToArray(vec) {
       var i;
-      var positionArray = new Array();
-      var positionVector = new Module.VectorInt;
+      var positionArray = [];
+      var positionVector = new Module.VectorInt();
       positionVector = vec;
 
       for (i = 0; i < positionVector.size(); i++) {
@@ -207,11 +211,11 @@
 
     function estimateScore() {
       var i;
-      var instance = new Module.Goban;
-      var instance2 = new Module.Goban;
-      var vec = new Module.VectorInt;
-      var scoreVec = new Module.VectorInt;
-      var scoreArray = new Array();
+      var instance = new Module.Goban();
+      var instance2 = new Module.Goban();
+      var vec = new Module.VectorInt();
+      var scoreVec = new Module.VectorInt();
+      var scoreArray = [];
 
       for (i = 0; i < 361; i++) {
         vec.push_back(game.getPosition().schema[i]);
@@ -313,6 +317,121 @@
 
       // draw board
       drawBoard(game, board);
+    }
+
+    // ---------------------------
+    // Seek Graph Functions
+    // ---------------------------
+
+    function canAccessGoogleVisualization() {
+      if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) {
+        return false;
+      }
+      return true;
+    }
+
+    function drawChart() {
+      var chartData;
+      var chartOptions = {};
+      var chartView;
+      var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+      var selectHandler = function (e) {
+        var dataRow = chart.getSelection()[0].row;
+        var dataColTimeType = 2; // Time Type column #
+        var dataColSeconds = 3; // Seconds column #
+        var dataColPeriods = 4; // Periods column #
+        var dataColSeekID = 5; // SeekID column #
+        var dataColOpponent = 6; // seek username column #
+        if (username !== chartData.getValue(dataRow, dataColOpponent)) {
+          // alert('SeekID ' + chartData.getValue(dataRow, dataSeekID) + ' selected');
+          socket.emit('invite', {
+            opponentId: chartData.getValue(dataRow, dataColOpponent),
+            time: {
+              type: chartData.getValue(dataRow, dataColTimeType),
+              seconds: chartData.getValue(dataRow, dataColSeconds),
+              periods: chartData.getValue(dataRow, dataColPeriods),
+            },
+            seekId: chartData.getValue(dataRow, dataColSeekID),
+          });
+        } else {
+          alert('Can not start your own seek');
+        }
+      };
+
+      if (canAccessGoogleVisualization()) {
+        chartData = google.visualization.arrayToDataTable(seekChartDataTable);
+
+        chartOptions = {
+          title: 'Available Games',
+          hAxis: {
+            title: 'Time',
+            minValue: 1,
+            maxValue: 90,
+            ticks: [1, 3, 15, 90],
+            logScale: true,
+            viewWindowMode: 'maximized',
+            viewWindow: {
+              min: 1,
+              max: 90,
+            },
+          },
+          vAxis: {
+            title: 'Rank',
+            minValue: -30,
+            maxValue: 10,
+            ticks: [{
+              v: -30,
+              f: '30k',
+            }, {
+              v: -20,
+              f: '20k',
+            }, {
+              v: -10,
+              f: '10k',
+            }, {
+              v: -5,
+              f: '5k',
+            }, {
+              v: 5,
+              f: '5d',
+            }],
+          },
+          legend: 'none',
+          tooltip: {
+            isHtml: true,
+            // trigger: 'selection',
+          },
+          focusTarget: 'datum',
+        };
+
+        chartView = new google.visualization.DataView(chartData);
+
+        chartView.setColumns([0, 1, {
+          type: 'string',
+          role: 'tooltip',
+          properties: {
+            html: true,
+          },
+          calc: function (dt, row) {
+            // var totalTime = dt.getFormattedValue(row, 0);
+            var rank = dt.getFormattedValue(row, 1);
+            var timeType = dt.getFormattedValue(row, 2);
+            var seconds = dt.getFormattedValue(row, 3);
+            var periods = dt.getFormattedValue(row, 4);
+            // var seekID = dt.getFormattedValue(row, 5);
+            var chartusername = dt.getFormattedValue(row, 6);
+            return '<div class="chart-tooltip"> <span>' + timeType + '</span><br />' +
+              '<span class="tooltipHeader">Time</span>: ' + seconds + ' | ' + periods +
+              '<br /> <span class="tooltipHeader">User</span>: ' + chartusername + '(' +
+              rank + ') <br /> </div>';
+          },
+        }]);
+
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+
+        chart.draw(chartView, chartOptions);
+      }
     }
 
 
@@ -547,14 +666,9 @@
     });
 
     $('#calc-score').on('click', function () {
-      calcScore_clickToggle = (calcScore_clickToggle === true) ? false : true;
-
-      var position = game.getPosition();
+      calcScore_clickToggle = (calcScore_clickToggle !== true); // toggles between true and false
       if (calcScore_clickToggle === true) {
-        // drawScoreBoard(getAreaScoringPosition(position), board);
-        // estimateScore(); // calls goScoreEstimator
         drawBoard(game, board, estimateScore());
-        // drawScoreBoardFromArray(estimateScore(), board, gameSize);
       } else {
         drawBoard(game, board);
       }
@@ -563,119 +677,9 @@
     // --------------------------
     // Seek Graph
     // --------------------------
-    function canAccessGoogleVisualization() {
-      if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) {
-        return false;
-      }
-      return true;
-    }
-
-    function drawChart() {
-      var chartData;
-      var chartOptions = {};
-      var chartView;
-      var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
-
-      var selectHandler = function (e) {
-        var dataRow = chart.getSelection()[0].row;
-        var dataColTimeType = 2; // Time Type column #
-        var dataColSeconds = 3; // Seconds column #
-        var dataColPeriods = 4; // Periods column #
-        var dataColSeekID = 5; // SeekID column #
-        var dataColOpponent = 6; // seek username column #
-        if (username !== chartData.getValue(dataRow, dataColOpponent)) {
-          // alert('SeekID ' + chartData.getValue(dataRow, dataSeekID) + ' selected');
-          socket.emit('invite', {
-            opponentId: chartData.getValue(dataRow, dataColOpponent),
-            time: {
-              type: chartData.getValue(dataRow, dataColTimeType),
-              seconds: chartData.getValue(dataRow, dataColSeconds),
-              periods: chartData.getValue(dataRow, dataColPeriods),
-            },
-            seekId: chartData.getValue(dataRow, dataColSeekID),
-          });
-        } else {
-          alert('Can not start your own seek');
-        }
-      };
-
-      if (canAccessGoogleVisualization()) {
-        chartData = google.visualization.arrayToDataTable(seekChartDataTable);
-
-        chartOptions = {
-          title: 'Available Games',
-          hAxis: {
-            title: 'Time',
-            minValue: 1,
-            maxValue: 90,
-            ticks: [1, 3, 15, 90],
-            logScale: true,
-            viewWindowMode: 'maximized',
-            viewWindow: {
-              min: 1,
-              max: 90,
-            },
-          },
-          vAxis: {
-            title: 'Rank',
-            minValue: -30,
-            maxValue: 10,
-            ticks: [{
-              v: -30,
-              f: '30k',
-            }, {
-              v: -20,
-              f: '20k',
-            }, {
-              v: -10,
-              f: '10k',
-            }, {
-              v: -5,
-              f: '5k',
-            }, {
-              v: 5,
-              f: '5d',
-            }],
-          },
-          legend: 'none',
-          tooltip: {
-            isHtml: true,
-            // trigger: 'selection',
-          },
-          focusTarget: 'datum',
-        };
-
-        chartView = new google.visualization.DataView(chartData);
-
-        chartView.setColumns([0, 1, {
-          type: 'string',
-          role: 'tooltip',
-          properties: {
-            html: true,
-          },
-          calc: function (dt, row) {
-            // var totalTime = dt.getFormattedValue(row, 0);
-            var rank = dt.getFormattedValue(row, 1);
-            var timeType = dt.getFormattedValue(row, 2);
-            var seconds = dt.getFormattedValue(row, 3);
-            var periods = dt.getFormattedValue(row, 4);
-            // var seekID = dt.getFormattedValue(row, 5);
-            var chartusername = dt.getFormattedValue(row, 6);
-            return '<div class="chart-tooltip"> <span>' + timeType + '</span><br />' +
-              '<span class="tooltipHeader">Time</span>: ' + seconds + ' | ' + periods +
-              '<br /> <span class="tooltipHeader">User</span>: ' + chartusername + '(' +
-              rank + ') <br /> </div>';
-          },
-        }]);
-
-        google.visualization.events.addListener(chart, 'select', selectHandler);
-
-        chart.draw(chartView, chartOptions);
-      }
-    }
 
     google.charts.load('current', {
-      'packages': ['corechart'],
+      packages: ['corechart'],
     });
     google.charts.setOnLoadCallback(drawChart);
 
