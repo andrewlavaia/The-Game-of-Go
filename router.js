@@ -2,21 +2,20 @@ module.exports = function(app, passport){
 
 	// Home Page
 	app.get('/', function(req,res){
-		
+
 		if(req.user) {
 			console.log("Passport - logged in as " + req.user.username);
 			res.render('home', {
 				pageTitle : 'Home',
 				username : req.user.username
 			});
-		} 
+		}
 		else {
 			console.log("Passport - user not logged in");
 			res.render('home', {
 				pageTitle : 'Home'
 			});
 		}
-		
 
 	});
 
@@ -33,11 +32,11 @@ module.exports = function(app, passport){
 			pageTitle : 'Login',
 			loginMessage,
 			helpers: {
-				
+
 				loginMessage: function () { return req.flash('loginMessage'); },
-				loginMessageExists: function() { 
+				loginMessageExists: function() {
 						return true;
-						
+
 				}
 			}
 		});
@@ -58,7 +57,7 @@ module.exports = function(app, passport){
             }
         res.redirect('/');
     });
-    
+
 
 	// =====================================
 	// SIGNUP ==============================
@@ -94,7 +93,7 @@ module.exports = function(app, passport){
 		res.render('profile', {
 			pageTitle : 'Profile',
 			userid : req.user.userid, // get the user out of session and pass to template
-			username : req.user.username 
+			username : req.user.username
 		});
 	});
 
@@ -107,16 +106,29 @@ module.exports = function(app, passport){
 	});
 
 	// =====================================
-	// PLAY - LIVE =========================
+	// PLAY - GAME LOBBY ===================
 	// =====================================
 	app.get('/gamelobby', isLoggedIn, function(req, res) {
 		res.render('gamelobby', {
 			pageTitle : 'Live Game Lobby',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
+
+  // =====================================
+  // PLAY - GAME =========================
+  // =====================================
+  app.get('/games*', isLoggedIn, function(req, res) {
+    res.render('game', {
+      pageTitle : 'Live Game',
+      includeGoScripts : 'true', // required to load go scripts in page
+      includeGameLogic : 'true', // required to play a game
+      userid : req.user.userid,
+      username : req.user.username
+    });
+  });
 
 	// =====================================
 	// PLAY - TURN BASED ===================
@@ -125,8 +137,8 @@ module.exports = function(app, passport){
 		res.render('play_turnbased', {
 			pageTitle : 'Turn Based Game Lobby',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
 
@@ -137,8 +149,8 @@ module.exports = function(app, passport){
 		res.render('play_computer', {
 			pageTitle : 'Play Computer',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
 
@@ -260,7 +272,7 @@ module.exports = function(app, passport){
 	// LEARN - OPENINGS ====================
 	// =====================================
 	app.get('/learn_openings', function(req, res) {
-		if(req.user) {		
+		if(req.user) {
 			res.render('learn_openings', {
 				pageTitle : 'Openings',
 				username : req.user.username
@@ -279,8 +291,8 @@ module.exports = function(app, passport){
 		res.render('watch_live', {
 			pageTitle : 'Watch Live Games',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
 
@@ -291,8 +303,8 @@ module.exports = function(app, passport){
 		res.render('watch_annotated', {
 			pageTitle : 'Watch Annotated Game Videos',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
 
@@ -303,8 +315,8 @@ module.exports = function(app, passport){
 		res.render('watch_event', {
 			pageTitle : 'Event Coverage',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
 
@@ -315,8 +327,8 @@ module.exports = function(app, passport){
 		res.render('discuss_forums', {
 			pageTitle : 'Forums',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
 
@@ -327,8 +339,8 @@ module.exports = function(app, passport){
 		res.render('discuss_groups', {
 			pageTitle : 'Groups',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
 
@@ -339,8 +351,8 @@ module.exports = function(app, passport){
 		res.render('discuss_members', {
 			pageTitle : 'Members',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid, 
-			username : req.user.username 
+			userid : req.user.userid,
+			username : req.user.username
 		});
 	});
 
@@ -348,7 +360,7 @@ module.exports = function(app, passport){
 	// =====================================
 	// 404 Error - Page Not Found ==========
 	// =====================================
-	
+
 	app.use(function(req,res){ // needs to be last route since it's a catch all
 		res.status(404);
 
@@ -358,7 +370,7 @@ module.exports = function(app, passport){
 				userid : req.user.userid,
 				username : req.user.username // needed to show top user navigation
 			});
-		} 
+		}
 		else {
 			res.render('404');
 		}
@@ -382,6 +394,6 @@ function isLoggedIn(req, res, next) {
 function isNotLoggedIn(req, res, next) {
 	if (req.isAuthenticated())
 		res.redirect('/'); // if user is logged in, redirect them to the home page
-	else 
-		return next(); 	// if user isn't authenticated in the session, carry on	
+	else
+		return next(); 	// if user isn't authenticated in the session, carry on
 };
