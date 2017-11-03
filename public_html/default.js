@@ -235,7 +235,7 @@
     });
 
     socket.on('joingame', function (msg) {
-      console.log('joined game id: ' + msg.game.id);
+      console.log('joining game id: ' + msg.game.id);
 
       // send client to new url
       window.location.href = '/games/' + msg.game.id;
