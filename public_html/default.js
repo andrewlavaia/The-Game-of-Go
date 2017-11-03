@@ -193,7 +193,7 @@
     // Socket.io Handlers
     // ---------------------------
 
-    socket.on('login', function (msg) {
+    socket.on('updateLobby', function (msg) {
       usersOnline = msg.users;
       updateUserList();
 
@@ -201,16 +201,14 @@
       updateGamesList();
     });
 
-    socket.on('joinlobby', function (msg) {
+    socket.on('joinLobby', function (msg) {
       removeUser(msg); // in case the user is already in the lobby for whatever reason
       addUser(msg);
     });
 
-    socket.on('leavelobby', function (msg) {
+    socket.on('leaveLobby', function (msg) {
       removeUser(msg);
     });
-
-    socket.on('gameadd', function (msg) {});
 
     socket.on('addSeeks', function (msg) {
       seekChartDataTable = msg;
@@ -225,15 +223,6 @@
       seekChartDataTable.push([40, -7, 'Sudden Death', 60, 0, 1004, 'test6']);
       */
 
-      /*
-      // !!! This needs to be in socket.on('login') so it is before Add Seeks
-      if (canAccessGoogleVisualization()) {
-        drawChart();
-      } else {
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-      }
-      */
       // console.log("Seek added - " + msg);
     });
 
@@ -251,7 +240,7 @@
       // send client to new url
       window.location.href = '/games/' + msg.game.id;
 
-      socket.emit('launchgame', msg);
+      // socket.emit('launchgame', msg);
 
     });
 
@@ -273,20 +262,6 @@
     // --------------------------
     // Button Event Handlers
     // --------------------------
-
-    $('#login').on('click', function () {
-      /*
-      username = $('#username').val();
-
-      if (username.length > 0) {
-        $('#userLabel').text(username);
-        socket.emit('login', username);
-
-        $('#page-login').hide();
-        $('#page-lobby').show();
-      }
-      */
-    });
 
     $('#5m').on('click', function () {
       socket.emit('createSeek', {

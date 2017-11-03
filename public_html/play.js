@@ -32,6 +32,9 @@
 
     // initiate socket
     socket = io();
+    // console.log(window.location.pathname.slice(7));
+    socket.emit('gameReady', window.location.pathname.slice(7));
+
 
     // ---------------------------
     // jQuery
@@ -260,15 +263,18 @@
       console.log('launching game: ' + msg.game.id);
 
       initializeGame(msg.game);
-
     });
 
     socket.on('resign', function (msg) {
       if (msg.gameId === serverGame.id) {
+        alert('Opponent has resigned');
+
+        // send to game lobby
+        window.location.href = '../gamelobby';
+/*
         socket.emit('login', username);
-
-        updateGamesList(); // used when resign is broadcasted
-
+        updateGamesList(); // used when resign is broadcasted"
+*/
       }
     });
 
@@ -276,7 +282,12 @@
       console.log('joined game id: ' + msg.game.id);
 
       initializeGame(msg.game);
+    });
 
+    // bad URL
+    socket.on('gameNotFound', function () {
+      alert("game not found");
+      window.location.href = '../gamelobby';
     });
 
     socket.on('move', function (msg) {
@@ -316,13 +327,8 @@
     // --------------------------
 
     $('#game-back').on('click', function () {
-      socket.emit('login', username);
-
-      $('#page-game').hide();
-      $('#users').hide();
-      $('#board').hide();
-      $('#capcount').hide();
-      $('#page-lobby').show();
+      // send to game lobby
+      window.location.href = '../gamelobby';
     });
 
     $('#game-resign').on('click', function () {
@@ -332,9 +338,8 @@
       });
 
       // send to game lobby
-      /*
-      socket.emit('login', username);
-      */
+      window.location.href = '../gamelobby';
+
     });
 
     $('#calc-score').on('click', function () {
