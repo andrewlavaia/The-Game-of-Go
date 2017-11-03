@@ -144,6 +144,8 @@
 
       // draw estimated score array
       } else {
+        // clear board
+        board.removeAllObjects();
         for (i = 0; i < arr.length; i++) {
           if (arr[i] !== 0) {
             y = i % game.size;
