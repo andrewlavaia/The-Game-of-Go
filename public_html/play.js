@@ -1,13 +1,11 @@
-/* globals username, userid, io, google, Module, WGo */
+/* globals username, userid, io, Module, WGo */
 
-'use strict'; // strict mode directive for eslint
+'use strict';
 
 (function () {
   WinJS.UI.processAll().then(function () { // eslint-disable-line
     var socket;
     var serverGame;
-    var usersOnline = [];
-    var myGames = [];
 
     // WGo variables
     var game;
@@ -259,6 +257,14 @@
     // Socket.io Handlers
     // ---------------------------
 
+    /*
+    socket.on('joingame', function (msg) {
+      console.log('joined game id: ' + msg.game.id);
+
+      initializeGame(msg.game);
+    });
+    */
+
     socket.on('launchgame', function (msg) {
       console.log('launching game: ' + msg.game.id);
 
@@ -271,22 +277,12 @@
 
         // send to game lobby
         window.location.href = '../gamelobby';
-/*
-        socket.emit('login', username);
-        updateGamesList(); // used when resign is broadcasted"
-*/
       }
-    });
-
-    socket.on('joingame', function (msg) {
-      console.log('joined game id: ' + msg.game.id);
-
-      initializeGame(msg.game);
     });
 
     // bad URL
     socket.on('gameNotFound', function () {
-      alert("game not found");
+      alert('game not found');
       window.location.href = '../gamelobby';
     });
 
@@ -296,11 +292,6 @@
         move(game, msg.x, msg.y, game.turn);
         drawBoard(game, board);
       }
-    });
-
-
-    socket.on('logout', function (msg) {
-      removeUser(msg.username);
     });
 
     // ---------------------------
@@ -316,11 +307,6 @@
       socket.emit('pong');
     });
 
-    /*
-          socket.on('drawChart', function() {
-            drawChart();
-          });
-    */
 
     // --------------------------
     // Button Event Handlers
@@ -339,7 +325,6 @@
 
       // send to game lobby
       window.location.href = '../gamelobby';
-
     });
 
     $('#calc-score').on('click', function () {

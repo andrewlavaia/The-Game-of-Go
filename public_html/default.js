@@ -1,6 +1,6 @@
 /* globals username, userid, io, google */
 
-// 'use strict'; // strict mode directive for eslint
+'use strict';
 
 (function () {
   WinJS.UI.processAll().then(function () { // eslint-disable-line
@@ -241,9 +241,7 @@
       window.location.href = '/games/' + msg.game.id;
 
       // socket.emit('launchgame', msg);
-
     });
-
 
     socket.on('logout', function (msg) {
       removeUser(msg.username);
