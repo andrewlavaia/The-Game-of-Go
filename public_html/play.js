@@ -158,7 +158,7 @@
               board.addObject([{
                 x: x,
                 y: y,
-                // type: "SQ",
+                type: 'mini',
                 c: WGo.B,
               }]);
               blackCount++;
@@ -166,7 +166,7 @@
               board.addObject([{
                 x: x,
                 y: y,
-                // type: "SQ",
+                type: 'mini',
                 c: WGo.W,
               }]);
               whiteCount++;
@@ -306,9 +306,17 @@
     });
 
     socket.on('ping', function () {
-      socket.emit('pong');
+      socket.emit('reportPing');
     });
 
+    socket.on('sendPing', function (data) {
+      // console.log(data);
+      if (data.userId === serverGame.users.white) {
+        $('#ping-white').html('Ping: ' + data.ping);
+      } else if (data.userId === serverGame.users.black) {
+        $('#ping-black').html('Ping: ' + data.ping);
+      }
+    });
 
     // --------------------------
     // Button Event Handlers
