@@ -43,8 +43,6 @@
             <!-- https://www.gstatic.com/charts/loader.js -->
             <!--<script type="text/javascript" src="https://www.gstatic.com/chartloader.js"></script>-->
 
-
-            <script type="text/javascript" src="../lib/chartloader.js"></script>
             <script type="text/javascript" src="../wgo/wgo.js"></script>
             <script type="text/javascript" src="../scoreestimator.js"></script>
 
@@ -63,7 +61,9 @@
 
             {{#if includeGameLogic }}
               <script type="text/javascript" src="../play.js"></script>
+              <script type="text/javascript" src="../gamechat.js"></script>
             {{else}}
+              <script type="text/javascript" src="../lib/chartloader.js"></script>
               <script type="text/javascript" src="../default.js"></script>
             {{/if}}
 
