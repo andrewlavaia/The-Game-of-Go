@@ -240,7 +240,6 @@
       // send client to new url
       window.location.href = '/games/' + msg.game.id;
 
-      // socket.emit('launchgame', msg);
     });
 
     socket.on('logout', function (msg) {

@@ -25,18 +25,29 @@ $(function() {
   var typing = false;
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
-
   var socket = io();
-  setUsername();
+
+  var serverGame;
+  var gameID = window.location.pathname.slice(7);
+
+  socket.on('launchChat', function (msg) {
+    serverGame = msg.game;
+    setUsername();
+  });
+
+  // initializeChat(gameID); // !!! move to socket event
+  // need to limit chat to current game only
 
   function addParticipantsMessage (data) {
-    var message = '';
-    if (data.numUsers === 1) {
-      message += "there's 1 participant";
-    } else {
-      message += "there are " + data.numUsers + " participants";
+    if (serverGame && serverGame.id == gameID) {
+      var message = '';
+      if (data.numUsers === 1) {
+        message += "there's 1 participant";
+      } else {
+        message += "there are " + data.numUsers + " participants";
+      }
+      log(message);
     }
-    log(message);
   }
 
   // Sets the client's username
@@ -52,7 +63,10 @@ $(function() {
       $currentInput = $inputMessage.focus();
 
       // Tell the server your username
-      socket.emit('add user', username);
+      socket.emit('add user', {
+        username: username,
+        gameid: serverGame.id,
+      });
     }
   }
 
@@ -66,10 +80,14 @@ $(function() {
       $inputMessage.val('');
       addChatMessage({
         username: username,
-        message: message
+        message: message,
+        gameid: serverGame.id,
       });
-      // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', message);
+      // tell server to execute 'new message' and send along parameters
+      socket.emit('new message', {
+        message: message,
+        gameid: serverGame.id,
+      });
     }
   }
 
@@ -230,13 +248,15 @@ $(function() {
     $inputMessage.focus();
   });
 
+  // ----------------------------
   // Socket events
+  // ----------------------------
 
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Welcome to Socket.IO Chat – ";
+    var message = "Game #" + window.location.pathname.slice(7);
     log(message, {
       prepend: true
     });
@@ -245,7 +265,9 @@ $(function() {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
-    addChatMessage(data);
+    if (serverGame && serverGame.id === data.gameid) {
+      addChatMessage(data);
+    }
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
@@ -278,7 +300,10 @@ $(function() {
   socket.on('reconnect', function () {
     log('you have been reconnected');
     if (username) {
-      socket.emit('add user', username);
+      socket.emit('add user', {
+        username: username,
+        gameid: serverGame.id,
+      });
     }
   });
 

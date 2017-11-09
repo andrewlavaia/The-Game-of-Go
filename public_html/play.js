@@ -31,6 +31,7 @@
     // initiate socket
     socket = io();
     // console.log(window.location.pathname.slice(7));
+
     socket.emit('gameReady', window.location.pathname.slice(7));
 
 
