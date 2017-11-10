@@ -324,6 +324,11 @@
     // --------------------------
 
     $('#game-back').on('click', function () {
+      socket.emit('leave chat', {
+        userId: username,
+        gameId: serverGame.id,
+      });
+
       // send to game lobby
       window.location.href = '../gamelobby';
     });
