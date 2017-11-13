@@ -251,9 +251,9 @@
     });
 
     /*
-          socket.on('drawChart', function() {
-            drawChart();
-          });
+    socket.on('drawChart', function() {
+      drawChart();
+    });
     */
 
     // --------------------------

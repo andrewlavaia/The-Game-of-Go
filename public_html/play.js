@@ -34,7 +34,6 @@
 
     socket.emit('gameReady', window.location.pathname.slice(7));
 
-
     // ---------------------------
     // jQuery
     // ---------------------------
@@ -47,6 +46,15 @@
     function updateCapCount() {
       $('#capcountB').text(game.getPosition().capCount.black);
       $('#capcountW').text(game.getPosition().capCount.white);
+    }
+
+    function isPlaying() {
+      if(username !== serverGame.users.white &&
+         username !== serverGame.users.black) {
+        $('#game-resign').hide();
+      } else {
+        $('#game-resign').show();
+      }
     }
 
 
@@ -272,6 +280,9 @@
       console.log('launching game: ' + msg.game.id);
 
       initializeGame(msg.game);
+
+      isPlaying();
+
     });
 
     socket.on('resign', function (msg) {
@@ -334,13 +345,18 @@
     });
 
     $('#game-resign').on('click', function () {
-      socket.emit('resign', {
-        userId: username,
-        gameId: serverGame.id,
-      });
+      // make sure user is one of the players in the game (not someone watching)
+      if(username === serverGame.users.white ||
+         username === serverGame.users.black) {
 
-      // send to game lobby
-      window.location.href = '../gamelobby';
+        socket.emit('resign', {
+          userId: username,
+          gameId: serverGame.id,
+        });
+
+        // send to game lobby
+        window.location.href = '../gamelobby';
+      }
     });
 
     $('#calc-score').on('click', function () {
