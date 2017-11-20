@@ -17,13 +17,19 @@
     // NONE (positions can be repeated)
     var board = new WGo.Board(document.getElementById('game-board'), {
       size: gameSize,
-      width: 600,
+      width: 400,
     });
+    var passCount = 0; // used to track # of passes in a row
+    var gameOver = false; // check whether game has ended to restrict new moves
 
     // board addEventListener variables
     var lastHover = false;
     var lastX = -1;
     var lastY = -1;
+
+    // Chat variables
+    var $messages = $('.messages'); // Messages area
+    var FADE_TIME = 150; // ms
 
     // UI handler
     var calcScore_clickToggle = false;
@@ -49,14 +55,55 @@
     }
 
     function isPlaying() {
-      if(username !== serverGame.users.white &&
+      if (username !== serverGame.users.white &&
          username !== serverGame.users.black) {
         $('#game-resign').hide();
+        $('#game-pass').hide();
       } else {
         $('#game-resign').show();
+        $('#game-pass').show();
       }
     }
 
+    // ---------------------------
+    // Game Chat Functions (copied from gamechat.js)
+    // ---------------------------
+    // Adds a message element to the messages and scrolls to the bottom
+    // el - The element to add as a message
+    // options.fade - If the element should fade-in (default = true)
+    // options.prepend - If the element should prepend
+    //   all other messages (default = false)
+    function addMessageElement(el, options) {
+      var $el = $(el);
+
+      // Setup default options
+      if (!options) {
+        options = {};
+      }
+      if (typeof options.fade === 'undefined') {
+        options.fade = true;
+      }
+      if (typeof options.prepend === 'undefined') {
+        options.prepend = false;
+      }
+
+      // Apply options
+      if (options.fade) {
+        $el.hide().fadeIn(FADE_TIME);
+      }
+      if (options.prepend) {
+        $messages.prepend($el);
+      } else {
+        $messages.append($el);
+      }
+      $messages[0].scrollTop = $messages[0].scrollHeight;
+    }
+
+    // Log a message
+    function log(message, options) {
+      var $el = $('<li>').addClass('log').text(message);
+      addMessageElement($el, options);
+    }
 
     // ---------------------------
     // Utility Functions
@@ -86,19 +133,19 @@
       var errorCode = game.play(x, y, color);
       switch (errorCode) {
         case 1:
-          alert('given coordinates are not on board');
+          log('Illegal Move: given coordinates are not on board');
           return 0;
 
         case 2:
-          alert('stone already on given coordinates');
+          log('Illegal Move: stone already on given coordinates');
           return 0;
 
         case 3:
-          alert('suicide not allowed');
+          log('Illegal Move: suicide not allowed');
           return 0;
 
         case 4:
-          alert('repeated position');
+          log('Illegal Move: repeated position');
           return 0;
 
         default:
@@ -109,7 +156,20 @@
       game.validatePosition(WGo.B);
       game.validatePosition(WGo.W);
 
+      passCount = 0;
+
       return 1;
+    }
+
+    function pass(game) {
+      game.pass();
+
+      passCount++;
+
+      if (passCount === 2) {
+        log('game is over - two passes in a row');
+        gameOver = true;
+      }
     }
 
     // Draws all objects on the game board
@@ -282,29 +342,45 @@
       initializeGame(msg.game);
 
       isPlaying();
-
     });
 
     socket.on('resign', function (msg) {
       if (msg.gameId === serverGame.id) {
-        alert('Opponent has resigned');
+          log(msg.userId + ' has resigned.');
+
+          gameOver = true;
 
         // send to game lobby
-        window.location.href = '../gamelobby';
+        // window.location.href = '../gamelobby';
+      }
+    });
+
+    socket.on('timeloss', function (msg) {
+      if (msg.gameId === serverGame.id) {
+          log(msg.loser + ' has lost on time.');
+          gameOver = true;
       }
     });
 
     // bad URL
     socket.on('gameNotFound', function () {
-      alert('game not found');
+      console.log('game not found');
       window.location.href = '../gamelobby';
     });
 
     socket.on('move', function (msg) {
-      if (serverGame && msg.gameId === serverGame.id) {
+      if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
         // console.log(msg.game);
         move(game, msg.x, msg.y, game.turn);
         drawBoard(game, board);
+      }
+    });
+
+    socket.on('pass', function (msg) {
+      console.log(msg);
+      if (serverGame && msg.gameId === serverGame.id) {
+        log('Your opponent has passed. It is now your turn.');
+        pass(game);
       }
     });
 
@@ -346,16 +422,44 @@
 
     $('#game-resign').on('click', function () {
       // make sure user is one of the players in the game (not someone watching)
-      if(username === serverGame.users.white ||
+      if (username === serverGame.users.white ||
          username === serverGame.users.black) {
-
         socket.emit('resign', {
           userId: username,
           gameId: serverGame.id,
+          WGoGame: game,
+        });
+
+        gameOver = true;
+
+        // send to game lobby
+        // window.location.href = '../gamelobby';
+      }
+    });
+
+    $('#game-pass').on('click', function () {
+      // make sure user is one of the players in the game (not someone watching)
+      if ((username === serverGame.users.white && game.turn === WGo.W) ||
+          (username === serverGame.users.black && game.turn === WGo.B)) {
+
+        log('You have passed. It is no longer your turn.');
+        pass(game);
+
+        // submit move to server
+        socket.emit('move', {
+          x: 0,
+          y: 0,
+          color: game.turn,
+          gameId: serverGame.id,
+          game: game,
+          moveTime: Date.now(),
+          whiteUser: serverGame.users.white,
+          blackUser: serverGame.users.black,
+          pass: true,
         });
 
         // send to game lobby
-        window.location.href = '../gamelobby';
+        // window.location.href = '../gamelobby';
       }
     });
 
@@ -380,13 +484,14 @@
       }
 
       // check if it's the correct player's move
-      if ((game.turn === -1 && username === serverGame.users.white) ||
-        (game.turn === 1 && username === serverGame.users.black)) {
+      if (((game.turn === -1 && username === serverGame.users.white) ||
+           (game.turn === 1 && username === serverGame.users.black)) &&
+            gameOver === false) {
         if (move(game, x, y, game.turn) === 1) { // legal move
           // draw updated position
           drawBoard(game, board);
 
-          // broadcast move to opponent
+          // submit move to server
           socket.emit('move', {
             x: x,
             y: y,
@@ -394,10 +499,15 @@
             gameId: serverGame.id,
             game: game,
             moveTime: Date.now(),
+            whiteUser: serverGame.users.white,
+            blackUser: serverGame.users.black,
+            pass: false,
           });
         }
+      } else if (gameOver === true) {
+        log('No more moves allowed. Game is over.')
       } else {
-        alert('not your turn');
+        log('Not your turn.');
       }
 
       // console.log(new WGo.Goban(gameSize));
@@ -411,8 +521,9 @@
       }
 
       // check if it's your move
-      if ((game.turn === -1 && username === serverGame.users.white) ||
-        (game.turn === 1 && username === serverGame.users.black)) {
+      if (((game.turn === -1 && username === serverGame.users.white) ||
+           (game.turn === 1 && username === serverGame.users.black)) &&
+           gameOver === false) {
         if (x === -1 || y === -1 || (x === lastX && y === lastY)) {
           return;
         }
