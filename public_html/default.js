@@ -53,6 +53,7 @@
                 periods: 0,
               },
               seekId: 0,
+              isRated: 0,
             });
           }));
       });
@@ -97,6 +98,7 @@
         var dataColPeriods = 4; // Periods column #
         var dataColSeekID = 5; // SeekID column #
         var dataColOpponent = 6; // seek username column #
+        var dataColIsRated = 7; // is rated column #
         if (username !== chartData.getValue(dataRow, dataColOpponent)) {
           // alert('SeekID ' + chartData.getValue(dataRow, dataSeekID) + ' selected');
           socket.emit('invite', {
@@ -107,6 +109,7 @@
               periods: chartData.getValue(dataRow, dataColPeriods),
             },
             seekId: chartData.getValue(dataRow, dataColSeekID),
+            isRated: chartData.getValue(dataRow, dataColIsRated),
           });
         } else {
           alert('Can not start your own seek');
