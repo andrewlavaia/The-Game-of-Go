@@ -9,10 +9,10 @@
     var usersOnline = [];
     var myGames = [];
 
-    // seek chart
+    // seek chart - should be same array that is on server
     var seekChartDataTable =
       [
-        ['Time', 'Rank', 'TimeType', 'Seconds', 'Periods', 'SeekID', 'Username'],
+        ['Time', 'Rank', 'TimeType', 'Seconds', 'Periods', 'SeekID', 'Username', 'isRated'],
       ];
 
     // initiate socket
@@ -175,10 +175,15 @@
             var periods = dt.getFormattedValue(row, 4);
             // var seekID = dt.getFormattedValue(row, 5);
             var chartusername = dt.getFormattedValue(row, 6);
+            var isRated = dt.getFormattedValue(row, 7);
+            var isRatedString;
+
+            var isRatedString = (parseInt(isRated, 10) === 0 ? 'Unrated' : 'Rated');
+
             return '<div class="chart-tooltip"> <span>' + timeType + '</span><br />' +
               '<span class="tooltipHeader">Time</span>: ' + seconds + ' | ' + periods +
               '<br /> <span class="tooltipHeader">User</span>: ' + chartusername + '(' +
-              rank + ') <br /> </div>';
+              rank + ') <br /> ' + isRatedString + '</div>';
           },
         }]);
 
@@ -239,7 +244,6 @@
 
       // send client to new url
       window.location.href = '/games/' + msg.game.id;
-
     });
 
     socket.on('logout', function (msg) {
@@ -270,6 +274,7 @@
           seconds: 60 * 5,
           periods: 0,
         },
+        isRated: 1,
       });
     });
 
@@ -283,6 +288,7 @@
           seconds: 15,
           periods: 5,
         },
+        isRated: 1,
       });
     });
 
@@ -296,12 +302,14 @@
           seconds: 30,
           periods: 5,
         },
+        isRated: 1,
       });
     });
 
     $('#createCustomSeek').on('click', function () {
       var customGameSeconds = parseInt($('input[name=customGameSeconds]').val(), 10);
-      var customGamePeriods = $('input[name=customGamePeriods]').val();
+      var customGamePeriods = parseInt($('input[name=customGamePeriods]').val(), 10);
+      var customGameRating = parseInt($('input[name=customGameRated]:checked').val(), 10);
       var customGameType;
 
       if (customGamePeriods === '' || customGamePeriods === 0) {
@@ -330,6 +338,7 @@
             seconds: customGameSeconds,
             periods: customGamePeriods,
           },
+          isRated: customGameRating,
         });
 
         $('input[name=customGameSeconds]').val('');
