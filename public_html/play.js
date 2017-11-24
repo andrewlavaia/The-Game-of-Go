@@ -55,8 +55,9 @@
     }
 
     function isPlaying() {
-      if (username !== serverGame.users.white &&
-         username !== serverGame.users.black) {
+      if ((username !== serverGame.users.white &&
+         username !== serverGame.users.black) ||
+         gameOver === true) {
         $('#game-resign').hide();
         $('#game-pass').hide();
       } else {
@@ -169,6 +170,7 @@
       if (passCount === 2) {
         log('game is over - two passes in a row');
         gameOver = true;
+        isPlaying();
       }
     }
 
@@ -349,7 +351,7 @@
           log(msg.userId + ' has resigned.');
 
           gameOver = true;
-
+          isPlaying();
         // send to game lobby
         // window.location.href = '../gamelobby';
       }
@@ -359,6 +361,7 @@
       if (msg.gameId === serverGame.id) {
           log(msg.loser + ' has lost on time.');
           gameOver = true;
+          isPlaying();
       }
     });
 
@@ -431,6 +434,7 @@
         });
 
         gameOver = true;
+        isPlaying();
 
         // send to game lobby
         // window.location.href = '../gamelobby';
