@@ -85,6 +85,18 @@
       return true;
     }
 
+    // should be same function that's on server in utility/ratings.js
+    function convertRankToString(rank) {
+      var rankString;
+
+      if(rank < 0)
+        rankString = Math.abs(rank) + " kyu"
+      else
+        rankString = rank + " dan"
+
+      return rankString;
+    }
+
     function drawChart() {
       var chartData;
       var chartOptions = {};
@@ -179,14 +191,14 @@
             // var seekID = dt.getFormattedValue(row, 5);
             var chartusername = dt.getFormattedValue(row, 6);
             var isRated = dt.getFormattedValue(row, 7);
-            var isRatedString;
 
             var isRatedString = (parseInt(isRated, 10) === 0 ? 'Unrated' : 'Rated');
 
             return '<div class="chart-tooltip"> <span>' + timeType + '</span><br />' +
               '<span class="tooltipHeader">Time</span>: ' + seconds + ' | ' + periods +
-              '<br /> <span class="tooltipHeader">User</span>: ' + chartusername + '(' +
-              rank + ') <br /> ' + isRatedString + '</div>';
+              '<br /> <span class="tooltipHeader">User</span>: ' + chartusername +
+              '<br /> (' + convertRankToString(rank) + ') <br /> ' +
+              isRatedString + '</div>';
           },
         }]);
 
@@ -221,16 +233,6 @@
     socket.on('addSeeks', function (msg) {
       seekChartDataTable = msg;
       google.charts.setOnLoadCallback(drawChart); // needs to be on callback
-
-      /*
-      seekChartDataTable.push([8, -24,'Sudden Death', 60, 0, 4420, 'test1']);
-      seekChartDataTable.push([4, 5, 'Sudden Death', 60, 0, 2330, 'test2']);
-      seekChartDataTable.push([11, 5, 'Sudden Death', 60, 0, 2301, 'test3']);
-      seekChartDataTable.push([8, 5, 'Sudden Death', 60, 0, 10, 'test4']);
-      seekChartDataTable.push([3, 3, 'Sudden Death', 60, 0, 12309, 'test5']);
-      seekChartDataTable.push([40, -7, 'Sudden Death', 60, 0, 1004, 'test6']);
-      */
-
       // console.log("Seek added - " + msg);
     });
 
