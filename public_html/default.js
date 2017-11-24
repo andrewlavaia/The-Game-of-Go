@@ -1,4 +1,4 @@
-/* globals username, userid, io, google */
+/* globals username, userid, userrank io, google */
 
 'use strict';
 
@@ -271,7 +271,7 @@
       socket.emit('createSeek', {
         seekuserid: userid,
         seekusername: username,
-        seekuserrank: 5,
+        seekuserrank: userrank,
         time: {
           type: 'Sudden Death',
           seconds: 60 * 5,
@@ -285,7 +285,7 @@
       socket.emit('createSeek', {
         seekuserid: userid,
         seekusername: username,
-        seekuserrank: 5,
+        seekuserrank: userrank,
         time: {
           type: 'Japanese',
           seconds: 15,
@@ -299,7 +299,7 @@
       socket.emit('createSeek', {
         seekuserid: userid,
         seekusername: username,
-        seekuserrank: 5,
+        seekuserrank: userrank,
         time: {
           type: 'Japanese',
           seconds: 30,
@@ -335,7 +335,7 @@
         socket.emit('createSeek', {
           seekuserid: userid,
           seekusername: username,
-          seekuserrank: 5,
+          seekuserrank: userrank,
           time: {
             type: customGameType,
             seconds: customGameSeconds,

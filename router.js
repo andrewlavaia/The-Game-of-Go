@@ -7,7 +7,9 @@ module.exports = function(app, passport){
 			console.log("Passport - logged in as " + req.user.username);
 			res.render('home', {
 				pageTitle : 'Home',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
 			});
 		}
 		else {
@@ -93,7 +95,9 @@ module.exports = function(app, passport){
 		res.render('profile', {
 			pageTitle : 'Profile',
 			userid : req.user.userid, // get the user out of session and pass to template
-			username : req.user.username
+			username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -113,7 +117,9 @@ module.exports = function(app, passport){
 			pageTitle : 'Live Game Lobby',
 			includeGoScripts : 'true', // required to load go scripts in page
 			userid : req.user.userid,
-			username : req.user.username
+			username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -126,7 +132,9 @@ module.exports = function(app, passport){
       includeGoScripts : 'true', // required to load go scripts in page
       includeGameLogic : 'true', // required to play a game
       userid : req.user.userid,
-      username : req.user.username
+      username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
     });
   });
 
@@ -138,7 +146,9 @@ module.exports = function(app, passport){
 			pageTitle : 'Turn Based Game Lobby',
 			includeGoScripts : 'true', // required to load go scripts in page
 			userid : req.user.userid,
-			username : req.user.username
+			username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -150,7 +160,9 @@ module.exports = function(app, passport){
 			pageTitle : 'Play Computer',
 			includeGoScripts : 'true', // required to load go scripts in page
 			userid : req.user.userid,
-			username : req.user.username
+			username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -163,7 +175,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_intro', {
 				pageTitle : 'Introduction to Go',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		} else {
 			res.render('learn_intro', {
@@ -179,7 +194,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_basics', {
 				pageTitle : 'Basics',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		} else {
 			res.render('learn_basics', {
@@ -195,7 +213,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_advanced', {
 				pageTitle : 'Advanced Rules',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		} else {
 			res.render('learn_advanced', {
@@ -211,7 +232,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_scoring', {
 				pageTitle : 'How to Score a Game',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		} else {
 			res.render('learn_scoring', {
@@ -227,7 +251,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_handicapping', {
 				pageTitle : 'Handicapping',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		} else {
 			res.render('learn_handicapping', {
@@ -243,7 +270,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_ranks', {
 				pageTitle : 'Ranks Explained',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		} else {
 			res.render('learn_ranks', {
@@ -259,7 +289,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_lessons', {
 				pageTitle : 'Lessons',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		} else {
 			res.render('learn_lessons', {
@@ -275,7 +308,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_openings', {
 				pageTitle : 'Openings',
-				username : req.user.username
+				username : req.user.username,
+        userid : req.user.userid,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		} else {
 			res.render('learn_openings', {
@@ -292,7 +328,9 @@ module.exports = function(app, passport){
 			pageTitle : 'Watch Live Games',
 			includeGoScripts : 'true', // required to load go scripts in page
 			userid : req.user.userid,
-			username : req.user.username
+			username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -303,8 +341,10 @@ module.exports = function(app, passport){
 		res.render('watch_annotated', {
 			pageTitle : 'Watch Annotated Game Videos',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid,
-			username : req.user.username
+      userid : req.user.userid,
+      username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -315,8 +355,10 @@ module.exports = function(app, passport){
 		res.render('watch_event', {
 			pageTitle : 'Event Coverage',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid,
-			username : req.user.username
+      userid : req.user.userid,
+      username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -327,8 +369,10 @@ module.exports = function(app, passport){
 		res.render('discuss_forums', {
 			pageTitle : 'Forums',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid,
-			username : req.user.username
+      userid : req.user.userid,
+      username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -339,8 +383,10 @@ module.exports = function(app, passport){
 		res.render('discuss_groups', {
 			pageTitle : 'Groups',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid,
-			username : req.user.username
+      userid : req.user.userid,
+      username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -351,8 +397,10 @@ module.exports = function(app, passport){
 		res.render('discuss_members', {
 			pageTitle : 'Members',
 			includeGoScripts : 'true', // required to load go scripts in page
-			userid : req.user.userid,
-			username : req.user.username
+      userid : req.user.userid,
+      username : req.user.username,
+      userrank : req.user.userrank,
+      userrankstring : req.user.userrankstring
 		});
 	});
 
@@ -367,8 +415,10 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('404', {
 				pageTitle : 'Oops - Page Not Found', // needed for every page
-				userid : req.user.userid,
-				username : req.user.username // needed to show top user navigation
+        userid : req.user.userid,
+        username : req.user.username,
+        userrank : req.user.userrank,
+        userrankstring : req.user.userrankstring
 			});
 		}
 		else {

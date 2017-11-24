@@ -48,11 +48,15 @@
 
             <script type="text/javascript">
                 {{#if username}}
-                    var username = '{{username}}'; // loaded into global scope so that it can be used in default.js
-                    var userid = '{{userid}}'; // loaded into global scope so that it can be used in default.js
+                    var username = '{{username}}'; // loaded into global scope
+                    var userid = '{{userid}}'; // loaded into global scope
+                    var userrank = '{{userrank}}';
+                    var userrankstring = '{{userrankstring}}';
                 {{else}}
                     var username = null;
                     var userid = null;
+                    var userrank = null;
+                    var userrankstring = null;
                 {{/if}}
             </script>
 
