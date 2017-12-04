@@ -53,7 +53,7 @@
                 periods: 0,
               },
               seekId: 0,
-              isRated: 0,
+              isRated: 1,
             });
           }));
       });

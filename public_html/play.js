@@ -171,6 +171,15 @@
         log('game is over - two passes in a row');
         gameOver = true;
         isPlaying();
+        socket.emit('resultbyscore', {
+          userId: username,
+          gameId: serverGame.id,
+          WGoGame: game,
+          whiteUser: serverGame.users.white,
+          blackUser: serverGame.users.black,
+          whiteScore: 110,
+          blackScore: 115,
+        });
       }
     }
 
@@ -447,7 +456,7 @@
           (username === serverGame.users.black && game.turn === WGo.B)) {
 
         log('You have passed. It is no longer your turn.');
-        pass(game);
+
 
         // submit move to server
         socket.emit('move', {
@@ -461,6 +470,8 @@
           blackUser: serverGame.users.black,
           pass: true,
         });
+
+        pass(game);
 
         // send to game lobby
         // window.location.href = '../gamelobby';
