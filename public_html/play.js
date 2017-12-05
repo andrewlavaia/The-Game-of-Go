@@ -19,6 +19,13 @@
       size: gameSize,
       width: 400,
     });
+
+    // used in final scoring procedures
+    var finalScoreBoard = new WGo.Board(document.getElementById('final-score-board'), {
+      size: gameSize,
+      width: 400,
+    });
+
     var passCount = 0; // used to track # of passes in a row
     var gameOver = false; // check whether game has ended to restrict new moves
 
@@ -55,6 +62,7 @@
     }
 
     function isPlaying() {
+      $('#final-score-board').hide();
       if ((username !== serverGame.users.white &&
          username !== serverGame.users.black) ||
          gameOver === true) {
@@ -168,9 +176,20 @@
       passCount++;
 
       if (passCount === 2) {
-        log('game is over - two passes in a row');
-        gameOver = true;
-        isPlaying();
+        log('Two passes in a row -> entering scoring mode');
+        // gameOver = true;
+        // isPlaying();
+        $('#game-board').hide(); // hide original board
+        $('#final-score-board').show(); // show final score board
+        drawBoard(game, finalScoreBoard, estimateScore());
+        socket.emit('pauseTimer');
+
+        // !!! add 'Continue Game' button that shows game-board and hides final-score-board
+        // !!! add 'Submit Score' button
+        // !!! allow clicking on final-score-board to set specific areas as dead or alive
+
+        // !!! below code will need to be moved
+        // event should trigger upon clicking 'Submit Score' button (requires both players to agree)
         socket.emit('resultbyscore', {
           userId: username,
           gameId: serverGame.id,
@@ -180,6 +199,7 @@
           whiteScore: 110,
           blackScore: 115,
         });
+
       }
     }
 
