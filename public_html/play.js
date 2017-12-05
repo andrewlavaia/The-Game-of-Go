@@ -62,7 +62,7 @@
     }
 
     function isPlaying() {
-      $('#final-score-board').hide();
+      $('#final-score-board-wrapper').hide();
       if ((username !== serverGame.users.white &&
          username !== serverGame.users.black) ||
          gameOver === true) {
@@ -179,27 +179,13 @@
         log('Two passes in a row -> entering scoring mode');
         // gameOver = true;
         // isPlaying();
-        $('#game-board').hide(); // hide original board
-        $('#final-score-board').show(); // show final score board
-        drawBoard(game, finalScoreBoard, estimateScore());
+        $('#game-board-wrapper').hide(); // hide original board
+        $('#final-score-board-wrapper').show(); // show final score board
+        drawBoard(game, finalScoreBoard); // add original stones that were placed during game
+        drawBoard(game, finalScoreBoard, estimateScore()); // add estimated scoring stones
         socket.emit('pauseTimer');
 
-        // !!! will need to show original pieces on board
-        // !!! add 'Continue Game' button that shows game-board and hides final-score-board
-        // !!! add 'Submit Score' button
         // !!! allow clicking on final-score-board to set specific areas as dead or alive
-
-        // !!! below code will need to be moved
-        // event should trigger upon clicking 'Submit Score' button (requires both players to agree)
-        socket.emit('resultbyscore', {
-          userId: username,
-          gameId: serverGame.id,
-          WGoGame: game,
-          whiteUser: serverGame.users.white,
-          blackUser: serverGame.users.black,
-          whiteScore: 110,
-          blackScore: 115,
-        });
 
       }
     }
@@ -418,6 +404,17 @@
     });
 
     // ---------------------------
+    // Final Score Submission Mode
+    // ---------------------------
+    socket.on('continue game', function (msg) {
+       if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
+        log('Scoring mode ended prematurely -> game continued.');
+        $('#game-board-wrapper').show(); // hide original board
+        $('#final-score-board-wrapper').hide(); // show final score board
+       }
+    });
+
+    // ---------------------------
     // Game Timer
     // ---------------------------
 
@@ -443,7 +440,7 @@
     // Button Event Handlers
     // --------------------------
 
-    $('#game-back').on('click', function () {
+    $('#game-back, #final-score-back').on('click', function () {
       socket.emit('leave chat', {
         userId: username,
         gameId: serverGame.id,
@@ -506,6 +503,29 @@
       } else {
         drawBoard(game, board);
       }
+    });
+
+    $('#final-score-submit').on('click', function () {
+      // should trigger only after both players have agreed
+      socket.emit('resultbyscore', {
+        userId: username,
+        gameId: serverGame.id,
+        WGoGame: game,
+        whiteUser: serverGame.users.white,
+        blackUser: serverGame.users.black,
+        whiteScore: 110,
+        blackScore: 115,
+      });
+
+      // !!! need to end game for both players and disable all buttons besides return to lobby
+
+    });
+
+    $('#final-score-continue').on('click', function () {
+      socket.emit('continue game', {
+        userId: username,
+        gameId: serverGame.id,
+      });
     });
 
 
