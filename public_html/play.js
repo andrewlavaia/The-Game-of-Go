@@ -184,6 +184,7 @@
         drawBoard(game, finalScoreBoard, estimateScore());
         socket.emit('pauseTimer');
 
+        // !!! will need to show original pieces on board
         // !!! add 'Continue Game' button that shows game-board and hides final-score-board
         // !!! add 'Submit Score' button
         // !!! allow clicking on final-score-board to set specific areas as dead or alive
@@ -245,7 +246,7 @@
       // draw estimated score array
       } else {
         // clear board
-        board.removeAllObjects();
+        // board.removeAllObjects();
         for (i = 0; i < arr.length; i++) {
           if (arr[i] !== 0) {
             y = i % game.size;
