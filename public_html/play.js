@@ -186,7 +186,6 @@
         socket.emit('pauseTimer');
 
         // !!! allow clicking on final-score-board to set specific areas as dead or alive
-
       }
     }
 
@@ -518,7 +517,6 @@
       });
 
       // !!! need to end game for both players and disable all buttons besides return to lobby
-
     });
 
     $('#final-score-continue').on('click', function () {
