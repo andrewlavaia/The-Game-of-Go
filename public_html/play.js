@@ -41,6 +41,9 @@
     // UI handler
     var calcScore_clickToggle = false;
 
+    // used for final scoring procedure
+    var colorToggle = 1;
+
     // initiate socket
     socket = io();
     // console.log(window.location.pathname.slice(7));
@@ -415,6 +418,19 @@
       }
     });
 
+    // !!! not triggering
+    socket.on('add stone to finalScoreBoard', function (msg) {
+      if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
+        finalScoreBoard.addObject([{
+          x: msg.x,
+          y: msg.y,
+          c: msg.c,
+          type: msg.type,
+        }]);
+      }
+    });
+
+
     // ---------------------------
     // Game Timer
     // ---------------------------
@@ -568,7 +584,6 @@
       // console.log(new WGo.Goban(gameSize));
     });
 
-
     board.addEventListener('mousemove', function (x, y) {
       // check if area scoring board is shown
       if (calcScore_clickToggle === true) {
@@ -611,5 +626,44 @@
 
       lastHover = false;
     });
+
+    // add black or white mini-stone to finalScoreBoard
+    finalScoreBoard.addEventListener('click', function (x, y) {
+      var stoneColor;
+      // assert(colorToggle == 1 || colorToggle == 2);
+      if (colorToggle === 1) {
+        stoneColor = WGo.B;
+        colorToggle = 2;
+      } else {
+        stoneColor = WGo.W;
+        colorToggle = 1;
+      }
+
+      // check that the user is playing and the game is not over
+      if (((username === serverGame.users.white) ||
+            username === serverGame.users.black) &&
+            gameOver === false) {
+
+        finalScoreBoard.addObject([{
+          x: x,
+          y: y,
+          c: stoneColor,
+          type: 'mini',
+        }]);
+
+        socket.emit('add stone to finalScoreBoard', {
+          userId: username,
+          gameId: serverGame.id,
+          x: x,
+          y: y,
+          c: stoneColor,
+          type: 'mini',
+        });
+
+      } else if (gameOver === true) {
+        log('Game is over.');
+      }
+    });
+
   }); // end WinJS.UI.processAll()
 })(); // end self invoking function
