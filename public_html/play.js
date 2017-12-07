@@ -170,24 +170,6 @@
       return 1;
     }
 
-    function pass(game) {
-      game.pass();
-
-      passCount++;
-
-      if (passCount === 2) {
-        log('Two passes in a row -> entering scoring mode');
-        // gameOver = true;
-        // isPlaying();
-        $('#game-board-wrapper').hide(); // hide original board
-        $('#final-score-board-wrapper').show(); // show final score board
-        drawBoard(game, finalScoreBoard); // add original stones that were placed during game
-        drawBoard(game, finalScoreBoard, estimateScore()); // add estimated scoring stones
-        socket.emit('pauseTimer');
-
-        // !!! allow clicking on final-score-board to set specific areas as dead or alive
-      }
-    }
 
     // Draws all objects on the game board
     // drawBoard(game, board) or drawBoard(game, board, estimateScore());
@@ -265,6 +247,26 @@
       // update users and cap count every time board is drawn
       updateUsers();
       updateCapCount();
+    }
+
+    // Used to handle pass commands in a game to determine if game should end
+    function pass(game) {
+      game.pass();
+
+      passCount++;
+
+      if (passCount === 2) {
+        log('Two passes in a row -> entering scoring mode');
+        // gameOver = true;
+        // isPlaying();
+        $('#game-board-wrapper').hide(); // hide original board
+        $('#final-score-board-wrapper').show(); // show final score board
+        drawBoard(game, finalScoreBoard); // add original stones that were placed during game
+        drawBoard(game, finalScoreBoard, estimateScore()); // add estimated scoring stones
+        socket.emit('pauseTimer');
+
+        // !!! allow clicking on final-score-board to set specific areas as dead or alive
+      }
     }
 
     // --------------------------
@@ -363,10 +365,10 @@
 
     socket.on('resign', function (msg) {
       if (msg.gameId === serverGame.id) {
-          log(msg.userId + ' has resigned.');
+        log(msg.userId + ' has resigned.');
 
-          gameOver = true;
-          isPlaying();
+        gameOver = true;
+        isPlaying();
         // send to game lobby
         // window.location.href = '../gamelobby';
       }
@@ -374,9 +376,9 @@
 
     socket.on('timeloss', function (msg) {
       if (msg.gameId === serverGame.id) {
-          log(msg.loser + ' has lost on time.');
-          gameOver = true;
-          isPlaying();
+        log(msg.loser + ' has lost on time.');
+        gameOver = true;
+        isPlaying();
       }
     });
 
@@ -406,11 +408,11 @@
     // Final Score Submission Mode
     // ---------------------------
     socket.on('continue game', function (msg) {
-       if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
+      if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
         log('Scoring mode ended prematurely -> game continued.');
         $('#game-board-wrapper').show(); // hide original board
         $('#final-score-board-wrapper').hide(); // show final score board
-       }
+      }
     });
 
     // ---------------------------
@@ -471,7 +473,6 @@
       // make sure user is one of the players in the game (not someone watching)
       if ((username === serverGame.users.white && game.turn === WGo.W) ||
           (username === serverGame.users.black && game.turn === WGo.B)) {
-
         log('You have passed. It is no longer your turn.');
 
 
@@ -559,7 +560,7 @@
           });
         }
       } else if (gameOver === true) {
-        log('No more moves allowed. Game is over.')
+        log('No more moves allowed. Game is over.');
       } else {
         log('Not your turn.');
       }
