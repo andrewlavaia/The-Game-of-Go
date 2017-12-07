@@ -25,6 +25,7 @@
       size: gameSize,
       width: 400,
     });
+    var lockCount = 0; // used to track # of locks for final scoring procedure
 
     var passCount = 0; // used to track # of passes in a row
     var gameOver = false; // check whether game has ended to restrict new moves
@@ -413,8 +414,33 @@
     socket.on('continue game', function (msg) {
       if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
         log('Scoring mode ended prematurely -> game continued.');
+        $('#final-score-lock').show(); // reset default status
         $('#game-board-wrapper').show(); // hide original board
         $('#final-score-board-wrapper').hide(); // show final score board
+        lockCount = 0;
+      }
+    });
+
+    //!!! How do I prevent same user from submitting multiple lock requests to trigger score submission?
+    socket.on('lock score', function (msg) {
+      if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
+        log(msg.userId + ' has locked in their score.');
+        lockCount++;
+
+        if (lockCount == 2) {
+          // !!! figure out how to submit score once (not by both players)
+          // b/c of two simultaneous socket events
+          gameOver = true;
+        }
+      }
+    });
+
+    socket.on('unlock score', function (msg) {
+      if (serverGame && msg.gameId === serverGame.id &&
+          gameOver === false && lockCount === 1) {
+        $('#final-score-lock').show();
+        log('Score unlocked.');
+        lockCount = 0;
       }
     });
 
@@ -543,6 +569,14 @@
       });
     });
 
+    $('#final-score-lock').on('click', function () {
+      socket.emit('lock score', {
+        userId: username,
+        gameId: serverGame.id,
+      });
+      $('#final-score-lock').hide();
+    });
+
 
     // --------------------------
     // Board Event Handlers
@@ -659,6 +693,9 @@
           c: stoneColor,
           type: 'mini',
         });
+
+        lockCount = 0;
+        $('#final-score-lock').show();
 
       } else if (gameOver === true) {
         log('Game is over.');
