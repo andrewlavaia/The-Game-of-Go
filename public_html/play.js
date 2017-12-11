@@ -421,16 +421,25 @@
       }
     });
 
-    //!!! How do I prevent same user from submitting multiple lock requests to trigger score submission?
     socket.on('lock score', function (msg) {
       if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
         log(msg.userId + ' has locked in their score.');
         lockCount++;
 
-        if (lockCount == 2) {
-          // !!! figure out how to submit score once (not by both players)
-          // b/c of two simultaneous socket events
+        if (lockCount === 2) {
           gameOver = true;
+
+          socket.emit('resultbyscore', {
+            userId: username,
+            gameId: serverGame.id,
+            WGoGame: game,
+            whiteUser: serverGame.users.white,
+            blackUser: serverGame.users.black,
+            whiteScore: 110,
+            blackScore: 115,
+          });
+
+          log('Game Over. Score submitted.')
         }
       }
     });
@@ -444,7 +453,6 @@
       }
     });
 
-    // !!! not triggering
     socket.on('add stone to finalScoreBoard', function (msg) {
       if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
         finalScoreBoard.addObject([{
@@ -545,21 +553,6 @@
       } else {
         drawBoard(game, board);
       }
-    });
-
-    $('#final-score-submit').on('click', function () {
-      // should trigger only after both players have agreed
-      socket.emit('resultbyscore', {
-        userId: username,
-        gameId: serverGame.id,
-        WGoGame: game,
-        whiteUser: serverGame.users.white,
-        blackUser: serverGame.users.black,
-        whiteScore: 110,
-        blackScore: 115,
-      });
-
-      // !!! need to end game for both players and disable all buttons besides return to lobby
     });
 
     $('#final-score-continue').on('click', function () {
@@ -677,7 +670,6 @@
       if (((username === serverGame.users.white) ||
             username === serverGame.users.black) &&
             gameOver === false) {
-
         finalScoreBoard.addObject([{
           x: x,
           y: y,
@@ -696,11 +688,9 @@
 
         lockCount = 0;
         $('#final-score-lock').show();
-
       } else if (gameOver === true) {
         log('Game is over.');
       }
     });
-
   }); // end WinJS.UI.processAll()
 })(); // end self invoking function
