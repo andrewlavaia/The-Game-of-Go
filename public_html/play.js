@@ -17,13 +17,13 @@
     // NONE (positions can be repeated)
     var board = new WGo.Board(document.getElementById('game-board'), {
       size: gameSize,
-      width: 400,
+      width: 650,
     });
 
     // used in final scoring procedures
     var finalScoreBoard = new WGo.Board(document.getElementById('final-score-board'), {
       size: gameSize,
-      width: 400,
+      width: 650,
     });
     var lockCount = 0; // used to track # of locks for final scoring procedure
 
@@ -65,18 +65,67 @@
       $('#capcountW').text(game.getPosition().capCount.white);
     }
 
-    function isPlaying() {
-      $('#final-score-board-wrapper').hide();
+    function hideFinalScoreElements() {
+      $('#final-score-board').hide();
+      $('#final-score-continue').hide();
+      $('#final-score-lock').hide();
+    }
+
+    function showFinalScoreElements() {
+      $('#final-score-board').show();
+
+      // only show these buttons if user is actually playing
       if ((username !== serverGame.users.white &&
          username !== serverGame.users.black) ||
          gameOver === true) {
-        $('#game-resign').hide();
+        $('#final-score-continue').hide();
+        $('#final-score-lock').hide();
+      } else {
+        $('#final-score-continue').show();
+        $('#final-score-lock').show();
+      }
+    }
+
+    function hideLiveBoardElements() {
+      $('#game-board').hide();
+      $('#calc-score').hide();
+      $('#game-pass').hide();
+      $('#game-resign').hide();
+    }
+
+    function showLiveBoardElements() {
+      $('#game-board').show();
+      $('#calc-score').show();
+
+      // only show these buttons if user is actually playing
+      if ((username !== serverGame.users.white &&
+         username !== serverGame.users.black) ||
+         gameOver === true) {
         $('#game-pass').hide();
+        $('#game-resign').hide();
+      } else {
+        $('#game-pass').show();
+        $('#game-resign').show();
+      }
+    }
+
+    function isPlaying() {
+      showLiveBoardElements();
+      hideFinalScoreElements();
+      /*
+      if ((username !== serverGame.users.white &&
+         username !== serverGame.users.black) ||
+         gameOver === true) {
+        // $('#game-resign').hide();
+        // $('#game-pass').hide();
       } else {
         $('#game-resign').show();
         $('#game-pass').show();
       }
+      */
     }
+
+
 
     // ---------------------------
     // Game Chat Functions (copied from gamechat.js)
@@ -263,8 +312,10 @@
         log('Two passes in a row -> entering scoring mode');
         // gameOver = true;
         // isPlaying();
-        $('#game-board-wrapper').hide(); // hide original board
-        $('#final-score-board-wrapper').show(); // show final score board
+        // $('#game-board').hide(); // hide original board
+        // $('#final-score-board').show(); // show final score board
+        hideLiveBoardElements();
+        showFinalScoreElements();
         drawBoard(game, finalScoreBoard); // add original stones that were placed during game
         drawBoard(game, finalScoreBoard, estimateScore()); // add estimated scoring stones
         socket.emit('pauseTimer');
@@ -413,10 +464,12 @@
     // ---------------------------
     socket.on('continue game', function (msg) {
       if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
-        log('Scoring mode ended prematurely -> game continued.');
-        $('#final-score-lock').show(); // reset default status
-        $('#game-board-wrapper').show(); // hide original board
-        $('#final-score-board-wrapper').hide(); // show final score board
+        log('Game resumed');
+        hideFinalScoreElements();
+        showLiveBoardElements();
+        // $('#final-score-lock').show(); // reset default status
+        // $('#game-board').show(); // show original board
+        // $('#final-score-board').hide(); // hide final score board
         lockCount = 0;
       }
     });
@@ -438,6 +491,8 @@
             whiteScore: 110,
             blackScore: 115,
           });
+
+          $('#final-score-continue').hide();
 
           log('Game Over. Score submitted.')
         }

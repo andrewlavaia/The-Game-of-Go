@@ -86,14 +86,23 @@ body {
 	width: 20%;
 }
 
-#users {
-
-}
-
-#capcount {
-
-}
-
 .chart-tooptip span {
 	white-space: nowrap;
 }
+
+/* Game Board Design */
+
+#game-left-panel {
+  width: 70%;
+  float: left;
+}
+
+#game-right-panel {
+  width: 30%;
+  float: left;
+  min-width: 300px;
+}
+
+
+
+/* End - Game Board Design */

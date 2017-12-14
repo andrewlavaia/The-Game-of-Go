@@ -19,17 +19,27 @@
 			"file": "app.js",
 			"settings":
 			{
-				"buffer_size": 20785,
+				"buffer_size": 25054,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "config/passport.js",
+			"file": "public_html/play.js",
 			"settings":
 			{
-				"buffer_size": 5481,
-				"line_ending": "Windows"
+				"buffer_size": 19634,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "database.js",
+			"settings":
+			{
+				"buffer_size": 2278,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
 			}
 		},
 		{
@@ -42,72 +52,10 @@
 			}
 		},
 		{
-			"file": "views/partials/scripts.hbs",
+			"file": "views/game.hbs",
 			"settings":
 			{
-				"buffer_size": 3729,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public_html/play.js",
-			"settings":
-			{
-				"buffer_size": 15551,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "views/gamelobby.hbs",
-			"settings":
-			{
-				"buffer_size": 1415,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "views/partials/footer.hbs",
-			"settings":
-			{
-				"buffer_size": 5194,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/partials/content.hbs",
-			"settings":
-			{
-				"buffer_size": 49388,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "views/partials/topnavbar.hbs",
-			"settings":
-			{
-				"buffer_size": 58686,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public_html/gamechat.js",
-			"settings":
-			{
-				"buffer_size": 8760,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public_html/gamechat.css",
-			"settings":
-			{
-				"buffer_size": 989,
+				"buffer_size": 3163,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -117,6 +65,15 @@
 			"settings":
 			{
 				"buffer_size": 13282,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/gamechat.css",
+			"settings":
+			{
+				"buffer_size": 989,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -222,23 +179,28 @@
 	[
 		"/C/Game Dev/go",
 		"/C/Game Dev/go/config",
+		"/C/Game Dev/go/public_html",
 		"/C/Game Dev/go/utility"
 	],
 	"file_history":
 	[
+		"/C/Game Dev/go/public_html/gamechat.js",
+		"/C/Game Dev/go/views/gamelobby.hbs",
+		"/C/Game Dev/go/views/partials/footer.hbs",
+		"/C/Game Dev/go/views/partials/content.hbs",
+		"/C/Game Dev/go/views/partials/topnavbar.hbs",
+		"/C/Game Dev/go/router.js",
+		"/C/Game Dev/go/public_html/play.js",
+		"/C/Game Dev/go/views/partials/scripts.hbs",
 		"/C/Game Dev/go/utility/ratings.js",
 		"/C/Game Dev/go/views/game.hbs",
 		"/C/Game Dev/go/app.js",
-		"/C/Game Dev/go/views/partials/scripts.hbs",
 		"/C/Game Dev/go/public_html/assets/layouts/layout3/css/layout.css",
-		"/C/Game Dev/go/views/partials/content.hbs",
 		"/C/Game Dev/go/public_html/default.css",
 		"/C/Game Dev/go/views/partials/header.hbs",
 		"/C/Game Dev/go/views/partials/head.hbs",
-		"/C/Game Dev/go/views/gamelobby.hbs",
 		"/C/Game Dev/go/public_html/wgo/wgo.js",
 		"/C/Game Dev/go/public_html/wgo/scoreestimator.js",
-		"/C/Game Dev/go/views/partials/topnavbar.hbs",
 		"/C/Game Dev/go/views/partials/topusernav.hbs",
 		"/C/Game Dev/go/config/passport.js",
 		"/C/Game Dev/go/database.js",
@@ -271,7 +233,6 @@
 		"/C/Game Dev/go/views/learn_basics.hbs",
 		"/C/Game Dev/go/views/learn_advanced.hbs",
 		"/C/Game Dev/go/views/layouts/main.hbs",
-		"/C/Game Dev/go/views/partials/footer.hbs",
 		"/C/Game Dev/go/views/home.hbs",
 		"/C/Game Dev/go/views/profile.hbs",
 		"/C/Game Dev/go/views/signup.hbs",
@@ -350,8 +311,7 @@
 		"/C/wamp/www/demoPlay.html",
 		"/C/wamp/www/go/dist/jgoboard-latest.js",
 		"/C/Game Dev/pong/index.html",
-		"/C/Game Dev/pong/src/common/MyGameEngine.js",
-		"/C/Users/alavaia/Downloads/jgoboard-master/jgoboard-master/Gruntfile.js"
+		"/C/Game Dev/pong/src/common/MyGameEngine.js"
 	],
 	"find":
 	{
@@ -370,134 +330,134 @@
 		"case_sensitive": true,
 		"find_history":
 		[
-			"INSERT",
-			"employee",
-			"pass",
-			"loss",
-			"resig",
-			"isPlaying",
-			"gameOver",
-			"isPlaying",
-			"updateSeek",
-			"doLog",
-			"updateSe",
-			"doLog",
-			"seekArr",
-			"rank ",
-			"userrank",
-			"RankS",
-			"seek",
-			"seekArr",
-			"doLogin// ",
-			"doLogin",
-			"seek",
-			"User",
-			"userrank",
-			"WHERE",
-			"userrank",
-			"req.user",
+			"socket.username",
 			"username",
-			"req.user",
-			"req.us",
-			"req",
-			");\n",
-			"adjust",
-			"userrank",
-			"rank",
-			"userrank",
-			"Ratin",
-			"rating",
-			"ratings",
-			"adjus",
-			"];\n",
-			"?",
-			"process",
-			"INSERT",
-			"process",
-			"invite",
-			"INSERT",
-			"process",
-			"seekCh",
-			"addSeeks",
-			"seekChartDataTabl",
-			"chartView",
-			"alert",
-			"isra",
-			"createSeek",
-			"see",
-			"menu-tog",
-			"logo",
-			"menu-toggl",
-			"hor-menu",
-			"page-header-menu",
-			"page-header-m",
-			"page-heade",
-			"processGameRes",
-			"not your turn",
-			"gameOv",
-			"gameOver",
-			"timelos",
-			"pass(",
-			"resign",
-			";\n",
-			"move(",
-			"move",
+			"initializeGa",
+			"continue ga",
+			"resume",
+			"continue",
+			"resu,e",
+			"initial",
+			"continue g",
+			"gameRead",
+			"contin",
+			"continu",
+			"initializ",
+			"launchga",
+			"gameRead",
+			"joingame",
+			"launch",
+			"joi",
+			"lockC",
+			"pass",
+			"isPla",
 			"!!!",
-			"console.log",
-			"'pass",
-			"pass'",
-			"WGo.W",
-			"WGo",
-			"pass'",
-			"pass",
-			"pass(gam",
-			"pass(",
-			"pass",
-			"game.pass",
-			"passe",
-			"'mov",
-			"move'",
-			"move",
-			"move(",
-			"pass(ga",
-			"game.play",
-			"pass",
-			"move",
-			"pass",
-			"move",
-			"pass",
-			"game =",
+			"submit",
+			"submit-sc",
+			"lock sc",
+			"resultby",
+			"return",
+			"result",
+			"return",
+			"result",
+			"submit sc",
+			"lock",
+			"lock scor",
+			"lockscor",
+			"isPla",
+			"assert",
+			"submit",
+			"finalScor",
+			"typing",
+			"emit(",
+			"drawB",
+			"final-score-sub",
+			"final-score",
+			"added",
+			"startTi",
+			"added",
+			"'stop typ",
+			"username",
+			"emit",
+			"'add us",
+			"emit",
+			"userna",
+			"emit('typ",
+			"emit",
+			"'typing",
+			"addChatT",
+			"addChat",
+			"typing",
+			"emit('",
+			"emit('typ",
+			"typing",
 			"serverG",
-			"game-resi",
-			"move(",
-			"resign",
-			"move",
-			"game.user",
-			"serverGame =",
-			"move",
-			"emit('mo",
+			"stop typin",
+			"emit",
+			"message",
+			"getUserna",
+			"$windo",
+			"FADE_T",
+			"chat",
+			"getTypingMes",
+			"typing",
+			"chat",
+			"getUs",
+			"addMess",
+			"gamechat",
+			"typing",
+			"two pa",
+			"final-s",
+			"final-sc",
+			"serverG",
+			"final-",
+			"continue g",
+			"final-scor",
+			"continue ga",
+			"final-score",
+			"final-sco",
+			"game-bac",
+			"final-sc",
+			"drawB",
+			"isPl",
+			"intervalID",
+			"clearIn",
+			"isPla",
+			"drawBoard",
+			"isPl",
+			"isPla",
+			"estimateScore",
+			"estimateS",
+			"score",
+			"result",
+			"processGameRe",
+			"insertGame",
+			"No Resu",
+			"gameRes",
+			"'win'",
+			"INSERT",
+			"gameRes",
+			"WGoGame",
+			"process",
+			"gameResul",
+			"adjustUs",
+			"'win'",
+			"gameRes",
+			"processGameRes",
+			"gameResult",
+			"gameREsu",
+			"adjustUs",
+			"adjustUser",
+			"gameResult",
+			"assert",
+			"gameRes",
+			"processGame",
 			"serverGame",
-			"initializeGam",
-			"serverGame",
-			"game.",
-			"move",
-			"game.users",
-			"game.user",
-			"log",
-			"lost",
-			"loses",
-			"resign",
-			"game-resi",
-			"DELETE",
-			"resign",
-			"WGo.Game",
-			"WGo",
-			"Game",
-			"WGo.game",
-			"position",
-			"Position",
-			"msg.game",
-			"activeGames["
+			"pass",
+			"timeloss",
+			"processGa",
+			"process",
+			"processGame"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -534,7 +494,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -543,15 +503,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20785,
+						"buffer_size": 25054,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6423,
-								6423
+								22446,
+								22446
 							]
 						],
 						"settings":
@@ -563,28 +523,28 @@
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
 						},
-						"translation.x": 63.0,
-						"translation.y": 5664.0,
+						"translation.x": 0.0,
+						"translation.y": 16831.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "config/passport.js",
-					"semi_transient": true,
+					"file": "public_html/play.js",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5481,
+						"buffer_size": 19634,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1974,
+								1981
 							]
 						],
 						"settings":
@@ -600,11 +560,44 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"file": "database.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2278,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2233,
+								2233
+							]
+						],
+						"settings":
+						{
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1054.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
 					"file": "public_html/default.js",
 					"semi_transient": false,
 					"settings":
@@ -616,8 +609,8 @@
 						"selection":
 						[
 							[
-								2594,
-								2594
+								7169,
+								7169
 							]
 						],
 						"settings":
@@ -630,40 +623,7 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1967.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "views/partials/scripts.hbs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3729,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3163,
-								3163
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 888.0,
+						"translation.y": 5311.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
@@ -671,205 +631,72 @@
 				},
 				{
 					"buffer": 4,
-					"file": "public_html/play.js",
+					"file": "views/game.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15551,
+						"buffer_size": 3163,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1722,
-								1722
+								2461,
+								2441
 							]
 						],
 						"settings":
 						{
 							"editorconfig": true,
 							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 941.0,
+						"translation.y": 1881.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "views/gamelobby.hbs",
+					"file": "router.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1415,
+						"buffer_size": 13282,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								253,
-								253
+								2865,
+								2865
 							]
 						],
 						"settings":
 						{
 							"editorconfig": true,
 							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "views/partials/footer.hbs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5194,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "views/partials/content.hbs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 49388,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								513,
-								513
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "views/partials/topnavbar.hbs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 58686,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3492,
-								3492
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 786.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "public_html/gamechat.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8760,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								293,
-								293
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"open_with_edit": true,
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2025.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 6,
 					"file": "public_html/gamechat.css",
 					"semi_transient": false,
 					"settings":
@@ -899,40 +726,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "router.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 13282,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								12483,
-								12483
-							]
-						],
-						"settings":
-						{
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 9440.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -940,7 +734,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 31.0
+		"height": 32.0
 	},
 	"input":
 	{
@@ -985,7 +779,7 @@
 	"project": "thegameofgo.sublime-project",
 	"replace":
 	{
-		"height": 58.0
+		"height": 60.0
 	},
 	"save_all_on_build": true,
 	"select_file":

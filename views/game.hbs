@@ -1,109 +1,77 @@
 <div id="board">
 
-	<div class="wgo-infobox">
-
-		<div class="wgo-box-wrapper wgo-player-wrapper wgo-white">
-			<div class="wgo-box-title" id="userW">Guest 1</div>
-			<div class="wgo-player-info">
-
-				<div class="wgo-player-info-box-wrapper">
-					<div class="wgo-player-info-box">
-						<div class="wgo-player-info-title">Rank</div>
-						<div class="wgo-player-info-value">5p</div>
-					</div>
-				</div>
-
-				<div class="wgo-player-info-box-wrapper">
-					<div class="wgo-player-info-box">
-						<div class="wgo-player-info-title">Caps</div>
-						<div class="wgo-player-info-value" id="capcountW">0</div>
-					</div>
-				</div>
-
-				<div class="wgo-player-info-box-wrapper">
-					<div class="wgo-player-info-box">
-						<div class="wgo-player-info-title">Time</div>
-						<div class="wgo-player-info-value" id="counter-white">--:--</div>
-					</div>
-				</div>
-
-        <div class="wgo-player-info-value" id="ping-white">Ping: </div>
-
-			</div>
-		</div>
-
-		<div class="wgo-box-wrapper wgo-player-wrapper wgo-black">
-			<div class="wgo-box-title" id="userB">Guest 2</div>
-			<div class="wgo-player-info">
-
-				<div class="wgo-player-info-box-wrapper">
-					<div class="wgo-player-info-box">
-						<div class="wgo-player-info-title">Rank</div>
-						<div class="wgo-player-info-value">9p</div>
-						<!-- !!! Figure out how to get Rank in here -->
-					</div>
-				</div>
-
-				<div class="wgo-player-info-box-wrapper">
-					<div class="wgo-player-info-box">
-						<div class="wgo-player-info-title">Caps</div>
-						<div class="wgo-player-info-value" id="capcountB">0</div>
-					</div>
-				</div>
-
-				<div class="wgo-player-info-box-wrapper">
-					<div class="wgo-player-info-box">
-						<div class="wgo-player-info-title">Time</div>
-						<div class="wgo-player-info-value" id="counter-black">--:--</div>
-					</div>
-				</div>
-
-        <div class="wgo-player-info-value" id="ping-black">Ping: </div>
-
-			</div>
-		</div>
-	</div>
-
-  <div id="game-board-wrapper">
-  	<div id="game-board">
-  	</div>
-
-  	<div class="wgo-buttons">
-  			<button id='calc-score' class='wgo-button'>Estimate Score</button>
-  			<button id='game-back' class='wgo-button'>Back to Lobby</button>
-  			<button id='game-resign' class='wgo-button'>Resign</button>
-        <button id='game-pass' class='wgo-button'>Pass</button>
-  	</div>
+  <!-- Left Panel -->
+  <div id="game-left-panel">
+    <div id="game-board-wrapper">
+      <div id="game-board">
+      </div>
+    </div>
+    <div id="final-score-board-wrapper">
+      <div id="final-score-board">
+      </div>
+    </div>
   </div>
 
-<div id="final-score-board-wrapper">
-  <div id="final-score-board">
-  </div>
-  <div class="wgo-buttons">
+  <!-- Right Panel -->
+  <div id="game-right-panel">
+
+    <!-- Black user info -->
+    <div>
+      <div id="ping-black">Ping: </div>
+      <div>
+        <span id="userB">Guest 2 </span>
+        <span id="black-rank">(7k)</span>
+      </div>
+      <div>
+        Captures: <span id="capcountB">0</span>
+        <span id="komiB">Komi: 6.5</span>
+      </div>
+      <div>
+        Time Left: <span id="counter-black">--:--</span>
+        <span id="periods-black">Periods: 0</span>
+      </div>
+    </div>
+
+    <!-- White user info -->
+  	<div>
+      <div id="ping-white">Ping: </div>
+  		<div>
+        <span id="userW">Guest 1 </span>
+        <span id="white-rank">(5k)</span>
+      </div>
+  		<div>
+        Captures: <span id="capcountW">0</span>
+        <span id="komiW">Komi: 6.5</span>
+      </div>
+      <div>
+        Time Left: <span id="counter-white">--:--</span>
+        <span id="periods-white">Periods: 0</span>
+      </div>
+  	</div>
+
+    <!-- Buttons -->
+    <button id='calc-score' class='wgo-button'>Estimate Score</button>
+    <!--<button id='game-back' class='wgo-button'>Back to Lobby</button>-->
+    <button id='game-pass' class='wgo-button'>Pass</button>
+    <button id='game-resign' class='wgo-button'>Resign</button>
     <button id='final-score-continue' class='wgo-button'>Continue Game</button>
     <button id='final-score-lock' class='wgo-button'>Lock Score</button>
-    <button id='final-score-back' class='wgo-button'>Back to Lobby</button>
-  </div>
-</div>
+    <!--<button id='final-score-back' class='wgo-button'>Back to Lobby</button>-->
 
-  <div id="game-chat">
-    <ul class="pages">
-      <li class="chat page">
-        <div class="chatArea">
-          <ul class="messages"></ul>
-        </div>
-        <input class="inputMessage" placeholder="Type here..."/>
-      </li>
-      <!--
-      <li class="login page">
-        <div class="form">
-          <h3 class="title">What's your nickname?</h3>
-          <input class="usernameInput" type="text" maxlength="14" />
-        </div>
-      </li>
-      -->
-    </ul>
-  </div>
-</div>
+    <!-- Game Chat -->
+    <div id="game-chat">
+      <ul class="pages">
+        <li class="chat page">
+          <div class="chatArea">
+            <ul class="messages"></ul>
+          </div>
+          <input class="inputMessage" placeholder="Type here..."/>
+        </li>
+      </ul>
+    </div>
+
+  </div> <!-- end game-right-panel -->
+
+</div><!-- end board -->
 
 
