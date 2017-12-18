@@ -92,6 +92,18 @@ body {
 
 /* Game Board Design */
 
+.user-info {
+  width: 100%;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.game-float-right {
+  float: right;
+}
+
 #game-left-panel {
   width: 70%;
   float: left;
@@ -101,6 +113,16 @@ body {
   width: 30%;
   float: left;
   min-width: 300px;
+}
+
+#game-right-panel-divider-user {
+  border-bottom: 1px black dashed;
+  margin: 10px 0;
+}
+
+#game-right-panel-divider-section {
+  border-bottom: 2px black solid;
+  margin: 10px 0;
 }
 
 

@@ -47,6 +47,7 @@
           .on('click', function () {
             socket.emit('invite', {
               opponentId: user,
+              opponentRank: 3, // placeholder
               time: {
                 type: 'sudden_death',
                 seconds: 30,
@@ -105,6 +106,8 @@
 
       var selectHandler = function (e) {
         var dataRow = chart.getSelection()[0].row;
+        var dataColTotalTime = 0; // h axis
+        var dataColRank = 1; // v axis
         var dataColTimeType = 2; // Time Type column #
         var dataColSeconds = 3; // Seconds column #
         var dataColPeriods = 4; // Periods column #
@@ -115,6 +118,7 @@
           // alert('SeekID ' + chartData.getValue(dataRow, dataSeekID) + ' selected');
           socket.emit('invite', {
             opponentId: chartData.getValue(dataRow, dataColOpponent),
+            opponentRank: chartData.getValue(dataRow, dataColRank),
             time: {
               type: chartData.getValue(dataRow, dataColTimeType),
               seconds: chartData.getValue(dataRow, dataColSeconds),
@@ -230,6 +234,10 @@
       removeUser(msg);
     });
 
+    socket.on('logout', function (msg) {
+      removeUser(msg.username);
+    });
+
     socket.on('addSeeks', function (msg) {
       seekChartDataTable = msg;
       google.charts.setOnLoadCallback(drawChart); // needs to be on callback
@@ -251,19 +259,10 @@
       window.location.href = '/games/' + msg.game.id;
     });
 
-    socket.on('logout', function (msg) {
-      removeUser(msg.username);
-    });
-
     socket.on('ping', function () {
       socket.emit('pong');
     });
 
-    /*
-    socket.on('drawChart', function() {
-      drawChart();
-    });
-    */
 
     // --------------------------
     // Button Event Handlers

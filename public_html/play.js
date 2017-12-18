@@ -57,7 +57,9 @@
 
     function updateUsers() {
       $('#userB').text(serverGame.users.black);
+      $('#black-rank').text('(' + serverGame.users.blackRank + ')');
       $('#userW').text(serverGame.users.white);
+      $('#white-rank').text('(' + serverGame.users.whiteRank + ')');
     }
 
     function updateCapCount() {
@@ -124,7 +126,6 @@
       }
       */
     }
-
 
 
     // ---------------------------
@@ -222,7 +223,6 @@
 
       return 1;
     }
-
 
     // Draws all objects on the game board
     // drawBoard(game, board) or drawBoard(game, board, estimateScore());
@@ -525,8 +525,10 @@
     // ---------------------------
 
     socket.on('timer', function (data) {
-      $('#counter-black').html(secondsToHms(data.timer_black) + '|' + data.periods_black);
-      $('#counter-white').html(secondsToHms(data.timer_white) + '|' + data.periods_white);
+      $('#counter-black').html(secondsToHms(data.timer_black));
+      $('#periods-black').html('Periods: ' + data.periods_black);
+      $('#counter-white').html(secondsToHms(data.timer_white));
+      $('#periods-white').html('Periods: ' + data.periods_white);
     });
 
     socket.on('ping', function () {

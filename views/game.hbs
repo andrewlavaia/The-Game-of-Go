@@ -16,38 +16,42 @@
   <div id="game-right-panel">
 
     <!-- Black user info -->
-    <div>
-      <div id="ping-black">Ping: </div>
+    <div class="user-info">
+      <div class="align-right" id="ping-black">Ping: </div>
       <div>
         <span id="userB">Guest 2 </span>
         <span id="black-rank">(7k)</span>
       </div>
       <div>
         Captures: <span id="capcountB">0</span>
-        <span id="komiB">Komi: 6.5</span>
+        <span class="game-float-right" id="komiB">Komi: 6.5</span>
       </div>
       <div>
         Time Left: <span id="counter-black">--:--</span>
-        <span id="periods-black">Periods: 0</span>
+        <span class="game-float-right" id="periods-black">Periods: 0</span>
       </div>
     </div>
 
+    <div id="game-right-panel-divider-user"></div>
+
     <!-- White user info -->
-  	<div>
-      <div id="ping-white">Ping: </div>
+  	<div class="user-info">
+      <div class="align-right" id="ping-white">Ping: </div>
   		<div>
         <span id="userW">Guest 1 </span>
         <span id="white-rank">(5k)</span>
       </div>
   		<div>
         Captures: <span id="capcountW">0</span>
-        <span id="komiW">Komi: 6.5</span>
+        <span class="game-float-right" id="komiW">Komi: 6.5</span>
       </div>
       <div>
         Time Left: <span id="counter-white">--:--</span>
-        <span id="periods-white">Periods: 0</span>
+        <span class="game-float-right" id="periods-white">Periods: 0</span>
       </div>
   	</div>
+
+    <div id="game-right-panel-divider-section"></div>
 
     <!-- Buttons -->
     <button id='calc-score' class='wgo-button'>Estimate Score</button>
@@ -57,6 +61,8 @@
     <button id='final-score-continue' class='wgo-button'>Continue Game</button>
     <button id='final-score-lock' class='wgo-button'>Lock Score</button>
     <!--<button id='final-score-back' class='wgo-button'>Back to Lobby</button>-->
+
+    <div id="game-right-panel-divider-section"></div>
 
     <!-- Game Chat -->
     <div id="game-chat">
