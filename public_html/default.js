@@ -12,7 +12,8 @@
     // seek chart - should be same array that is on server
     var seekChartDataTable =
       [
-        ['Time', 'Rank', 'TimeType', 'Seconds', 'Periods', 'SeekID', 'Username', 'isRated'],
+        ['Time', 'Rank', 'TimeType', 'Seconds', 'Periods', 'SeekID', 'Username', 'isRated',
+          'BoardSize', 'Komi', 'Handicap'],
       ];
 
     // initiate socket
@@ -106,14 +107,20 @@
 
       var selectHandler = function (e) {
         var dataRow = chart.getSelection()[0].row;
+
+        // same column #s as seekChartDataTable
         var dataColTotalTime = 0; // h axis
         var dataColRank = 1; // v axis
         var dataColTimeType = 2; // Time Type column #
         var dataColSeconds = 3; // Seconds column #
         var dataColPeriods = 4; // Periods column #
         var dataColSeekID = 5; // SeekID column #
-        var dataColOpponent = 6; // seek username column #
-        var dataColIsRated = 7; // is rated column #
+        var dataColOpponent = 6; // seek creator username column #
+        var dataColIsRated = 7; // isRated column #
+        var dataColBoardSize = 8; // boardSize column #
+        var dataColKomi = 9; // Komi column #
+        var dataColHandicap = 10; // Handicap column #
+
         if (username !== chartData.getValue(dataRow, dataColOpponent)) {
           // alert('SeekID ' + chartData.getValue(dataRow, dataSeekID) + ' selected');
           socket.emit('invite', {
@@ -126,6 +133,9 @@
             },
             seekId: chartData.getValue(dataRow, dataColSeekID),
             isRated: chartData.getValue(dataRow, dataColIsRated),
+            boardSize: chartData.getValue(dataRow, dataColBoardSize),
+            komi: chartData.getValue(dataRow, dataColKomi),
+            handicap: chartData.getValue(dataRow, dataColHandicap),
           });
         } else {
           alert('Can not start your own seek');
@@ -195,14 +205,20 @@
             // var seekID = dt.getFormattedValue(row, 5);
             var chartusername = dt.getFormattedValue(row, 6);
             var isRated = dt.getFormattedValue(row, 7);
-
             var isRatedString = (parseInt(isRated, 10) === 0 ? 'Unrated' : 'Rated');
+            var boardSize = dt.getFormattedValue(row, 8);
+            var komi = dt.getFormattedValue(row, 9);
+            var handicap = dt.getFormattedValue(row, 10);
 
             return '<div class="chart-tooltip"> <span>' + timeType + '</span><br />' +
-              '<span class="tooltipHeader">Time</span>: ' + seconds + ' | ' + periods +
-              '<br /> <span class="tooltipHeader">User</span>: ' + chartusername +
-              '<br /> (' + convertRankToString(rank) + ') <br /> ' +
-              isRatedString + '</div>';
+              '<span class="tooltipHeader">Time</span>: ' +
+              seconds + ' | ' + periods + '<br />' +
+              '<span class="tooltipHeader">User</span>: ' +
+              chartusername + ' (' + convertRankToString(rank) + ') <br /> ' +
+              boardSize + '<br />' +
+              isRatedString + '<br />' +
+              'handicap: ' + handicap + '<br />' +
+              'komi: ' + komi + '</div>';
           },
         }]);
 
