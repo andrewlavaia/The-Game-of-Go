@@ -26,9 +26,11 @@
     function updateGamesList() {
       // reset all elements
       if (myGames.length === 0) {
-        document.getElementById('gamesList').innerHTML = 'No Active Games';
+        $('#gameListContainer').hide();
+        // document.getElementById('gamesList').innerHTML = 'No Active Games';
       } else {
-        document.getElementById('gamesList').innerHTML = '';
+        $('#gameListContainer').show();
+        // document.getElementById('gamesList').innerHTML = '';
 
         myGames.forEach(function (game) {
           $('#gamesList').append($('<button>') // !!! update CSS to make this nicer
@@ -228,6 +230,11 @@
       }
     }
 
+    // ---------------------------
+    // Initialize Lobby
+    // ---------------------------
+
+    updateGamesList();
 
     // ---------------------------
     // Socket.io Handlers

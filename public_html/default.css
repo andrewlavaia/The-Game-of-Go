@@ -76,9 +76,17 @@ body {
 	background-color: yellow;
 }
 
+#leftWrapper {
+  float: left;
+  width: 80%;
+}
+
 #gameListContainer {
-	float: left;
-	width: 80%;
+
+}
+
+#seekGraphContainer {
+
 }
 
 #userListContainer {

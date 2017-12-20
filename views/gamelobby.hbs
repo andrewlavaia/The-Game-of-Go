@@ -1,47 +1,52 @@
 <div class="page lobby" id='page-lobby'>
-	<div id='gameListContainer'>
-		<h3>My Active Games</h3>
-		<div id='gamesList'>
-			No active games
-		</div>
+	<div id='leftWrapper'>
+    <div id='gameListContainer'>
+  		<h3>My Active Games</h3>
+  		<div id='gamesList'>
+  		</div>
+    </div>
 
-		<h3>Available Games</h3>
-		<div id='availableGamesList'>
-       		<div id="chart_div" style="width: 900px; height: 500px;"></div>
-		</div>
-
-		<h3>Create a New Seek</h3>
-		<div id='quickStart'>
-			<button>Quick Start</button>
-		</div>
-
-		<div id='createPopularGame'>
-			<button id="5m">5m</button>
-			<button id="15s5">15s / 5</button>
-			<button id="30s5">30s / 5</button>
-		</div>
-
-		<div id='customCustomGame'>
-			<div class="form-group">
-        <label># of seconds</label>
-        <input type="text" class="form-customgame" name="customGameSeconds">
+    <div id='seekGraphContainer'>
+      <h3>Available Games</h3>
+      <div id='availableGamesList'>
+        <div id="chart_div" style="width: 900px; height: 500px;"></div>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label># of periods</label>
-        <input type="text" class="form-customgame" name="customGamePeriods">
-      </div>
+    <div id='newSeekFormContainer'>
+  		<h3>Create a New Seek</h3>
+  		<div id='quickStart'>
+  			<button>Quick Start</button>
+  		</div>
 
-      <div class="form-group">
-        <label>Rated</label>
-        <input type="radio" class="form-customgame" name="customGameRated" value="1">
-        <label>Unrated</label>
-        <input type="radio" class="form-customgame" name="customGameRated" value="0">
-      </div>
+  		<div id='createPopularGame'>
+  			<button id="5m">5m</button>
+  			<button id="15s5">15s / 5</button>
+  			<button id="30s5">30s / 5</button>
+  		</div>
 
-      <button id="createCustomSeek" class="form-customgame">Create Seek</button>
-		</div>
-	</div>
+  		<div id='customCustomGame'>
+  			<div class="form-group">
+          <label># of seconds</label>
+          <input type="text" class="form-customgame" name="customGameSeconds">
+        </div>
+
+        <div class="form-group">
+          <label># of periods</label>
+          <input type="text" class="form-customgame" name="customGamePeriods">
+        </div>
+
+        <div class="form-group">
+          <label>Rated</label>
+          <input type="radio" class="form-customgame" name="customGameRated" value="1">
+          <label>Unrated</label>
+          <input type="radio" class="form-customgame" name="customGameRated" value="0">
+        </div>
+
+        <button id="createCustomSeek" class="form-customgame">Create Seek</button>
+  		</div>
+    </div>
+  </div>
 
 	<div id='userListContainer'>
 		<h3>Online players</h3>
