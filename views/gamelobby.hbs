@@ -12,21 +12,26 @@
         <div id="chart_div" style="width: 900px; height: 500px;"></div>
       </div>
     </div>
+  </div>
 
-    <div id='newSeekFormContainer'>
-  		<h3>Create a New Seek</h3>
-  		<div id='quickStart'>
-  			<button>Quick Start</button>
-  		</div>
+  <div id='seekFormContainer'>
+    <h3>Create a New Seek</h3>
+    <div id='quickStart'>
+      <button>Quick Start</button>
+    </div>
 
-  		<div id='createPopularGame'>
-  			<button id="5m">5m</button>
-  			<button id="15s5">15s / 5</button>
-  			<button id="30s5">30s / 5</button>
-  		</div>
+    <div id='createPopularGame'>
+      <button id="5m">5m</button>
+      <button id="15s5">15s / 5</button>
+      <button id="30s5">30s / 5</button>
+    </div>
 
-  		<div id='customCustomGame'>
-  			<div class="form-group">
+    <button id="openSeekForm" class="form-customgame">Create Custom Seek</button>
+
+    <div id='createCustomSeekForm' class='modal'>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="form-group">
           <label># of seconds</label>
           <input type="text" class="form-customgame" name="customGameSeconds">
         </div>
@@ -43,8 +48,9 @@
           <input type="radio" class="form-customgame" name="customGameRated" value="0">
         </div>
 
-        <button id="createCustomSeek" class="form-customgame">Create Seek</button>
-  		</div>
+        <button id="createCustomSeek" class="form-customgame">Submit</button>
+
+      </div>
     </div>
   </div>
 
