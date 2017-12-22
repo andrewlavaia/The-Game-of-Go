@@ -45,7 +45,7 @@
     function updateUserList() {
       document.getElementById('userList').innerHTML = '';
       usersOnline.forEach(function (user) {
-        $('#userList').append($('<button>') // !!! update CSS to make this nicer
+        $('#userList').append($('<button class="lobby-button">') // !!! update CSS to make this nicer
           .text(user)
           .on('click', function () {
             socket.emit('invite', {
