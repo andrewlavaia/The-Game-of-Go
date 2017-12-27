@@ -97,7 +97,8 @@ module.exports = function(app, passport){
 			userid : req.user.userid, // get the user out of session and pass to template
 			username : req.user.username,
       userrank : req.user.userrank,
-      userrankstring : req.user.userrankstring
+      userrankstring : req.user.userrankstring,
+      datejoined: req.user.datejoined,
 		});
 	});
 
