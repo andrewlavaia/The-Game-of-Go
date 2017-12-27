@@ -176,6 +176,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_intro', {
 				pageTitle : 'Introduction to Go',
+        includeGoScripts : 'true', // required to load go scripts in page
 				username : req.user.username,
         userid : req.user.userid,
         userrank : req.user.userrank,
@@ -183,7 +184,8 @@ module.exports = function(app, passport){
 			});
 		} else {
 			res.render('learn_intro', {
-				pageTitle : 'Introduction to Go'
+				pageTitle : 'Introduction to Go',
+        includeGoScripts : 'true', // required to load go scripts in page
 			});
 		}
 	});
@@ -195,6 +197,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_basics', {
 				pageTitle : 'Basics',
+        includeGoScripts : 'true', // required to load go scripts in page
 				username : req.user.username,
         userid : req.user.userid,
         userrank : req.user.userrank,
@@ -202,7 +205,8 @@ module.exports = function(app, passport){
 			});
 		} else {
 			res.render('learn_basics', {
-				pageTitle : 'Basics'
+				pageTitle : 'Basics',
+        includeGoScripts : 'true', // required to load go scripts in page
 			});
 		}
 	});
@@ -214,6 +218,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_advanced', {
 				pageTitle : 'Advanced Rules',
+        includeGoScripts : 'true', // required to load go scripts in page
 				username : req.user.username,
         userid : req.user.userid,
         userrank : req.user.userrank,
@@ -222,6 +227,7 @@ module.exports = function(app, passport){
 		} else {
 			res.render('learn_advanced', {
 				pageTitle : 'Advanced Rules',
+        includeGoScripts : 'true', // required to load go scripts in page
 			});
 		}
 	});
@@ -233,6 +239,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_scoring', {
 				pageTitle : 'How to Score a Game',
+        includeGoScripts : 'true', // required to load go scripts in page
 				username : req.user.username,
         userid : req.user.userid,
         userrank : req.user.userrank,
@@ -241,6 +248,7 @@ module.exports = function(app, passport){
 		} else {
 			res.render('learn_scoring', {
 				pageTitle : 'How to Score a Game',
+        includeGoScripts : 'true', // required to load go scripts in page
 			});
 		}
 	});
@@ -252,6 +260,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_handicapping', {
 				pageTitle : 'Handicapping',
+        includeGoScripts : 'true', // required to load go scripts in page
 				username : req.user.username,
         userid : req.user.userid,
         userrank : req.user.userrank,
@@ -260,6 +269,7 @@ module.exports = function(app, passport){
 		} else {
 			res.render('learn_handicapping', {
 				pageTitle : 'Handicapping',
+        includeGoScripts : 'true', // required to load go scripts in page
 			});
 		}
 	});
@@ -271,6 +281,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_ranks', {
 				pageTitle : 'Ranks Explained',
+        includeGoScripts : 'true', // required to load go scripts in page
 				username : req.user.username,
         userid : req.user.userid,
         userrank : req.user.userrank,
@@ -279,6 +290,7 @@ module.exports = function(app, passport){
 		} else {
 			res.render('learn_ranks', {
 				pageTitle : 'Ranks Explained',
+        includeGoScripts : 'true', // required to load go scripts in page
 			});
 		}
 	});
@@ -290,6 +302,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_lessons', {
 				pageTitle : 'Lessons',
+        includeGoScripts : 'true', // required to load go scripts in page
 				username : req.user.username,
         userid : req.user.userid,
         userrank : req.user.userrank,
@@ -297,7 +310,8 @@ module.exports = function(app, passport){
 			});
 		} else {
 			res.render('learn_lessons', {
-				pageTitle : 'Lessons'
+				pageTitle : 'Lessons',
+        includeGoScripts : 'true', // required to load go scripts in page
 			});
 		}
 	});
@@ -309,6 +323,7 @@ module.exports = function(app, passport){
 		if(req.user) {
 			res.render('learn_openings', {
 				pageTitle : 'Openings',
+        includeGoScripts : 'true', // required to load go scripts in page
 				username : req.user.username,
         userid : req.user.userid,
         userrank : req.user.userrank,
@@ -316,7 +331,8 @@ module.exports = function(app, passport){
 			});
 		} else {
 			res.render('learn_openings', {
-				pageTitle : 'Openings'
+				pageTitle : 'Openings',
+        includeGoScripts : 'true', // required to load go scripts in page
 			});
 		}
 	});
