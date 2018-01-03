@@ -360,11 +360,13 @@
     });
 
     $('#createCustomSeek').on('click', function () {
+      var customGameTimeControl = 'Sudden Death';
+      var customGameTimeLength = parseInt($('#timelength option:selected').val(), 10) * 60;
+      var customGameRated = parseInt($('input[name=customGameRated]:checked').val(), 10);
+
+      /*
       var customGameSeconds = parseInt($('input[name=customGameSeconds]').val(), 10);
       var customGamePeriods = parseInt($('input[name=customGamePeriods]').val(), 10);
-      var customGameRating = parseInt($('input[name=customGameRated]:checked').val(), 10);
-      var customGameType;
-
       if (customGamePeriods === '' || customGamePeriods === 0) {
         customGameType = 'Sudden Death';
         customGamePeriods = parseInt(0, 10);
@@ -382,23 +384,29 @@
         typeof customGamePeriods === 'number' &&
         customGameSeconds != null &&
         customGamePeriods != null) {
-        socket.emit('createSeek', {
-          seekuserid: userid,
-          seekusername: username,
-          seekuserrank: userrank,
-          time: {
-            type: customGameType,
-            seconds: customGameSeconds,
-            periods: customGamePeriods,
-          },
-          isRated: customGameRating,
-        });
+        */
 
+      socket.emit('createSeek', {
+        seekuserid: userid,
+        seekusername: username,
+        seekuserrank: userrank,
+        time: {
+          type: customGameTimeControl,
+          seconds: customGameTimeLength,
+          periods: 0,
+        },
+        isRated: customGameRated,
+      });
+
+      modal.style.display = "none";
+
+      /*
         $('input[name=customGameSeconds]').val('');
         $('input[name=customGamePeriods]').val('');
       } else {
         alert('Not a valid entry');
       }
+      */
     });
 
     // --------------------------
