@@ -30,3 +30,9 @@ node_modules
 .vscode
 Code
 typings
+
+# Private
+database.js
+config/database.js
+config/options.js
+config/passport.js

@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"createUnion",
+				"createUnionWQU"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"array",
+				"array"
+			],
+			[
 				"hide",
 				"hideLiveBoardElements"
 			],
@@ -23,6 +35,90 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/C/wamp/www/algo/algo.html",
+			"settings":
+			{
+				"buffer_size": 3509,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/wamp/www/algo/util.js",
+			"settings":
+			{
+				"buffer_size": 1488,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/wamp/www/algo/unions.js",
+			"settings":
+			{
+				"buffer_size": 10709,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "// Initially hide #union div\n// $('#perc-wrapper').hide();\n\nvar matrix = [];\nvar unions = [];\nvar nodeCount = [];\nvar rows;\nvar cols;\nvar percIntervalTimer = 1000; \nvar percNum = 0;\n\n$('input[name=\"perc-begin\"]').on('click', function() {\n  rows = parseInt($('input[name=\"perc-rows\"]').val(), 10);\n  cols = parseInt($('input[name=\"perc-cols\"]').val(), 10);\n  percIntervalTimer = parseInt($('input[name=\"perc-animation-time\"]').val(), 10);\n  callPerc(rows, cols, percIntervalTimer);\n});\n\nfunction callPerc(rows, cols, pauseTime) {\n  var rowArray = [];\n  var table = $('#perc-table');\n\n  // clear any previous data\n  matrix.length = 0;\n  unions.length = 0;\n  nodeCount.length = 0;\n  percNum = 0;\n  table.html('');\n\n  // create matrix and populate DOM\n  for (var i = 0; i < rows; i++) {\n    rowArray.length = 0;\n    table.append('<tr></tr>');\n    for (var j = 0; j < cols; j++) {\n      rowArray.push(0);\n\n      // create unique roots for top and bottom rows\n      if (i == 0) {\n        unions.push(0);\n        nodeCount.push(cols);\n      } else if (i == rows - 1) {\n        unions.push(rows * cols - 1)\n        nodeCount.push(cols);\n      } else {\n        unions.push((cols * i) + j);\n        nodeCount.push(1);\n      }\n\n      table.append('<td id=\"perc-' + i + '-' + j + '\"></td>')\n    }\n    matrix.push(rowArray.slice());\n  }\n\n  percIntervalTimer = drawPerc(pauseTime);\n}\n\nfunction drawPerc(pauseTime) {\n  return setInterval(function() {\n\n    // random union calls until percolation occurs\n    if(!percolates()) {\n      var row = Math.floor(Math.random() * rows);  // 0 through maxIntSize - 1\n      var col = Math.floor(Math.random() * cols);  // 0 through maxIntSize - 1\n      open(row, col);\n      percNum++;\n    } \n    else {\n      clearInterval(percIntervalTimer);\n\n      // !!! Should I use shortest path instead?\n      \n      // change color of all connected nodes that percolated\n      for(var i = 0; i < rows; i++) {\n        for (var j = 0; j < cols; j++) {\n          if (isConnected(0, (i * cols) + j)) {\n            $('#perc-' + i + '-' + j).css(\"background-color\", \"green\");\n          }\n        }\n      }\n    }\n    \n  }, pauseTime);\n\n}\n\nfunction open(row, col) {\n  var cell = $('#perc-' + row + '-' + col);\n  cell.css(\"background-color\", \"blue\");\n\n  matrix[row][col] = 1;\n\n  // check top\n  if (row > 0) {\n    if (isOpen(row - 1, col) || row == 1) {\n      createUnion((row * cols) + col, ((row - 1) * cols) + col);\n    }\n  }\n\n  // check right\n  if (col + 1 < cols) {\n    if (isOpen(row, col + 1)) {\n      createUnion((row * cols) + col, (row * cols) + col + 1);\n    }\n  }\n\n  // check bottom\n  if (row + 1 < rows) {\n    if (isOpen(row + 1, col)  || row == rows - 2) {\n      createUnion((row * cols) + col, ((row + 1) * cols) + col);\n    }\n  }\n\n  // check left\n  if (col - 1 >= 0) {\n    if (isOpen(row, col - 1)) {\n      createUnion((row * cols) + col, (row * cols) + col - 1);\n    }\n  }\n}\n\nfunction isOpen(row, col) {\n  return matrix[row][col];\n}\n\nfunction createUnion(p, q) {\n  var i = findRoot(p);\n  var j = findRoot(q);\n\n  // if roots are the same, p and q are already in the same set\n  if (i == j) {\n    return;\n  }\n\n  // move tree with less nodes into tree with more nodes\n  if (nodeCount[i] < nodeCount[j]) {\n    unions[i] = j;\n    nodeCount[j] += nodeCount[i];\n  }\n  else {\n    unions[j] = i;\n    nodeCount[i] += nodeCount[j];\n  }\n}\n\nfunction findRoot(p) {\n  while (p != unions[p]) {\n    unions[p] = unions[unions[p]]; // skip a level and check grandparent \n    p = unions[p];\n  }\n  return p;\n}\n\nfunction isConnected(p, q) {\n  return findRoot(p) == findRoot(q);\n}\n\nfunction percolates() {\n  // check if first node is connected to last node\n  return isConnected(0, (rows * cols) - 1);\n}\n\nvar visited = [];\nvar stack = [];\nvar path = [];\n\nfor (var j = 1; j < cols; j++) {\n  if (isOpen(1, j)) {   // skip first row\n    DFS(1, j);\n  }\n}\n\nfunction DFS(row, col) {\n  \n  if (row == rows - 1 && isConnected(0, (row * cols) + col)) {\n    return;\n  }\n\n  // check bottom \n  if (isOpen(row + 1, col) \n    && isConnected(0, ((row + 1) * cols) + col)) {\n    path.push([row, col]);\n    DFS(row + 1, col);\n  }\n\n  for (var i = 0; i < cols; i++) {\n    var row = 0;\n    var col = i;\n\n    visited.push([row, col]);\n    stack.push([row, col]);\n\n    // check bottom \n\n    if (isOpen(row + 1, col) \n      && isConnected((row * cols) + col, ((row + 1) * cols) + col)) {\n      queue.push([row + 1, col]);\n    }\n\n  }\n\n  if(queue.length > 0) {\n\n    visited[row][col] = true;\n  }\n\n}\n\n\n",
+			"file": "/C/wamp/www/algo/percolation.js",
+			"file_size": 4681,
+			"file_write_time": 131659008199009257,
+			"settings":
+			{
+				"buffer_size": 4471,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/wamp/www/algo/sorts.js",
+			"settings":
+			{
+				"buffer_size": 12129,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/wamp/www/algo/algo.css",
+			"settings":
+			{
+				"buffer_size": 2546,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/wamp/www/andrewlavaia.com/include/ajax/animatedalgorithms.php",
+			"settings":
+			{
+				"buffer_size": 4622,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/wamp/www/andrewlavaia.com/include/ajax/thegameofgo.php",
+			"settings":
+			{
+				"buffer_size": 4812,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/wamp/www/andrewlavaia.com/include/ajax/geography.php",
+			"settings":
+			{
+				"buffer_size": 5036,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
 		{
 			"file": "app.js",
 			"settings":
@@ -54,8 +150,16 @@
 			"file": "public_html/default.js",
 			"settings":
 			{
-				"buffer_size": 12385,
+				"buffer_size": 12547,
 				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "views/partials/head.hbs",
+			"settings":
+			{
+				"buffer_size": 2336,
 				"line_ending": "Unix"
 			}
 		},
@@ -81,7 +185,7 @@
 			"file": "views/gamelobby.hbs",
 			"settings":
 			{
-				"buffer_size": 1788,
+				"buffer_size": 2177,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -233,10 +337,49 @@
 		"/C/Game Dev/go",
 		"/C/Game Dev/go/config",
 		"/C/Game Dev/go/views",
+		"/C/Game Dev/go/views/helpers",
+		"/C/Game Dev/go/views/layouts",
 		"/C/Game Dev/go/views/partials"
 	],
 	"file_history":
 	[
+		"/C/wamp/www/algo/util.js",
+		"/C/wamp/www/algo/.eslintrc.js",
+		"/C/Game Dev/go/public_html/.eslintrc.js",
+		"/C/wamp/www/andrewlavaia.com/index.html",
+		"/C/Program Files (x86)/Audacity/help/manual/man/faq_installing_the_lame_mp3_encoder.html",
+		"/C/wamp/www/algo/unions.js",
+		"/C/wamp/www/algo/jquery-3.3.1.min.js",
+		"/C/wamp/www/algo/algo.html",
+		"/C/Users/alavaia/Downloads/Queue.src.js",
+		"/C/Users/alavaia/Downloads/Queue.src (1).js",
+		"/C/Users/alavaia/Downloads/Queue.js",
+		"/C/wamp/www/algo/Chart.js",
+		"/C/wamp/www/algo/readme.md",
+		"/C/Users/alavaia/Desktop/nand2tetris/readme.md",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Mux4Way16.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/DMux4Way.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Mux16.hdl",
+		"/C/C++/Algorithms/readme.md",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Mux8Way16.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/DMux.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/DMux8Way.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Xor.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Not16.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Mux.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/02/FullAdder.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/02/Add16.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/02/ALU.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/And16.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/02/HalfAdder.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/02/Inc16.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/02/Zero16.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/02/Zero.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Not.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Or8Way.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Or16.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/And.hdl",
+		"/C/Users/alavaia/Desktop/nand2tetris/projects/01/Or.hdl",
 		"/C/Game Dev/go/public_html/gamechat.js",
 		"/C/Game Dev/go/views/gamelobby.hbs",
 		"/C/Game Dev/go/views/partials/footer.hbs",
@@ -259,7 +402,6 @@
 		"/C/Game Dev/go/database.js",
 		"/C/Game Dev/go/.editorconfig",
 		"/C/Game Dev/go/README.md",
-		"/C/Game Dev/go/public_html/.eslintrc.js",
 		"/C/Game Dev/go/package.json",
 		"/C/Game Dev/go/views/404.hbs",
 		"/C/Users/alavaia/AppData/Roaming/Sublime Text 3/Packages/Glue/Glue.sublime-settings",
@@ -328,51 +470,15 @@
 		"/C/Game Dev/go/public/theme/admin_3/layout_blank_page.html",
 		"/C/Game Dev/goScoreEstimator/score-estimator/function2.html",
 		"/C/Game Dev/go/public/a.out.js",
-		"/C/Game Dev/goScoreEstimator/score-estimator/function2.js",
-		"/C/Game Dev/go/public/function2.js",
-		"/C/Game Dev/go/public/quick_test.js",
-		"/C/Game Dev/go/public/wgo/scoreestimator.js",
-		"/C/Game Dev/goScoreEstimator/score-estimator/function.html",
-		"/C/Program Files/Emscripten/tests/quick_test.js",
-		"/C/Program Files/Emscripten/tests/a.out.js",
-		"/C/Program Files/Emscripten/tests/hello.html",
-		"/C/Users/alavaia/AppData/Local/Temp/Temp1_wgo.js-master.zip/wgo.js-master/docs/docs.html",
-		"/C/Game Dev/go/public/lib/jgoboard-latest.js",
-		"/C/Game Dev/go/public/board.js",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/docs.html",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/player.html",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/demo1.html",
-		"/C/Game Dev/go/public/wgo/wgo.min.js",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/demo4.html",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/tutorials/tutorial-player-3.html",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/tutorials/tutorial-player-6.html",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/tutorials/tutorial-board-5.html",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/docs/tutorial-board.html",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/test/test03.html",
-		"/C/Users/alavaia/Downloads/wgo.js-master/wgo.js-master/demo3.html",
-		"/C/Game Dev/go/public/lib/chess.min.js",
-		"/C/Game Dev/go/public/lib/chessboard-0.3.0.min.js",
-		"/C/Game Dev/go/public/demoPlay.html",
-		"/C/Game Dev/chess/app.js",
-		"/C/Game Dev/chess/public/default.js",
-		"/C/Game Dev/GO Online/main.js",
-		"/C/Game Dev/GO Online/src/common/MyGameEngine.js",
-		"/C/Game Dev/GO Online/dist/bundle.js",
-		"/C/wamp/www/index.php",
-		"/C/Users/alavaia/Downloads/jgoboard-master/jgoboard-master/main.js",
-		"/C/Users/alavaia/Downloads/jgoboard-master/jgoboard-master/large/board.js",
-		"/C/wamp/www/demoPlay.html",
-		"/C/wamp/www/go/dist/jgoboard-latest.js",
-		"/C/Game Dev/pong/index.html",
-		"/C/Game Dev/pong/src/common/MyGameEngine.js"
+		"/C/Game Dev/goScoreEstimator/score-estimator/function2.js"
 	],
 	"find":
 	{
-		"height": 45.0
+		"height": 75.0
 	},
 	"find_in_files":
 	{
-		"height": 116.0,
+		"height": 127.0,
 		"where_history":
 		[
 			"C:\\Game Dev\\go"
@@ -383,6 +489,70 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			";\n",
+			"return",
+			"isConnected",
+			"percolates()",
+			"percolate",
+			"open",
+			"create",
+			"findRoot",
+			"isConne",
+			"nodeCount",
+			"unions",
+			">\n",
+			"aux",
+			"callNum",
+			"moveAnimateQU",
+			";\n",
+			"top-le",
+			"> #",
+			">",
+			"style",
+			", ",
+			"pf-",
+			"moveAnimate",
+			"console",
+			"console.lo",
+			"display: blo",
+			"a href=\"#\"",
+			"/a",
+			"a href=\"#\"",
+			"$border-width",
+			"$rev",
+			"$border-width",
+			"union-he",
+			"  \t\n",
+			"console",
+			"cons",
+			"con",
+			"text",
+			" //",
+			"});\n",
+			"();\n",
+			"conso",
+			"drawU",
+			"console.log",
+			"clear",
+			"supp",
+			"suppQu",
+			"drawC",
+			")';\n",
+			"myChart",
+			"pauseTim",
+			";\n",
+			");\n",
+			"in",
+			"And",
+			"=a[",
+			"in[",
+			"in = ",
+			"Not",
+			"]);\n",
+			"close",
+			"customGameRate",
+			"customGame",
+			"form-custom",
 			"profi",
 			"timer",
 			"usersO",
@@ -446,71 +616,7 @@
 			"game",
 			"user",
 			"rank",
-			"time",
-			"userran",
-			"rank",
-			"submit",
-			"serverGame",
-			"serverGame.users.white",
-			"serverGame.users.",
-			"padding",
-			"padding-l",
-			"ul",
-			"pages",
-			"logout",
-			"leaveL",
-			"joinLob",
-			"isPlay",
-			"{\n",
-			".hide",
-			"wrapper",
-			"socket.username",
-			"username",
-			"initializeGa",
-			"continue ga",
-			"resume",
-			"continue",
-			"resu,e",
-			"initial",
-			"continue g",
-			"gameRead",
-			"contin",
-			"continu",
-			"initializ",
-			"launchga",
-			"gameRead",
-			"joingame",
-			"launch",
-			"joi",
-			"lockC",
-			"pass",
-			"isPla",
-			"!!!",
-			"submit",
-			"submit-sc",
-			"lock sc",
-			"resultby",
-			"return",
-			"result",
-			"return",
-			"result",
-			"submit sc",
-			"lock",
-			"lock scor",
-			"lockscor",
-			"isPla",
-			"assert",
-			"submit",
-			"finalScor",
-			"typing",
-			"emit(",
-			"drawB",
-			"final-score-sub",
-			"final-score",
-			"added",
-			"startTi",
-			"added",
-			"'stop typ"
+			"time"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -518,6 +624,19 @@
 		"regex": false,
 		"replace_history":
 		[
+			"unionCallNum",
+			"span",
+			"/span",
+			"span",
+			"1px",
+			"chart",
+			"a",
+			"Mux",
+			"Or",
+			"= a[",
+			"a[",
+			"a =",
+			"And",
 			"joinGame",
 			"launchGame",
 			"resumeGame",
@@ -547,11 +666,280 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
+					"file": "/C/wamp/www/algo/algo.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3509,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								599,
+								599
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 545.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/wamp/www/algo/util.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1488,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1275,
+								1275
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1470.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/wamp/www/algo/unions.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10709,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3332,
+								3343
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2175.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/wamp/www/algo/percolation.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4471,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3875,
+								3875
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4349.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/wamp/www/algo/sorts.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12129,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7754,
+								7754
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/C/wamp/www/algo/algo.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2546,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2486,
+								2486
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3978.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/C/wamp/www/andrewlavaia.com/include/ajax/animatedalgorithms.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4622,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2823,
+								2823
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1818.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/C/wamp/www/andrewlavaia.com/include/ajax/thegameofgo.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4812,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3709,
+								3709
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2197.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/C/wamp/www/andrewlavaia.com/include/ajax/geography.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5036,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3608,
+								3608
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
 					"file": "app.js",
 					"semi_transient": false,
 					"settings":
@@ -563,8 +951,8 @@
 						"selection":
 						[
 							[
-								15395,
-								15395
+								2110,
+								2110
 							]
 						],
 						"settings":
@@ -577,14 +965,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 11205.0,
+						"translation.y": 1331.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
+					"buffer": 10,
 					"file": "views/partials/scripts.hbs",
 					"semi_transient": false,
 					"settings":
@@ -596,8 +984,8 @@
 						"selection":
 						[
 							[
-								3042,
-								3042
+								299,
+								299
 							]
 						],
 						"settings":
@@ -610,14 +998,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1217.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 11,
 					"file": "views/profile.hbs",
 					"semi_transient": false,
 					"settings":
@@ -646,24 +1034,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 12,
 					"file": "public_html/default.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 12385,
+						"buffer_size": 12547,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								232,
-								232
+								7367,
+								7367
 							]
 						],
 						"settings":
@@ -676,14 +1064,47 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 5608.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 13,
+					"file": "views/partials/head.hbs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2336,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								794,
+								730
+							]
+						],
+						"settings":
+						{
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
 					"file": "public_html/play.js",
 					"semi_transient": false,
 					"settings":
@@ -709,14 +1130,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 12285.0,
+						"translation.y": 13818.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 15,
 					"file": "database.js",
 					"semi_transient": false,
 					"settings":
@@ -742,27 +1163,27 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 984.0,
+						"translation.y": 1107.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 16,
 					"file": "views/gamelobby.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1788,
+						"buffer_size": 2177,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								878,
-								878
+								1569,
+								1569
 							]
 						],
 						"settings":
@@ -775,14 +1196,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 376.0,
+						"translation.y": 735.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 17,
 					"file": "views/game.hbs",
 					"semi_transient": false,
 					"settings":
@@ -808,14 +1229,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 409.0,
+						"translation.y": 460.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 18,
 					"file": "public_html/default.css",
 					"semi_transient": false,
 					"settings":
@@ -827,8 +1248,8 @@
 						"selection":
 						[
 							[
-								3632,
-								3632
+								830,
+								0
 							]
 						],
 						"settings":
@@ -841,14 +1262,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4655.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 19,
 					"file": "router.js",
 					"semi_transient": false,
 					"settings":
@@ -874,14 +1295,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 9365.0,
+						"translation.y": 10535.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 20,
 					"file": "config/passport.js",
 					"semi_transient": false,
 					"settings":
@@ -907,14 +1328,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2503.0,
+						"translation.y": 2815.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 21,
 					"file": "public_html/gamechat.css",
 					"semi_transient": false,
 					"settings":
@@ -944,7 +1365,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 21,
 					"type": "text"
 				}
 			]
@@ -956,7 +1377,7 @@
 	},
 	"input":
 	{
-		"height": 44.0
+		"height": 45.0
 	},
 	"layout":
 	{
@@ -997,7 +1418,7 @@
 	"project": "thegameofgo.sublime-project",
 	"replace":
 	{
-		"height": 66.0
+		"height": 88.0
 	},
 	"save_all_on_build": true,
 	"select_file":
