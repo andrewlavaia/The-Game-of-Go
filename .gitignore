@@ -31,6 +31,10 @@ node_modules
 Code
 typings
 
+# Sublime settings
+thegameofgo.sublime-project
+thegameofgo.sublime-workspace
+
 # Private
 database.js
 config/database.js
