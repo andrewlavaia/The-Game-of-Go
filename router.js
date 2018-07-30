@@ -28,36 +28,28 @@ module.exports = function(app, passport){
 	app.get('/login', isNotLoggedIn,  function(req,res){
 
 		var loginMessage = req.flash('loginMessage');
+    // console.log(loginMessage);
 
 		// render the page and pass in any flash data if it exists
 		res.render('login', {
 			pageTitle : 'Login',
 			loginMessage,
-			helpers: {
-
-				loginMessage: function () { return req.flash('loginMessage'); },
-				loginMessageExists: function() {
-						return true;
-
-				}
-			}
 		});
 	});
 
 	// process the login form
 	app.post('/login', passport.authenticate('local-login', {
-            successRedirect : '/profile', // redirect to the secure profile section
-            failureRedirect : '/login', // redirect back to the signup page if there is an error
-            failureFlash : true // allow flash messages
+      successRedirect : '/profile', // redirect to the secure profile section
+      failureRedirect : '/login', // redirect back to the login page if there is an error
+      failureFlash : true, // allow flash messages
 		}),
-        function(req, res) {
-
-            if (req.body.remember) {
-              req.session.cookie.maxAge = 1000 * 60 * 3;
-            } else {
-              req.session.cookie.expires = false;
-            }
-        res.redirect('/');
+      function(req, res) {
+        if (req.body.remember) {
+          req.session.cookie.maxAge = 1000 * 60 * 3;
+        } else {
+          req.session.cookie.expires = false;
+        }
+      res.redirect('/');
     });
 
 
@@ -72,10 +64,7 @@ module.exports = function(app, passport){
 		// render the page and pass in any flash data if it exists
 		res.render('signup', {
 			pageTitle : 'Register',
-			signupMessage,
-			helpers: {
-				signupMessage: function() { return req.flash('signupMessage'); }
-			}
+			signupMessage
 		});
 	});
 
