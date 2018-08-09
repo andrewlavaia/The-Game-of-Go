@@ -67,66 +67,63 @@
       $('#capcountW').text(game.getPosition().capCount.white);
     }
 
-    function hideFinalScoreElements() {
-      $('#final-score-board').hide();
-      $('#final-score-continue').hide();
-      $('#final-score-lock').hide();
-    }
-
-    function showFinalScoreElements() {
-      $('#final-score-board').show();
-
-      // only show these buttons if user is actually playing
-      if ((username !== serverGame.users.white &&
-         username !== serverGame.users.black) ||
-         gameOver === true) {
-        $('#final-score-continue').hide();
-        $('#final-score-lock').hide();
-      } else {
-        $('#final-score-continue').show();
-        $('#final-score-lock').show();
-      }
-    }
-
-    function hideLiveBoardElements() {
-      $('#game-board').hide();
-      $('#calc-score').hide();
-      $('#game-pass').hide();
-      $('#game-resign').hide();
-    }
-
-    function showLiveBoardElements() {
-      $('#game-board').show();
-      $('#calc-score').show();
-
-      // only show these buttons if user is actually playing
-      if ((username !== serverGame.users.white &&
-         username !== serverGame.users.black) ||
-         gameOver === true) {
+    function displayBoardElements() {
+      // user is not playing and is a guest
+      if (username !== serverGame.users.white &&
+         username !== serverGame.users.black) {
+        if (gameOver === true) {
+          $('#final-score-board').show();
+          $('#game-board').hide();
+          $('#calc-score').hide();
+        }
+        else {
+          $('#game-board').show();
+          $('#calc-score').show();
+          $('#final-score-board').hide();
+        }
+        $('#final-score-back').show();
         $('#game-pass').hide();
         $('#game-resign').hide();
-      } else {
+        $('#final-score-continue').hide();
+        $('#final-score-lock').hide();
+      }
+
+      // game is officially over
+      else if (gameOver === true) {
+        $('#final-score-board').show();
+        $('#final-score-back').show();
+        $('#calc-score').hide();
+        $('#game-board').hide();
+        $('#game-pass').hide();
+        $('#game-resign').hide();
+        $('#final-score-continue').hide();
+        $('#final-score-lock').hide();
+      }
+
+      // user is in final scoring determination
+      else if (passCount === 2) {
+        $('#final-score-board').show();
+        $('#final-score-continue').show();
+        $('#final-score-lock').show();
+        $('#game-board').hide();
+        $('#calc-score').hide();
+        $('#game-pass').hide();
+        $('#game-resign').hide();
+        $('#final-score-back').hide();
+      }
+
+      // user is actively playing
+      else {
+        $('#game-board').show();
+        $('#calc-score').show();
         $('#game-pass').show();
         $('#game-resign').show();
+        $('#final-score-board').hide();
+        $('#final-score-back').hide();
+        $('#final-score-continue').hide();
+        $('#final-score-lock').hide();
       }
     }
-
-    function isPlaying() {
-      showLiveBoardElements();
-      hideFinalScoreElements();
-      /*
-      if ((username !== serverGame.users.white &&
-         username !== serverGame.users.black) ||
-         gameOver === true) {
-        // $('#game-resign').hide();
-        // $('#game-pass').hide();
-      } else {
-        $('#game-resign').show();
-        $('#game-pass').show();
-      }
-      */
-    }
-
 
     // ---------------------------
     // Game Chat Functions (copied from gamechat.js)
@@ -310,15 +307,13 @@
 
       if (passCount === 2) {
         log('Two passes in a row -> entering scoring mode');
-        // gameOver = true;
-        // isPlaying();
-        // $('#game-board').hide(); // hide original board
-        // $('#final-score-board').show(); // show final score board
-        hideLiveBoardElements();
-        showFinalScoreElements();
+
+        displayBoardElements();
         drawBoard(game, finalScoreBoard); // add original stones that were placed during game
         drawBoard(game, finalScoreBoard, estimateScore()); // add estimated scoring stones
         socket.emit('pauseTimer');
+
+        // if score locked in, set gameOver = true
 
         // !!! allow clicking on final-score-board to set specific areas as dead or alive
       }
@@ -379,8 +374,6 @@
     function initializeGame(serverGameState) {
       serverGame = serverGameState;
 
-      // console.log (serverGame);
-
       if (serverGame.game == null) {
         gameSize = serverGameState.boardSize;
         board.setSize(gameSize);
@@ -393,7 +386,6 @@
         console.log('resuming game');
       }
 
-      // draw board
       drawBoard(game, board);
     }
 
@@ -402,20 +394,12 @@
     // Socket.io Handlers
     // ---------------------------
 
-    /*
-    socket.on('joingame', function (msg) {
-      console.log('joined game id: ' + msg.game.id);
-
-      initializeGame(msg.game);
-    });
-    */
-
     socket.on('launchgame', function (msg) {
       console.log('launching game: ' + msg.game.id);
 
       initializeGame(msg.game);
 
-      isPlaying();
+      displayBoardElements();
     });
 
     socket.on('resign', function (msg) {
@@ -423,7 +407,9 @@
         log(msg.userId + ' has resigned.');
 
         gameOver = true;
-        isPlaying();
+        drawBoard(game, finalScoreBoard); // add original stones that were placed during game
+        displayBoardElements();
+
         // send to game lobby
         // window.location.href = '../gamelobby';
       }
@@ -433,7 +419,7 @@
       if (msg.gameId === serverGame.id) {
         log(msg.loser + ' has lost on time.');
         gameOver = true;
-        isPlaying();
+        displayBoardElements();
       }
     });
 
@@ -465,8 +451,7 @@
     socket.on('continue game', function (msg) {
       if (serverGame && msg.gameId === serverGame.id && gameOver === false) {
         log('Game resumed');
-        hideFinalScoreElements();
-        showLiveBoardElements();
+        displayBoardElements();
         // $('#final-score-lock').show(); // reset default status
         // $('#game-board').show(); // show original board
         // $('#final-score-board').hide(); // hide final score board
@@ -492,7 +477,7 @@
             blackScore: 115,
           });
 
-          $('#final-score-continue').hide();
+          displayBoardElements();
 
           log('Game Over. Score submitted.')
         }
@@ -569,7 +554,8 @@
         });
 
         gameOver = true;
-        isPlaying();
+        drawBoard(game, finalScoreBoard); // add original stones that were placed during game
+        displayBoardElements();
 
         // send to game lobby
         // window.location.href = '../gamelobby';
