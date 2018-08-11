@@ -3,9 +3,11 @@
 /* vim: set tabstop=4 expandtab foldmethod=marker: */
 
 #ifdef DEBUG
-#include <iostream>
+
 using namespace std;
 #endif
+
+#include <iostream>
 
 #define MAX_WIDTH 25
 #define MAX_HEIGHT 25

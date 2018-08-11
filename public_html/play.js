@@ -4,6 +4,7 @@
 
 (function () {
   WinJS.UI.processAll().then(function () { // eslint-disable-line
+
     var socket;
     var serverGame;
 
@@ -353,14 +354,14 @@
       // console.log(instance.score());
 
       if (game.turn === 1) { // black's move
-        instance2 = instance.estimate(Module.Color.BLACK, 1000, 0.35);
+        instance2 = instance.estimate(Module.Color.BLACK, 10000, 0.35);
         // change # of simulations from 1000 to 10000 once optimized
       } else { // white's move
-        instance2 = instance.estimate(Module.Color.WHITE, 1000, 0.35);
+        instance2 = instance.estimate(Module.Color.WHITE, 10000, 0.35);
         // change # of simulations from 1000 to 10000 once optimized
       }
       // instance2.print();
-      // console.log(instance2.score());
+      console.log(instance2.score());
 
       scoreVec = instance2.getScoreVector();
       // console.log(scoreVec);
@@ -504,6 +505,13 @@
       }
     });
 
+    // !!! need a way for users to mark dead stones efficiently at end of game
+    // ??? if stones are 100% for one side from estimator, lock them or allow override?
+    // option 1: BFS or DFS to mark all non-adjacent stones that are still alive->
+    //      how to handle dead stones within that area?
+    // option 2: color stones using mousedown to scroll over all stones?
+    // option 3: algorithmically determine each all or nothing zone,
+    //      whether it is alive or dead, and which color it belongs to?
 
     // ---------------------------
     // Game Timer
@@ -696,6 +704,12 @@
 
       lastHover = false;
     });
+
+    // finalScoreBoard.addEventListener('mousemove', function (x, y) {
+    //     console.log(x + ' - ' + y);
+    //     console.log(game.getStone(x, y));
+    //   });
+    // });
 
     // add black or white mini-stone to finalScoreBoard
     finalScoreBoard.addEventListener('click', function (x, y) {

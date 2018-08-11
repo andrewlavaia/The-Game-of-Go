@@ -1,4 +1,4 @@
-#define DEBUG 1
+//#define DEBUG 1
 
 /* vim: set tabstop=4 expandtab */
 #include "estimator.h"
@@ -53,12 +53,12 @@ Goban::Goban(const Goban &other) {
 }
 
 // Binding code
-EMSCRIPTEN_BINDINGS(my_class_example) {
+EMSCRIPTEN_BINDINGS(Goban) {
   class_<Goban>("Goban")
     .constructor<>()
     .function("estimate", &Goban::estimate)
     .function("score", &Goban::score)
-    .function("print", &Goban::print)
+    //.function("print", &Goban::print)
     .function("getScoreVector", &Goban::getScoreVector)
     .function("populateBoard", &Goban::populateBoard)
     //.property("x", &MyClass::getX, &MyClass::setX)
@@ -679,6 +679,7 @@ Console instructions:
 Compiling instructions:
 
   emcc --bind -O2 main.cc estimator.cc -o function.html -s NO_EXIT_RUNTIME=1
+  emcc --bind --memory-init-file 0 -O2 main.cc estimator.cc -o scoreestimator.js -s NO_EXIT_RUNTIME=1 -s WASM=1
 
   --bind -> required by embind which allows C++ function calls from javascript
 

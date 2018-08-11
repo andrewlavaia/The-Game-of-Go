@@ -1,4 +1,4 @@
-#define DEBUG 1
+//#define DEBUG 1
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -23,7 +23,7 @@ int main(int argn, const char *args[]) {
     clock_t start, stop;
 
     if (argn < 2) {
-        fprintf(stderr, "Usage: estimator <file.game> ...\n");
+        //fprintf(stderr, "Usage: estimator <file.game> ...\n");
         return -1;
     }
 
@@ -57,14 +57,17 @@ int main(int argn, const char *args[]) {
         printf("height: %d\n", goban.height);
         printf("width: %d\n", goban.width);
         printf("player to move: %d\n", player_to_move);
+        #ifdef DEBUG
         goban.print();
+        #endif
         printf("\n\n");
         start = clock();
 
         Goban est = goban.estimate(WHITE, 10000, 0.35);
         stop = clock();
-
+        #ifdef DEBUG
         est.print();
+        #endif
         printf("\n\n");
         printf("Score: %f\n", est.score() - 0.5);
         double elapsed_secs = double(stop - start) / CLOCKS_PER_SEC;
