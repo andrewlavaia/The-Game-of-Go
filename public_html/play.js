@@ -2,6 +2,11 @@
 
 'use strict';
 
+  // setInterval(() => {
+  //   startTime = Date.now();
+  //   socket.emit('ping');
+  // }, 3000); // check ping every three seconds
+
 (function () {
   WinJS.UI.processAll().then(function () { // eslint-disable-line
 
@@ -524,12 +529,13 @@
       $('#periods-white').html('Periods: ' + data.periods_white);
     });
 
-    socket.on('ping', function () {
-      socket.emit('reportPing');
-    });
+    // check ping every three seconds
+    setInterval(() => {
+      socket.emit('reportPing', {'startTime': Date.now()});
+    }, 3000);
 
     socket.on('sendPing', function (data) {
-      // console.log(data);
+      console.log(data);
       if (data.userId === serverGame.users.white) {
         $('#ping-white').html('Ping: ' + data.ping);
       } else if (data.userId === serverGame.users.black) {

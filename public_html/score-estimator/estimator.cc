@@ -678,15 +678,14 @@ Console instructions:
 /*
 Compiling instructions:
 
-  emcc --bind -O2 main.cc estimator.cc -o function.html -s NO_EXIT_RUNTIME=1
+  emcc --bind -O3 main.cc estimator.cc -o scoreestimator.js -s NO_EXIT_RUNTIME=1 -s WASM=1
   emcc --bind --memory-init-file 0 -O2 main.cc estimator.cc -o scoreestimator.js -s NO_EXIT_RUNTIME=1 -s WASM=1
 
   --bind -> required by embind which allows C++ function calls from javascript
-
+  --memory-init-file 0 -> turns off .mem allocation for buffer
   -O2 -> optimizes the program for faster output
-
-  -o "function.html" -> output file in html form, not needed
-
+  -O3 -> highest level of optimization
   -s NO_EXIT_RUNTIME=1 -> doesn't exit main loop in c++
+  -s WASM=1 -> forces use of webassembly (faster but doesn't work in IE)
 
 */

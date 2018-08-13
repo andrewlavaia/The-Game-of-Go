@@ -56,7 +56,6 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // socket.io dependencies for multiplayer
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-
 const port = process.env.PORT || 51234;
 
 // passport.socketio middleware
@@ -80,6 +79,10 @@ io.use(passportSocketIo.authorize({
   success: onAuthorizeSuccess,
   fail: onAuthorizeFail,
 }));
+
+// socket events
+const chatEvents = require('./events/chat_events.js');
+const utilityEvents = require('./events/utility_events.js');
 
 // connect to database
 require('./config/passport')(passport); // pass passport for configuration
@@ -293,13 +296,8 @@ function processGameResult(gameID, loserID, WGoGame, endCondition, whiteScore, b
 io.on('connection', (socket) => {
   console.log('new socket connection - logged in as ' + socket.request.user.username);
 
-  let startTime = Date.now(); // used to check latency
-  let addedUser = false; // used for game chat
-
-  setInterval(() => {
-    startTime = Date.now();
-    socket.emit('ping');
-  }, 3000); // check ping every three seconds
+  chatEvents(socket);
+  utilityEvents(socket);
 
   function updateSeeks(socket) {
     const seekArray =
@@ -704,97 +702,15 @@ io.on('connection', (socket) => {
     });
 
     // Game chat functionality
-    if (addedUser) {
-      // --numUsers;
-
-      // echo globally that this client has left chat
-      socket.broadcast.emit('user left', {
-        username: socket.username,
-        // numUsers: numUsers,
-        gameid: socket.gameId,
-      });
-    }
-  });
-
-  // Latency Check
-  socket.on('reportPing', () => {
-    const latency = Date.now() - startTime;
-    // send ping to client
-    socket.emit('sendPing', {
-      ping: latency,
-      userId: socket.userId,
-    });
-
-    // send ping to opponent
-    socket.broadcast.emit('sendPing', {
-      ping: latency,
-      userId: socket.userId,
-    });
-  });
-
-  // --------------------------
-  // Game Chat
-  // --------------------------
-
-  // when the client emits 'new message', this listens and executes
-  socket.on('new message', (data) => {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
-      username: socket.username,
-      message: data.message,
-      gameid: data.gameid,
-    });
-  });
-
-  // when the client emits 'add user', this listens and executes
-  socket.on('add user', (data) => {
-    if (addedUser) return;
-
-    // we store the username in the socket session for this client
-    socket.username = data.username;
-    // ++numUsers;
-    addedUser = true;
-    socket.emit('login', {
-      // numUsers: numUsers,
-      gameid: data.gameid,
-    });
-    // echo globally (all clients) that a person has connected
-    socket.broadcast.emit('user joined', {
-      username: socket.username,
-      // numUsers: numUsers,
-      gameid: data.gameid,
-    });
-  });
-
-  socket.on('leave chat', (data) => {
+    // echo globally that this client has left chat
     socket.broadcast.emit('user left', {
       username: socket.username,
-      gameid: data.gameId,
+      // numUsers: numUsers,
+      gameid: socket.gameId,
     });
+
   });
 
-
-  // when the client emits 'typing', we broadcast it to others
-  socket.on('typing', (data) => {
-    // only broadcast when user is the same on server
-    if (socket.username === data.username) {
-      socket.broadcast.emit('typing', {
-        username: socket.username,
-        gameid: data.gameid,
-      });
-    }
-  });
-
-  // when the client emits 'stop typing', we broadcast it to others
-  socket.on('stop typing', (data) => {
-    // only broadcast when user is the same on server
-    if (socket.username === data.username) {
-      socket.broadcast.emit('stop typing', {
-        username: socket.username,
-        gameid: data.gameid,
-      });
-    }
-  });
 });
 
 
