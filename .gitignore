@@ -36,7 +36,5 @@ thegameofgo.sublime-project
 thegameofgo.sublime-workspace
 
 # Private
-database.js
-config/database.js
-config/options.js
+config/dbconfig.js
 config/passport.js

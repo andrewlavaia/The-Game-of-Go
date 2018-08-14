@@ -37,14 +37,13 @@ app.use(cookieParser()); // read cookies (needed for auth)
 
 // sets up a session store with MySQL
 const MySQLStore = require('express-mysql-session')(session);
-
-const options = require('./config/options.js');
-const sessionStore = new MySQLStore(options);
+const dbconfig = require('./config/dbconfig.js');
+const sessionStore = new MySQLStore(dbconfig.options);
 
 // required for passport
 app.use(session({
-  key: 'thegameofgokey.sid',
-  secret: 'andrewlavaiatestsecret',
+  key: dbconfig.session_key,
+  secret: dbconfig.session_secret,
   store: sessionStore,
   resave: false, // don't create session until something stored
   saveUninitialized: false, // don't save session if unmodified
@@ -61,23 +60,19 @@ const port = process.env.PORT || 51234;
 // passport.socketio middleware
 const passportSocketIo = require('passport.socketio');
 
-function onAuthorizeSuccess(data, accept) {
-  console.log('successful connection to socket.io');
-  accept();
-}
-
-function onAuthorizeFail() {
-  console.log('connection to socket.io rejected - user not authorized');
-}
-
 io.use(passportSocketIo.authorize({
-  key: 'thegameofgokey.sid',
-  secret: 'andrewlavaiatestsecret', // can also use: process.env.SECRET_KEY_BASE,
+  key: dbconfig.session_key,
+  secret: dbconfig.session_secret,
   store: sessionStore,
   passport, // shorthand for passport: passport,
   cookieParser, // shorthand for cookieParser: cookieParser,
-  success: onAuthorizeSuccess,
-  fail: onAuthorizeFail,
+  success: function onAuthorizeSuccess(data, accept) {
+    console.log('Connection successful - user authenticated');
+    accept();
+  },
+  fail: function onAuthorizeFail() {
+    console.log('Connection rejected - user not authorized');
+  },
 }));
 
 // socket events
@@ -94,8 +89,7 @@ require('./router.js')(app, passport);
 const utilityRatings = require('./utility/ratings.js');
 
 // Load database
-const DB = require('./database.js');
-
+const DB = require('./config/database.js');
 const db = new DB();
 
 // socket.io tracking variables
@@ -708,9 +702,7 @@ io.on('connection', (socket) => {
       // numUsers: numUsers,
       gameid: socket.gameId,
     });
-
   });
-
 });
 
 

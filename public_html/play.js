@@ -535,7 +535,6 @@
     }, 3000);
 
     socket.on('sendPing', function (data) {
-      console.log(data);
       if (data.userId === serverGame.users.white) {
         $('#ping-white').html('Ping: ' + data.ping);
       } else if (data.userId === serverGame.users.black) {
