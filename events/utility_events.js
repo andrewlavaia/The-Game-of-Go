@@ -1,4 +1,4 @@
-exports = module.exports = function(socket){
+module.exports = function(socket) {
   // Latency Check
   socket.on('reportPing', (data) => {
     let latency = Date.now() - data.startTime;

@@ -75,12 +75,8 @@ io.use(passportSocketIo.authorize({
   },
 }));
 
-// socket events
-const chatEvents = require('./events/chat_events.js');
-const utilityEvents = require('./events/utility_events.js');
-
-// connect to database
-require('./config/passport')(passport); // pass passport for configuration
+// connect passport to database
+require('./config/passport')(passport);
 
 // send app to router
 require('./router.js')(app, passport);
@@ -91,6 +87,11 @@ const utilityRatings = require('./utility/ratings.js');
 // Load database
 const DB = require('./config/database.js');
 const db = new DB();
+
+// socket events
+const lobbyEvents = require('./events/lobby_events.js');
+const chatEvents = require('./events/chat_events.js');
+const utilityEvents = require('./events/utility_events.js');
 
 // socket.io tracking variables
 const lobbyUsers = {};
@@ -264,6 +265,8 @@ function adjustUserRatings(gameID, winnerID, loserID, endCondition) {
 function processGameResult(gameID, loserID, WGoGame, endCondition, whiteScore, blackScore) {
   assert(endCondition === 'Time Loss' || endCondition === 'Resignation' ||
          endCondition === 'Score' || endCondition === 'No Result');
+
+
   db.query(
     'SELECT * FROM games WHERE gameid = ' + mysql.escape(gameID),
     (result) => {
@@ -285,14 +288,6 @@ function processGameResult(gameID, loserID, WGoGame, endCondition, whiteScore, b
     } // eslint-disable-line comma-dangle
   );
 }
-
-// socket.io functions
-io.on('connection', (socket) => {
-  console.log('new socket connection - logged in as ' + socket.request.user.username);
-
-  chatEvents(socket);
-  utilityEvents(socket);
-
   function updateSeeks(socket) {
     const seekArray =
       [
@@ -300,7 +295,9 @@ io.on('connection', (socket) => {
          'BoardSize', 'Komi', 'Handicap'],
       ];
 
-    db.query('SELECT * FROM seekgames', (result) => {
+    db.query('SELECT * FROM seekgames', seekHandler);
+
+    function seekHandler(result) {
       let seekRow = [];
       for (let i = 0; i < result.length; i++) {
         seekRow.push(parseInt((result[i].seconds / 60) * (result[i].periods + 1), 10));
@@ -322,8 +319,17 @@ io.on('connection', (socket) => {
       }
       socket.emit('addSeeks', seekArray);
       socket.broadcast.emit('addSeeks', seekArray);
-    });
+    }
   }
+// socket.io functions
+io.on('connection', (socket) => {
+  console.log('new socket connection - logged in as ' + socket.request.user.username);
+
+  lobbyEvents(socket, db);
+  chatEvents(socket);
+  utilityEvents(socket);
+
+
 
   function doLogin(socket, userId) {
     socket.userId = userId;
@@ -661,24 +667,7 @@ io.on('connection', (socket) => {
     clearInterval(intervalID);
   });
 
-  socket.on('createSeek', (data) => {
-    db.query(
-      'INSERT INTO seekgames (userid, username, userrank, seconds, periods, timetype, israted) VALUES (' +
-      mysql.escape(data.seekuserid) + ', ' + mysql.escape(data.seekusername) + ', ' +
-      mysql.escape(data.seekuserrank) + ', ' + mysql.escape(data.time.seconds) + ', ' +
-      mysql.escape(data.time.periods) + ', ' + mysql.escape(data.time.type) + ', ' +
-      mysql.escape(data.isRated) + ')',
-      (err, result) => {
-        // console.log(result);
-      } // eslint-disable-line comma-dangle
-    );
-    updateSeeks(socket);
-    // doLogin(socket, socket.request.user.username);
-    console.log('Seek Added');
-    // socket.emit('drawChart');
-    // socket.broadcast.emit('drawChart');
-    // console.log(data);
-  });
+
 
   socket.on('disconnect', (msg) => {
     console.log(msg);
