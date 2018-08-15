@@ -8,13 +8,20 @@ module.exports = {
       mysql.escape(data.seekuserrank) + ', ' + mysql.escape(data.time.seconds) + ', ' +
       mysql.escape(data.time.periods) + ', ' + mysql.escape(data.time.type) + ', ' +
       mysql.escape(data.isRated) + ')',
-      addSeekHandler // eslint-disable-line comma-dangle
+      addSeekHandler
     );
   },
   getSeeks: function getSeeks(db, getSeeksHandler) {
     db.query(
       'SELECT * FROM seekgames',
       getSeeksHandler
+    );
+  },
+  getUserGames: function getUserGames(userid, db, getUserGamesHandler) {
+    db.query(
+      'SELECT * FROM games WHERE (username_white = ' + mysql.escape(userid) +
+      ' OR username_black = ' + mysql.escape(userid) + ')',
+      getUserGamesHandler
     );
   },
 };

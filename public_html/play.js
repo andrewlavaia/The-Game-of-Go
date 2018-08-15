@@ -2,11 +2,6 @@
 
 'use strict';
 
-  // setInterval(() => {
-  //   startTime = Date.now();
-  //   socket.emit('ping');
-  // }, 3000); // check ping every three seconds
-
 (function () {
   WinJS.UI.processAll().then(function () { // eslint-disable-line
 
@@ -531,10 +526,10 @@
 
     // check ping every three seconds
     setInterval(() => {
-      socket.emit('reportPing', {'startTime': Date.now()});
+      socket.emit('pingRequest', {'startTime': Date.now()});
     }, 3000);
 
-    socket.on('sendPing', function (data) {
+    socket.on('pingResponse', function (data) {
       if (data.userId === serverGame.users.white) {
         $('#ping-white').html('Ping: ' + data.ping);
       } else if (data.userId === serverGame.users.black) {

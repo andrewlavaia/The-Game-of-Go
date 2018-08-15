@@ -108,49 +108,12 @@ let periods_white;
 let timer_type;
 let intervalID;
 
-// chat variables
-// let numUsers = 0;
-
-/*
-function getUserGames(userid) {
-  db.query(
-    'SELECT * FROM games WHERE (username_white = ' + mysql.escape(userid) +
-    ' OR username_black = ' + mysql.escape(userid) + ')',
-    (result, err) => {
-      if (err) {
-        throw new Error(err);
-      }
-
-      // sendUserGames(result); // sends the logged in users' games to client
-
-      let i = 0;
-      result.forEach(() => {
-        console.log(result[i]);
-        i++;
-      });
-    } // eslint-disable-line comma-dangle
-  );
-}
-*/
-
-function insertGameResult(gameID, whiteUser, blackUser, winningUser, endCondition, WGoGame, whiteScore, blackScore, isRated, dateStarted) {
-  assert(endCondition === 'Time Loss' || endCondition === 'Resignation' ||
-         endCondition === 'Score' || endCondition === 'No Result');
-  const gameString = JSON.stringify(WGoGame);
-  const winner = (endCondition !== 'No Result' ? winningUser : 'No Result');
-
-  // console.log(gameString);
-  db.query(
-    'INSERT INTO gameresults (gameid, username_white, username_black, winner, gameend, game_array, whitescore, blackscore, israted, datestarted) VALUES (' +
-    mysql.escape(gameID) + ', ' + mysql.escape(whiteUser) + ', ' +
-    mysql.escape(blackUser) + ', ' + mysql.escape(winner) + ', ' +
-    mysql.escape(endCondition) + ', ' + mysql.escape(gameString) + ', ' +
-    mysql.escape(whiteScore) + ', ' + mysql.escape(blackScore) + ', ' +
-    mysql.escape(isRated) + ', ' + mysql.escape(dateStarted) + ')',
-    (result) => {
-      // console.log(result);
-    } // eslint-disable-line comma-dangle
-  );
+function insertGameResult(gameResult) {
+  const model = require('./models/game_result_model.js');
+  model.insertGameResult(gameResult, db, insertGameResultHandler);
+  function insertGameResultHandler() {
+    console.log('game successfully inserted into database');
+  }
 }
 
 function deleteGame(gameID) {
@@ -263,9 +226,6 @@ function adjustUserRatings(gameID, winnerID, loserID, endCondition) {
 }
 
 function processGameResult(gameID, loserID, WGoGame, endCondition, whiteScore, blackScore) {
-  assert(endCondition === 'Time Loss' || endCondition === 'Resignation' ||
-         endCondition === 'Score' || endCondition === 'No Result');
-
 
   db.query(
     'SELECT * FROM games WHERE gameid = ' + mysql.escape(gameID),
@@ -283,44 +243,31 @@ function processGameResult(gameID, loserID, WGoGame, endCondition, whiteScore, b
         adjustUserRatings(gameID, winningUser, loserID, endCondition);
       }
 
-      insertGameResult(gameID, whiteUser, blackUser, winningUser, endCondition, WGoGame, whiteScore, blackScore, isRated, dateStarted);
+      const gameString = JSON.stringify(WGoGame);
+      const winner = (endCondition !== 'No Result' ? winningUser : 'No Result');
+
+      let gameResult = {
+        gameID,
+        whiteUser,
+        blackUser,
+        winner,
+        endCondition,
+        gameString,
+        whiteScore,
+        blackScore,
+        isRated,
+        dateStarted,
+      }
+
+      assert(gameResult.endCondition === 'Time Loss' || gameResult.endCondition === 'Resignation' ||
+        gameResult.endCondition === 'Score' || gameResult.endCondition === 'No Result');
+
+      insertGameResult(gameResult);
       deleteGame(gameID);
     } // eslint-disable-line comma-dangle
   );
 }
-  function updateSeeks(socket) {
-    const seekArray =
-      [
-        ['Time', 'Rank', 'TimeType', 'Seconds', 'Periods', 'SeekID', 'Username', 'isRated',
-         'BoardSize', 'Komi', 'Handicap'],
-      ];
 
-    db.query('SELECT * FROM seekgames', seekHandler);
-
-    function seekHandler(result) {
-      let seekRow = [];
-      for (let i = 0; i < result.length; i++) {
-        seekRow.push(parseInt((result[i].seconds / 60) * (result[i].periods + 1), 10));
-        seekRow.push(parseInt(result[i].userrank, 10));
-        seekRow.push(result[i].timetype);
-        seekRow.push(result[i].seconds);
-        seekRow.push(result[i].periods);
-        seekRow.push(result[i].seekgameid);
-        seekRow.push(result[i].username);
-        seekRow.push(result[i].israted);
-        seekRow.push(result[i].boardsize);
-        seekRow.push(result[i].komi);
-        seekRow.push(result[i].handicap);
-        seekArray.push(seekRow);
-        // console.log(seekArray);
-        // console.log(result[i]);
-        // console.log(seekRow + "-" + i);
-        seekRow = [];
-      }
-      socket.emit('addSeeks', seekArray);
-      socket.broadcast.emit('addSeeks', seekArray);
-    }
-  }
 // socket.io functions
 io.on('connection', (socket) => {
   console.log('new socket connection - logged in as ' + socket.request.user.username);
@@ -328,8 +275,6 @@ io.on('connection', (socket) => {
   lobbyEvents(socket, db);
   chatEvents(socket);
   utilityEvents(socket);
-
-
 
   function doLogin(socket, userId) {
     socket.userId = userId;
@@ -354,8 +299,6 @@ io.on('connection', (socket) => {
     lobbyUsers[userId] = socket;
 
     socket.broadcast.emit('joinLobby', socket.userId);
-
-    updateSeeks(socket);
 
     // getUserGames(socket.userId);
   }

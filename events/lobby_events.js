@@ -26,20 +26,22 @@ function formatSeeks(seeks) {
 }
 
 module.exports = function(socket, db) {
-  socket.on('createSeek', (data) => {
-    model.addSeek(data, db, addSeekHandler);
+  socket.on('createSeekRequest', (data) => {
+    model.addSeek(data, db, createSeekHandler);
 
-    function addSeekHandler(result) {
-      model.getSeeks(db, getSeeksHandler);
-    }
-
-    function getSeeksHandler(result) {
-
-      let seekArray = formatSeeks(result);
-      socket.emit('addSeeks', seekArray);
-      socket.broadcast.emit('addSeeks', seekArray);
+    function createSeekHandler(result) {
+      socket.emit('createSeekResponse', result);
+      socket.broadcast.emit('createSeekResponse', result);
     }
   });
 
+  socket.on('getSeeksRequest', () => {
+    model.getSeeks(db, getSeeksHandler);
 
+    function getSeeksHandler(result) {
+      let seekArray = formatSeeks(result);
+      socket.emit('getSeeksResponse', seekArray);
+      socket.broadcast.emit('getSeeksResponse', seekArray);
+    }
+  });
 }

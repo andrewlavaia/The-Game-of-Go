@@ -235,6 +235,7 @@
     // ---------------------------
 
     updateGamesList();
+    socket.emit('getSeeksRequest', {});
 
     // Get the modal
     var modal = document.getElementById('createCustomSeekForm');
@@ -287,7 +288,11 @@
       removeUser(msg.username);
     });
 
-    socket.on('addSeeks', function (msg) {
+    socket.on('createSeekResponse', function (msg) {
+      socket.emit('getSeeksRequest', {});
+    });
+
+    socket.on('getSeeksResponse', function (msg) {
       seekChartDataTable = msg;
       google.charts.setOnLoadCallback(drawChart); // needs to be on callback
       // console.log("Seek added - " + msg);
@@ -308,17 +313,13 @@
       window.location.href = '/games/' + msg.game.id;
     });
 
-    socket.on('ping', function () {
-      socket.emit('pong');
-    });
-
 
     // --------------------------
     // Button Event Handlers
     // --------------------------
 
     $('#5m').on('click', function () {
-      socket.emit('createSeek', {
+      socket.emit('createSeekRequest', {
         seekuserid: userid,
         seekusername: username,
         seekuserrank: userrank,
@@ -332,7 +333,7 @@
     });
 
     $('#15s5').on('click', function () {
-      socket.emit('createSeek', {
+      socket.emit('createSeekRequest', {
         seekuserid: userid,
         seekusername: username,
         seekuserrank: userrank,
@@ -346,7 +347,7 @@
     });
 
     $('#30s5').on('click', function () {
-      socket.emit('createSeek', {
+      socket.emit('createSeekRequest', {
         seekuserid: userid,
         seekusername: username,
         seekuserrank: userrank,
@@ -386,7 +387,7 @@
         customGamePeriods != null) {
         */
 
-      socket.emit('createSeek', {
+      socket.emit('createSeekRequest', {
         seekuserid: userid,
         seekusername: username,
         seekuserrank: userrank,
