@@ -26,6 +26,43 @@ function formatGameResult(result, data, type) {
   return gameResult;
 }
 
+function calcRatingChange(winner, loser, gameResult) {
+  // elo formula
+  const k = 32; // k-factor
+
+  const r1 = Math.pow(10, (winner.elo / 400)); // eslint-disable-line no-restricted-properties
+  const r2 = Math.pow(10, (loser.elo / 400)); // eslint-disable-line no-restricted-properties
+
+  const e1 = r1 / (r1 + r2);
+  const e2 = r2 / (r1 + r2);
+
+  // set score multiplier (1 = win, 0 = loss, 0.5 = draw)
+  let s1;
+  let s2;
+  if (gameResult.endCondition !== 'No Result') {
+    s1 = 1; // score multiplier (1 = win)
+    s2 = 0; // score multiplier (0 = loss)
+  } else {
+    s1 = 0.5;
+    s2 = 0.5;
+  }
+
+  let newEloWinner = winner.elo + (k * (s1 - e1));
+  let newEloLoser = loser.elo + (k * (s2 - e2));
+
+  if (newEloWinner < 0)
+    newEloWinner = 0; // in case of a draw
+  if (newEloLoser < 0)
+    newEloLoser = 0;
+
+  let ratingChanges = {
+    winnerRating: newEloWinner,
+    loserRating: newEloLoser,
+  }
+
+  return ratingChanges;
+}
+
 function processGameResult(socket, db, data, type) {
   model.getGame(data.gameId, db, getGameHandler);
 
@@ -53,33 +90,39 @@ function adjustUserRatings(socket, db, gameResult) {
   model.getUsers(gameResult, db, getUsersHandler);
 
   function getUsersHandler(result) {
-    let winner = (result[0].username === gameResult.winnerID ? result[0] : result[1]);
-    let loser = (result[0].username === gameResult.loserID ? result[0] : result[1]);
-    let winnerElo = calcRatingChange(winner, loser, 'winner');
-    let loserElo = calcRatingChange(winner, loser, 'loser');
+    let winner = (result[0].username === gameResult.winner ? result[0] : result[1]);
+    let loser = (result[0].username === gameResult.loser ? result[0] : result[1]);
+    let ratingChanges = calcRatingChange(winner, loser, gameResult);
 
     let winnerRankUpdate = {
-      userID : winner.username
-      elo : winnerElo,
-      rank : utilityRatings.convertEloToRank(winnerElo);,
+      userID : winner.username,
+      newElo : ratingChanges.winnerRating,
+      oldElo : winner.elo,
+      rank : utilityRatings.convertEloToRank(ratingChanges.winnerRating),
+      gameID: gameResult.gameID,
     }
 
     let loserRankUpdate = {
-      userID : loser.username
-      elo : loserElo,
-      rank : utilityRatings.convertEloToRank(loserElo);,
+      userID : loser.username,
+      newElo : ratingChanges.loserRating,
+      oldElo : loser.elo,
+      rank : utilityRatings.convertEloToRank(ratingChanges.loserRating),
+      gameID: gameResult.gameID,
     }
 
     model.updateRating(winnerRankUpdate, db, updateRatingHandler);
     model.updateRating(loserRankUpdate, db, updateRatingHandler);
+    model.updateRatingHistory(winnerRankUpdate, db, updateRatingHistoryHandler);
+    model.updateRatingHistory(loserRankUpdate, db, updateRatingHistoryHandler);
   }
 
   function updateRatingHandler(result) {
     console.log("Rating updated successfully");
-    // update rating history
+  }
+  function updateRatingHandlerHistory(result) {
+    console.log("Rating history updated successfully");
   }
 }
-
 
 module.exports = function(socket, db) {
   socket.on('resignRequest', (data) => {

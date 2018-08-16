@@ -24,23 +24,31 @@ module.exports = {
       deleteGameHandler
     );
   },
-  getUsers: function getUsers(gameID, db, getUsersHandler) {
+  getUsers: function getUsers(gameResult, db, getUsersHandler) {
     db.query(
       'SELECT * FROM users WHERE username in (' +
-          mysql.escape(gameResult.winnerID) + ',' +
-          mysql.escape(gameResult.loserID) + ')',
+          mysql.escape(gameResult.winner) + ',' +
+          mysql.escape(gameResult.loser) + ')',
       getUsersHandler
     );
   },
   updateRating: function updateRating(rankUpdate, db, updateRatingHandler) {
     db.query(
       'UPDATE users SET ' +
-          'elo = ' + mysql.escape(rankUpdate.elo) + ', ' +
+          'elo = ' + mysql.escape(rankUpdate.newElo) + ', ' +
           'userrank = ' + mysql.escape(rankUpdate.rank) + ' ' +
           'WHERE username = ' + mysql.escape(rankUpdate.userID),
       updateRatingHandler
     );
   },
+  updateRatingHistory: function updateRatingHistory(rankUpdate, db, updateRatingHistoryHandler) {
+    db.query(
+      'INSERT INTO ratinghistory (gameid, username, startingelo, endingelo) VALUES (' +
+      mysql.escape(rankUpdate.gameID) + ', ' + mysql.escape(rankUpdate.userID) + ', ' +
+      mysql.escape(rankUpdate.oldElo) + ', ' + mysql.escape(rankUpdate.newElo) + ')',
+      updateRatingHistoryHandler
+    );
+  }
 };
 
 
