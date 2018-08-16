@@ -403,16 +403,15 @@
       displayBoardElements();
     });
 
-    socket.on('resign', function (msg) {
+    socket.on('gameEndResponse', function (msg) {
       if (msg.gameId === serverGame.id) {
-        log(msg.userId + ' has resigned.');
+
+        if (msg.type === 'Resignation')
+          log(msg.userId + ' has resigned.');
 
         gameOver = true;
         drawBoard(game, finalScoreBoard); // add original stones that were placed during game
         displayBoardElements();
-
-        // send to game lobby
-        // window.location.href = '../gamelobby';
       }
     });
 
@@ -555,18 +554,12 @@
       // make sure user is one of the players in the game (not someone watching)
       if (username === serverGame.users.white ||
          username === serverGame.users.black) {
-        socket.emit('resign', {
+
+        socket.emit('resignRequest', {
           userId: username,
           gameId: serverGame.id,
           WGoGame: game,
         });
-
-        gameOver = true;
-        drawBoard(game, finalScoreBoard); // add original stones that were placed during game
-        displayBoardElements();
-
-        // send to game lobby
-        // window.location.href = '../gamelobby';
       }
     });
 

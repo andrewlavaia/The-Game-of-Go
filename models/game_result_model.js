@@ -12,10 +12,33 @@ module.exports = {
       insertGameResultHandler
     );
   },
-  getGame: function getGame(gameId, db, getGameHandler) {
+  getGame: function getGame(gameID, db, getGameHandler) {
     db.query(
       'SELECT * FROM games WHERE gameid = ' + mysql.escape(gameID),
       getGameHandler
+    );
+  },
+  deleteGame: function deleteGame(gameID, db, deleteGameHandler) {
+    db.query(
+      'DELETE FROM games WHERE gameid = ' + mysql.escape(gameID),
+      deleteGameHandler
+    );
+  },
+  getUsers: function getUsers(gameID, db, getUsersHandler) {
+    db.query(
+      'SELECT * FROM users WHERE username in (' +
+          mysql.escape(gameResult.winnerID) + ',' +
+          mysql.escape(gameResult.loserID) + ')',
+      getUsersHandler
+    );
+  },
+  updateRating: function updateRating(rankUpdate, db, updateRatingHandler) {
+    db.query(
+      'UPDATE users SET ' +
+          'elo = ' + mysql.escape(rankUpdate.elo) + ', ' +
+          'userrank = ' + mysql.escape(rankUpdate.rank) + ' ' +
+          'WHERE username = ' + mysql.escape(rankUpdate.userID),
+      updateRatingHandler
     );
   },
 };

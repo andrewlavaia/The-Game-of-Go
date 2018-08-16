@@ -90,6 +90,7 @@ const db = new DB();
 
 // socket events
 const lobbyEvents = require('./events/lobby_events.js');
+const gameResultEvents = require('./events/game_result_events.js');
 const chatEvents = require('./events/chat_events.js');
 const utilityEvents = require('./events/utility_events.js');
 
@@ -273,6 +274,7 @@ io.on('connection', (socket) => {
   console.log('new socket connection - logged in as ' + socket.request.user.username);
 
   lobbyEvents(socket, db);
+  gameResultEvents(socket, db);
   chatEvents(socket);
   utilityEvents(socket);
 
