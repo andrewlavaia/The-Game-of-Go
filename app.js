@@ -94,6 +94,9 @@ const gameResultEvents = require('./events/game_result_events.js');
 const chatEvents = require('./events/chat_events.js');
 const utilityEvents = require('./events/utility_events.js');
 
+// controllers
+const gameResultController = require('./controllers/game_result_controller.js');
+
 // socket.io tracking variables
 const lobbyUsers = {};
 const users = {};
@@ -108,166 +111,6 @@ let periods_black;
 let periods_white;
 let timer_type;
 let intervalID;
-
-function insertGameResult(gameResult) {
-  const model = require('./models/game_result_model.js');
-  model.insertGameResult(gameResult, db, insertGameResultHandler);
-  function insertGameResultHandler() {
-    console.log('game successfully inserted into database');
-  }
-}
-
-function deleteGame(gameID) {
-  db.query(
-    'DELETE FROM games WHERE gameid = ' + mysql.escape(gameID),
-    (err, result) => {
-      // console.log(result);
-    } // eslint-disable-line comma-dangle
-  );
-}
-
-function adjustUserRatings(gameID, winnerID, loserID, endCondition) {
-  assert(endCondition === 'Time Loss' || endCondition === 'Resignation' ||
-         endCondition === 'Score' || endCondition === 'No Result');
-
-  db.query(
-    'SELECT * FROM users WHERE username in (' +
-      mysql.escape(winnerID) + ',' + mysql.escape(loserID) + ')',
-    (result) => {
-      assert(result.length === 2);
-      let winner;
-      let loser;
-      if (result[0].username === winnerID) {
-        winner = result[0];
-        loser = result[1];
-      } else {
-        loser = result[0];
-        winner = result[1];
-      }
-
-      // elo formula
-      const k = 32; // k-factor
-
-      assert(Math.pow(2, 4) === 2 * 2 * 2 * 2); // eslint-disable-line no-restricted-properties
-      const r1 = Math.pow(10, (winner.elo / 400)); // eslint-disable-line no-restricted-properties
-      const r2 = Math.pow(10, (loser.elo / 400)); // eslint-disable-line no-restricted-properties
-
-      const e1 = r1 / (r1 + r2);
-      const e2 = r2 / (r1 + r2);
-
-      // set score multiplier (1 = win, 0 = loss, 0.5 = draw)
-      let s1;
-      let s2;
-      if (endCondition !== 'No Result') {
-        s1 = 1; // score multiplier (1 = win)
-        s2 = 0; // score multiplier (0 = loss)
-      } else {
-        s1 = 0.5;
-        s2 = 0.5;
-      }
-
-      let newEloWinner = winner.elo + (k * (s1 - e1));
-      if (newEloWinner < 0) {
-        newEloWinner = 0; // in case of a draw
-      }
-      let newEloLoser = loser.elo + (k * (s2 - e2));
-      if (newEloLoser < 0) {
-        newEloLoser = 0;
-      }
-
-      const newRankW = utilityRatings.convertEloToRank(newEloWinner);
-      // const newRankStringW = utilityRatings.convertRankToString(newRankW);
-
-      const newRankL = utilityRatings.convertEloToRank(newEloLoser);
-      // const newRankStringL = utilityRatings.convertRankToString(newRankL);
-
-      console.log('winner: ' + winner.elo + ' -> ' + newEloWinner);
-      console.log('loser: ' + loser.elo + ' -> ' + newEloLoser);
-
-      // Update users table with new ratings
-      // Run two separate MySQL queries for performance reasons
-      db.query(
-        'UPDATE users SET ' +
-        'elo = ' + mysql.escape(newEloWinner) + ', ' +
-        'userrank = ' + mysql.escape(newRankW) + ' ' +
-        'WHERE username = ' + mysql.escape(winnerID),
-        (result) => {
-          // console.log(result);
-        } // eslint-disable-line comma-dangle
-      );
-      db.query(
-        'UPDATE users SET ' +
-        'elo = ' + mysql.escape(newEloLoser) + ', ' +
-        'userrank = ' + mysql.escape(newRankL) + ' ' +
-        'WHERE username = ' + mysql.escape(loserID),
-        (result) => {
-          // console.log(result);
-        } // eslint-disable-line comma-dangle
-      );
-
-      // Add old rating and new rating to ratinghistory table
-      db.query(
-        'INSERT INTO ratinghistory (gameid, username, startingelo, endingelo) VALUES (' +
-        mysql.escape(gameID) + ', ' + mysql.escape(winnerID) + ', ' +
-        mysql.escape(winner.elo) + ', ' + mysql.escape(newEloWinner) + ')',
-        (err, result) => {
-          // console.log(result);
-        } // eslint-disable-line comma-dangle
-      );
-      db.query(
-        'INSERT INTO ratinghistory (gameid, username, startingelo, endingelo) VALUES (' +
-        mysql.escape(gameID) + ', ' + mysql.escape(loserID) + ', ' +
-        mysql.escape(loser.elo) + ', ' + mysql.escape(newEloLoser) + ')',
-        (err, result) => {
-          // console.log(result);
-        } // eslint-disable-line comma-dangle
-      );
-    } // eslint-disable-line comma-dangle
-  );
-}
-
-function processGameResult(gameID, loserID, WGoGame, endCondition, whiteScore, blackScore) {
-
-  db.query(
-    'SELECT * FROM games WHERE gameid = ' + mysql.escape(gameID),
-    (result) => {
-      assert(gameID === result[0].gameid);
-      const whiteUser = result[0].username_white;
-      const blackUser = result[0].username_black;
-      const isRated = result[0].israted;
-      const dateStarted = result[0].datestarted;
-
-      // set winningUser variable
-      const winningUser = (loserID === whiteUser ? blackUser : whiteUser);
-
-      if (isRated === 1) {
-        adjustUserRatings(gameID, winningUser, loserID, endCondition);
-      }
-
-      const gameString = JSON.stringify(WGoGame);
-      const winner = (endCondition !== 'No Result' ? winningUser : 'No Result');
-
-      let gameResult = {
-        gameID,
-        whiteUser,
-        blackUser,
-        winner,
-        endCondition,
-        gameString,
-        whiteScore,
-        blackScore,
-        isRated,
-        dateStarted,
-      }
-
-      assert(gameResult.endCondition === 'Time Loss' || gameResult.endCondition === 'Resignation' ||
-        gameResult.endCondition === 'Score' || gameResult.endCondition === 'No Result');
-
-      insertGameResult(gameResult);
-      deleteGame(gameID);
-    } // eslint-disable-line comma-dangle
-  );
-}
 
 // socket.io functions
 io.on('connection', (socket) => {
@@ -474,7 +317,7 @@ io.on('connection', (socket) => {
           delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
           delete activeGames[msg.gameId];
         }
-        processGameResult(msg.gameId, msg.blackUser, msg.game, 'Time Loss', 0, 0);
+        gameResultController.processGameResult(socket, db, msg, 'Time Loss', msg.blackUser);
         socket.emit('timeloss', {
           gameId: msg.gameId,
           loser: msg.blackUser,
@@ -497,7 +340,7 @@ io.on('connection', (socket) => {
           delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
           delete activeGames[msg.gameId];
         }
-        processGameResult(msg.gameId, msg.whiteUser, msg.game, 'Time Loss', 0, 0);
+        gameResultController.processGameResult(socket, db, msg, 'Time Loss', msg.whiteUser);
         socket.emit('timeloss', {
           gameId: msg.gameId,
           loser: msg.whiteUser,
@@ -543,7 +386,7 @@ io.on('connection', (socket) => {
       console.log('Resigning game : ' + msg.gameId);
 
       // add result to Game Results table and delete active game
-      processGameResult(msg.gameId, msg.userId, msg.WGoGame, 'Resignation', 0, 0);
+      //processGameResult(msg.gameId, msg.userId, msg.WGoGame, 'Resignation', 0, 0);
       clearInterval(intervalID);
 
       socket.emit('resign', msg);
@@ -577,7 +420,8 @@ io.on('connection', (socket) => {
       const loserID = (msg.blackScore > msg.whiteScore ? msg.whiteUser : msg.blackUser);
 
       // add result to Game Results table and delete active game
-      processGameResult(msg.gameId, loserID, msg.WGoGame, 'Score', msg.whiteScore, msg.blackScore);
+      gameResultController.processGameResult(socket, db, msg, 'Time Loss', loserID);
+      //processGameResult(msg.gameId, loserID, msg.WGoGame, 'Score', msg.whiteScore, msg.blackScore);
     }
   });
 

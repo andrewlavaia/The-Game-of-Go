@@ -470,7 +470,7 @@
           socket.emit('resultbyscore', {
             userId: username,
             gameId: serverGame.id,
-            WGoGame: game,
+            game: game,
             whiteUser: serverGame.users.white,
             blackUser: serverGame.users.black,
             whiteScore: 110,
@@ -558,7 +558,7 @@
         socket.emit('resignRequest', {
           userId: username,
           gameId: serverGame.id,
-          WGoGame: game,
+          game: game,
         });
       }
     });
