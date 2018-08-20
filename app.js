@@ -96,6 +96,7 @@ const utilityEvents = require('./events/utility_events.js');
 
 // controllers
 const gameResultController = require('./controllers/game_result_controller.js');
+const lobbyController = require('./controllers/lobby_controller.js');
 
 // socket.io tracking variables
 const lobbyUsers = {};
@@ -176,6 +177,7 @@ io.on('connection', (socket) => {
         periods: data.time.periods,
       }, // types include sudden_death and Japanese
       boardSize: 19, // 9, 13, or 19 are most common
+      isRated: data.isRated,
     };
 
     seconds = game.time.seconds;
@@ -207,29 +209,10 @@ io.on('connection', (socket) => {
     delete lobbyUsers[game.users.white];
     delete lobbyUsers[game.users.black];
 
-    // add game to database
-    // !!! if game.id is already taken, there will be a mysql error so it will need to change
-    db.query(
-      'INSERT INTO games (gameid, username_white, username_black, israted) VALUES (' +
-      mysql.escape(game.id) + ', ' + mysql.escape(game.users.white) + ', ' +
-      mysql.escape(game.users.black) + ', ' + mysql.escape(data.isRated) + ')',
-      (err, result) => {
-        // console.log(result);
-      } // eslint-disable-line comma-dangle
-    );
+    lobbyController.createNewGame(socket, db, game);
 
     if (data.seekId) {
-      // delete seek from database
-      db.query(
-        'DELETE FROM seekgames WHERE seekgameid = ' + mysql.escape(data.seekId),
-        (err, result) => {
-          // console.log(result);
-        } // eslint-disable-line comma-dangle
-      );
-      /*
-      socket.emit('drawChart');
-      socket.broadcast.emit('drawChart');
-      */
+      lobbyController.deleteSeekByID(socket, db, data.seekId);
     }
   });
 
@@ -420,7 +403,7 @@ io.on('connection', (socket) => {
       const loserID = (msg.blackScore > msg.whiteScore ? msg.whiteUser : msg.blackUser);
 
       // add result to Game Results table and delete active game
-      gameResultController.processGameResult(socket, db, msg, 'Time Loss', loserID);
+      gameResultController.processGameResult(socket, db, msg, 'Score', loserID);
       //processGameResult(msg.gameId, loserID, msg.WGoGame, 'Score', msg.whiteScore, msg.blackScore);
     }
   });

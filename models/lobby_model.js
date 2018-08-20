@@ -17,11 +17,32 @@ module.exports = {
       getSeeksHandler
     );
   },
-  getUserGames: function getUserGames(userid, db, getUserGamesHandler) {
+  deleteSeekByID: function deleteSeekByID(seekID, db, deleteSeekByIDHandler) {
     db.query(
-      'SELECT * FROM games WHERE (username_white = ' + mysql.escape(userid) +
-      ' OR username_black = ' + mysql.escape(userid) + ')',
+      'DELETE FROM seekgames WHERE seekgameid = ' + mysql.escape(seekID),
+      deleteSeekByIDHandler
+    );
+  },
+  deleteSeeksByUserID(userID, db, deleteSeeksByUserIDHandler) {
+    db.query(
+      'DELETE FROM seekgames WHERE userid = ' + mysql.escape(userID),
+      deleteSeekByIDHandler
+    );
+  },
+  getUserGames: function getUserGames(userID, db, getUserGamesHandler) {
+    db.query(
+      'SELECT * FROM games WHERE (username_white = ' + mysql.escape(userID) +
+      ' OR username_black = ' + mysql.escape(userID) + ')',
       getUserGamesHandler
+    );
+  },
+  insertGame: function insertGame(game, db, insertGameHandler) {
+    db.query(
+      'INSERT INTO games (gameid, username_white, username_black, israted) VALUES (' +
+      mysql.escape(game.id) + ',' + // !!! fix this so it gets auto generated from db
+      mysql.escape(game.users.white) + ', ' + mysql.escape(game.users.black) +
+      ', ' + mysql.escape(game.isRated) + ')',
+      insertGameHandler
     );
   },
 };

@@ -288,14 +288,9 @@
       removeUser(msg.username);
     });
 
-    socket.on('createSeekResponse', function (msg) {
-      socket.emit('getSeeksRequest', {});
-    });
-
     socket.on('getSeeksResponse', function (msg) {
       seekChartDataTable = msg;
       google.charts.setOnLoadCallback(drawChart); // needs to be on callback
-      // console.log("Seek added - " + msg);
     });
 
     socket.on('resign', function (msg) {
