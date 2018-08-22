@@ -1,5 +1,7 @@
 const controller = require('../controllers/lobby_controller.js');
 
+
+
 module.exports = function(socket, db) {
   socket.on('createSeekRequest', (data) => {
     controller.createSeek(socket, db, data);
@@ -12,4 +14,5 @@ module.exports = function(socket, db) {
   socket.on('gameReady', (gameID) => {
     controller.loadGame(socket, db, gameID);
   });
+
 }

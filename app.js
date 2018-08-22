@@ -93,15 +93,11 @@ const lobbyEvents = require('./events/lobby_events.js');
 const gameResultEvents = require('./events/game_result_events.js');
 const chatEvents = require('./events/chat_events.js');
 const utilityEvents = require('./events/utility_events.js');
+const gameEvents = require('./events/game_events.js');
 
 // controllers
 const gameResultController = require('./controllers/game_result_controller.js');
 const lobbyController = require('./controllers/lobby_controller.js');
-
-// socket.io tracking variables
-const lobbyUsers = {};
-const users = {};
-const activeGames = {};
 
 // go board timer variables
 let seconds;
@@ -121,45 +117,9 @@ io.on('connection', (socket) => {
   gameResultEvents(socket, db);
   chatEvents(socket);
   utilityEvents(socket);
-
-  function doLogin(socket, userId) {
-    socket.userId = userId;
-
-    if (!users[userId]) {
-      console.log('creating new user');
-      users[userId] = {
-        userId: socket.userId,
-        games: {},
-      };
-    } else {
-      console.log('user found!');
-      Object.keys(users[userId].games).forEach((gameId) => {
-        console.log('available game: ' + gameId);
-      });
-    }
-
-    socket.emit('updateLobby', {
-      users: Object.keys(lobbyUsers),
-      games: Object.keys(users[userId].games),
-    });
-    lobbyUsers[userId] = socket;
-
-    socket.broadcast.emit('joinLobby', socket.userId);
-
-    // getUserGames(socket.userId);
-  }
-
-  doLogin(socket, socket.request.user.username);
-
-  socket.on('login', (userId) => {
-    doLogin(socket, userId);
-  });
+  gameEvents(socket, db);
 
   socket.on('invite', (data) => {
-    console.log('got an invite from: ' + socket.userId + ' --> ' + data.opponentId);
-
-    socket.broadcast.emit('leaveLobby', socket.userId);
-    socket.broadcast.emit('leaveLobby', data.opponentId);
 
     const game = lobbyController.createNewGame(socket, db, data);
 
@@ -171,77 +131,9 @@ io.on('connection', (socket) => {
     periods_white = game.time.periods;
     timer_type = game.time.type;
 
-    // socket.gameId = game.id;
-    // activeGames[game.id] = game;
-
-    // users[game.users.white].games[game.id] = game.id;
-    // users[game.users.black].games[game.id] = game.id;
-
-    // console.log('starting game: ' + game.id);
-    // lobbyUsers[game.users.white].emit('joingame', {
-    //   game, // shorthand for game: game,
-    //   color: 'white',
-    // });
-    // lobbyUsers[game.users.black].emit('joingame', {
-    //   game, // shorthand for game: game,
-    //   color: 'black',
-    // });
-
-    // delete all other seeks from these users when they join the game
-
-    delete lobbyUsers[game.users.white];
-    delete lobbyUsers[game.users.black];
-
     if (data.seekId) {
       lobbyController.deleteSeekByID(socket, db, data.seekId);
     }
-  });
-
-  // socket.on('gameReady', (gameId) => {
-  //   // if (activeGames[gameId]) {
-  //     socket.gameId = gameId;
-  //     const game = activeGames[gameId];
-
-  //     if (lobbyUsers[socket.request.user.username]) {
-  //       socket.emit('launchgame', {
-  //         game, // shorthand for game: game,
-  //       });
-  //       delete lobbyUsers[socket.request.user.username];
-  //       socket.emit('launchChat', {
-  //         game,
-  //       });
-  //     }
-  //   // } else {
-  //   //   socket.emit('gameNotFound');
-  //   // }
-  // });
-
-
-  socket.on('resumegame', (gameId) => {
-    console.log('ready to resume game: ' + gameId);
-
-    socket.gameId = gameId;
-    const game = activeGames[gameId];
-
-    users[game.users.white].games[game.id] = game.id;
-    users[game.users.black].games[game.id] = game.id;
-
-    console.log('resuming game: ' + game.id);
-    if (lobbyUsers[game.users.white]) {
-      lobbyUsers[game.users.white].emit('joingame', {
-        game, // shorthand for game: game,
-        color: 'white',
-      });
-    }
-
-    if (lobbyUsers[game.users.black]) {
-      lobbyUsers[game.users.black].emit('joingame', {
-        game, // shorthand for game: game,
-        color: 'black',
-      });
-    }
-
-    socket.broadcast.emit('leaveLobby', socket.userId);
   });
 
   socket.on('move', (msg) => {
@@ -250,7 +142,6 @@ io.on('connection', (socket) => {
     } else {
       socket.broadcast.emit('pass', msg);
     }
-    //activeGames[msg.gameId].game = msg.game;
 
     // potential security concern: should I look up users through MySQL
     // rather than trusting msg.blackUser and msg.white User
@@ -276,11 +167,6 @@ io.on('connection', (socket) => {
       } else if (msg.game.turn === 1 && timer_black === 0 && periods_black === 0) {
         // console.log('Black loses on time');
 
-        if (socket.username === msg.blackUser || socket.username === msg.whiteUser) {
-          delete users[activeGames[msg.gameId].users.white].games[msg.gameId];
-          delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
-          delete activeGames[msg.gameId];
-        }
         gameResultController.processGameResult(socket, db, msg, 'Time Loss', msg.blackUser);
         socket.emit('timeloss', {
           gameId: msg.gameId,
@@ -298,12 +184,7 @@ io.on('connection', (socket) => {
         periods_white--;
         timer_white = seconds;
       } else if (msg.game.turn === -1 && timer_white === 0 && periods_white === 0) {
-        // console.log('White loses on time');
-        if (socket.username === msg.blackUser || socket.username === msg.whiteUser) {
-          delete users[activeGames[msg.gameId].users.white].games[msg.gameId];
-          delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
-          delete activeGames[msg.gameId];
-        }
+
         gameResultController.processGameResult(socket, db, msg, 'Time Loss', msg.whiteUser);
         socket.emit('timeloss', {
           gameId: msg.gameId,
@@ -343,9 +224,6 @@ io.on('connection', (socket) => {
   socket.on('resign', (msg) => {
     // confirm that the user that emitted the resign request is current user in socket
     if (socket.username === msg.userId) {
-      delete users[activeGames[msg.gameId].users.white].games[msg.gameId];
-      delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
-      delete activeGames[msg.gameId];
 
       console.log('Resigning game : ' + msg.gameId);
 
@@ -367,16 +245,8 @@ io.on('connection', (socket) => {
     // clear timer interval for both players
     clearInterval(intervalID);
 
-    // if game no longer exists, do nothing
-    if (!activeGames[msg.gameId]) {
-      return;
-    }
-
     // if game still exists, delete it and submit result to database
     if (socket.username === msg.userId && activeGames[msg.gameId]) {
-      delete users[activeGames[msg.gameId].users.white].games[msg.gameId];
-      delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
-      delete activeGames[msg.gameId];
 
       console.log('Game decided by score : ' + msg.gameId);
 
@@ -385,7 +255,7 @@ io.on('connection', (socket) => {
 
       // add result to Game Results table and delete active game
       gameResultController.processGameResult(socket, db, msg, 'Score', loserID);
-      //processGameResult(msg.gameId, loserID, msg.WGoGame, 'Score', msg.whiteScore, msg.blackScore);
+
     }
   });
 
@@ -424,18 +294,6 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', (msg) => {
     console.log(msg);
-
-    if (socket && socket.userId && socket.gameId) {
-      console.log(socket.userId + ' disconnected');
-      console.log(socket.gameId + ' disconnected');
-    }
-
-    delete lobbyUsers[socket.userId];
-
-    socket.broadcast.emit('logout', {
-      userId: socket.userId,
-      gameId: socket.gameId,
-    });
 
     // Game chat functionality
     // echo globally that this client has left chat

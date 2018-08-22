@@ -31,7 +31,7 @@ function formatGame(socket, data) {
     board: null,
     game: null,
     users: {
-      white: socket.userId,
+      white: socket.request.user.username,
       whiteElo: socket.request.user.userrank,
       whiteRank: utilityRatings.convertRankToString(socket.request.user.userrank),
       black: data.opponentId,
@@ -118,7 +118,7 @@ let self = module.exports = {
       });
     }
 
-    return game;
+    return game; // remove this once lobby is sorted out
   },
   loadGame: function loadGame(socket, db, gameID) {
     model.getGame(gameID, db, getGameHandler);
@@ -139,4 +139,5 @@ let self = module.exports = {
       });
     }
   },
+
 }

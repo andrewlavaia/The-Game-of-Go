@@ -583,6 +583,11 @@
           pass: true,
         });
 
+        socket.emit('moveRequest', {
+          gameID: serverGame.id,
+          game: game,
+        });
+
         pass(game);
 
         // send to game lobby
@@ -644,6 +649,11 @@
             whiteUser: serverGame.users.white,
             blackUser: serverGame.users.black,
             pass: false,
+          });
+
+          socket.emit('moveRequest', {
+            gameID: serverGame.id,
+            game: game,
           });
         }
       } else if (gameOver === true) {
