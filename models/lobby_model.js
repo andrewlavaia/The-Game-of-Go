@@ -38,11 +38,16 @@ module.exports = {
   },
   insertGame: function insertGame(game, db, insertGameHandler) {
     db.query(
-      'INSERT INTO games (gameid, username_white, username_black, israted) VALUES (' +
-      mysql.escape(game.id) + ',' + // !!! fix this so it gets auto generated from db
+      'INSERT INTO games (username_white, username_black, israted) VALUES (' +
       mysql.escape(game.users.white) + ', ' + mysql.escape(game.users.black) +
       ', ' + mysql.escape(game.isRated) + ')',
       insertGameHandler
+    );
+  },
+  getGame: function getGame(gameID, db, getGameHandler) {
+    db.query(
+      'SELECT * FROM games WHERE gameid = ' + mysql.escape(gameID),
+      getGameHandler
     );
   },
 };

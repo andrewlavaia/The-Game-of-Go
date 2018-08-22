@@ -302,10 +302,10 @@
     });
 
     socket.on('joingame', function (msg) {
-      console.log('joining game id: ' + msg.game.id);
+      console.log('joining game id: ' + msg.gameID);
 
       // send client to new url
-      window.location.href = '/games/' + msg.game.id;
+      window.location.href = '/games/' + msg.gameID;
     });
 
 

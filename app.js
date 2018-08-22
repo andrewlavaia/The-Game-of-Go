@@ -161,24 +161,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('leaveLobby', socket.userId);
     socket.broadcast.emit('leaveLobby', data.opponentId);
 
-    const game = {
-      id: Math.floor((Math.random() * 100000) + 1),
-      board: null,
-      game: null,
-      users: {
-        white: socket.userId,
-        whiteRank: utilityRatings.convertRankToString(socket.request.user.userrank),
-        black: data.opponentId,
-        blackRank: utilityRatings.convertRankToString(data.opponentRank),
-      },
-      time: {
-        type: data.time.type,
-        seconds: data.time.seconds,
-        periods: data.time.periods,
-      }, // types include sudden_death and Japanese
-      boardSize: 19, // 9, 13, or 19 are most common
-      isRated: data.isRated,
-    };
+    const game = lobbyController.createNewGame(socket, db, data);
 
     seconds = game.time.seconds;
     periods = game.time.periods;
@@ -188,52 +171,50 @@ io.on('connection', (socket) => {
     periods_white = game.time.periods;
     timer_type = game.time.type;
 
-    socket.gameId = game.id;
-    activeGames[game.id] = game;
+    // socket.gameId = game.id;
+    // activeGames[game.id] = game;
 
-    users[game.users.white].games[game.id] = game.id;
-    users[game.users.black].games[game.id] = game.id;
+    // users[game.users.white].games[game.id] = game.id;
+    // users[game.users.black].games[game.id] = game.id;
 
-    console.log('starting game: ' + game.id);
-    lobbyUsers[game.users.white].emit('joingame', {
-      game, // shorthand for game: game,
-      color: 'white',
-    });
-    lobbyUsers[game.users.black].emit('joingame', {
-      game, // shorthand for game: game,
-      color: 'black',
-    });
+    // console.log('starting game: ' + game.id);
+    // lobbyUsers[game.users.white].emit('joingame', {
+    //   game, // shorthand for game: game,
+    //   color: 'white',
+    // });
+    // lobbyUsers[game.users.black].emit('joingame', {
+    //   game, // shorthand for game: game,
+    //   color: 'black',
+    // });
 
     // delete all other seeks from these users when they join the game
 
     delete lobbyUsers[game.users.white];
     delete lobbyUsers[game.users.black];
 
-    lobbyController.createNewGame(socket, db, game);
-
     if (data.seekId) {
       lobbyController.deleteSeekByID(socket, db, data.seekId);
     }
   });
 
-  socket.on('gameReady', (gameId) => {
-    if (activeGames[gameId]) {
-      socket.gameId = gameId;
-      const game = activeGames[gameId];
+  // socket.on('gameReady', (gameId) => {
+  //   // if (activeGames[gameId]) {
+  //     socket.gameId = gameId;
+  //     const game = activeGames[gameId];
 
-      if (lobbyUsers[socket.request.user.username]) {
-        socket.emit('launchgame', {
-          game, // shorthand for game: game,
-        });
-        delete lobbyUsers[socket.request.user.username];
-        socket.emit('launchChat', {
-          game,
-        });
-      }
-    } else {
-      socket.emit('gameNotFound');
-    }
-  });
+  //     if (lobbyUsers[socket.request.user.username]) {
+  //       socket.emit('launchgame', {
+  //         game, // shorthand for game: game,
+  //       });
+  //       delete lobbyUsers[socket.request.user.username];
+  //       socket.emit('launchChat', {
+  //         game,
+  //       });
+  //     }
+  //   // } else {
+  //   //   socket.emit('gameNotFound');
+  //   // }
+  // });
 
 
   socket.on('resumegame', (gameId) => {
@@ -269,7 +250,7 @@ io.on('connection', (socket) => {
     } else {
       socket.broadcast.emit('pass', msg);
     }
-    activeGames[msg.gameId].game = msg.game;
+    //activeGames[msg.gameId].game = msg.game;
 
     // potential security concern: should I look up users through MySQL
     // rather than trusting msg.blackUser and msg.white User

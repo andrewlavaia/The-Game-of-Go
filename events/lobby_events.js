@@ -8,4 +8,8 @@ module.exports = function(socket, db) {
   socket.on('getSeeksRequest', () => {
     controller.getSeeks(socket, db);
   });
+
+  socket.on('gameReady', (gameID) => {
+    controller.loadGame(socket, db, gameID);
+  });
 }
