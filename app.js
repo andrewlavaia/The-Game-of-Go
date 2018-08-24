@@ -1,14 +1,12 @@
 const express = require('express');
-
 const app = express();
 
 // general use libraries
 const path = require('path');
 const assert = require('assert');
 
-// Handlebars dependencies and initialization
+// handlebars dependencies and initialization
 const hbs = require('express-handlebars');
-
 app.engine('hbs', hbs({
   extname: 'hbs',
   defaultLayout: 'main',
@@ -17,7 +15,7 @@ app.engine('hbs', hbs({
 }));
 app.set('view engine', 'hbs');
 
-// MySQL and Passport login dependencies
+// MySQL and passport login dependencies
 const mysql = require('mysql');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -30,8 +28,8 @@ const flash = require('connect-flash');
 app.use(express.static('public_html')); // all files in public_html www folder should be static
 app.use(bodyParser.json()); // support parsing of application/json type post data
 app.use(bodyParser.urlencoded({
-  extended: true,
-})); // support parsing of application/x-www-form-urlencoded post data
+  extended: true, // support parsing of application/x-www-form-urlencoded post data
+}));
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 
@@ -59,7 +57,6 @@ const port = process.env.PORT || 51234;
 
 // passport.socketio middleware
 const passportSocketIo = require('passport.socketio');
-
 io.use(passportSocketIo.authorize({
   key: dbconfig.session_key,
   secret: dbconfig.session_secret,
@@ -84,7 +81,7 @@ require('./router.js')(app, passport);
 // utility functions
 const utilityRatings = require('./utility/ratings.js');
 
-// Load database
+// load database
 const DB = require('./config/database.js');
 const db = new DB();
 
@@ -120,20 +117,13 @@ io.on('connection', (socket) => {
   gameEvents(socket, db);
 
   socket.on('invite', (data) => {
-
-    const game = lobbyController.createNewGame(socket, db, data);
-
-    seconds = game.time.seconds;
-    periods = game.time.periods;
-    timer_black = game.time.seconds;
-    timer_white = game.time.seconds;
-    periods_black = game.time.periods;
-    periods_white = game.time.periods;
-    timer_type = game.time.type;
-
-    if (data.seekId) {
-      lobbyController.deleteSeekByID(socket, db, data.seekId);
-    }
+    seconds = data.time.seconds;
+    periods = data.time.periods;
+    timer_black = data.time.seconds;
+    timer_white = data.time.seconds;
+    periods_black = data.time.periods;
+    periods_white = data.time.periods;
+    timer_type = data.time.type;
   });
 
   socket.on('move', (msg) => {
@@ -236,29 +226,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('resultbyscore', (msg) => {
-    // confirm that the user that score request is current user in socket
-    // and confirm that game still exists
-    // (so no duplicate requests by player and opponent)
-    assert(msg.whiteScore !== msg.blackScore);
-
-    // clear timer interval for both players
-    clearInterval(intervalID);
-
-    // if game still exists, delete it and submit result to database
-    if (socket.username === msg.userId && activeGames[msg.gameId]) {
-
-      console.log('Game decided by score : ' + msg.gameId);
-
-      // determine which user lost based on score
-      const loserID = (msg.blackScore > msg.whiteScore ? msg.whiteUser : msg.blackUser);
-
-      // add result to Game Results table and delete active game
-      gameResultController.processGameResult(socket, db, msg, 'Score', loserID);
-
-    }
-  });
-
+  // !!! replace with joingame ?
   socket.on('continue game', (msg) => {
     if (socket.username === msg.userId) {
       console.log('continuing game : ' + msg.gameId);

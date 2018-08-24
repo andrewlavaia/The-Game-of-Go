@@ -25,8 +25,8 @@ module.exports = {
   },
   deleteSeeksByUserID(userID, db, deleteSeeksByUserIDHandler) {
     db.query(
-      'DELETE FROM seekgames WHERE userid = ' + mysql.escape(userID),
-      deleteSeekByIDHandler
+      'DELETE FROM seekgames WHERE username = ' + mysql.escape(userID),
+      deleteSeeksByUserIDHandler
     );
   },
   getUserGames: function getUserGames(userID, db, getUserGamesHandler) {
@@ -42,12 +42,6 @@ module.exports = {
       mysql.escape(game.users.white) + ', ' + mysql.escape(game.users.black) +
       ', ' + mysql.escape(game.isRated) + ')',
       insertGameHandler
-    );
-  },
-  getGame: function getGame(gameID, db, getGameHandler) {
-    db.query(
-      'SELECT * FROM games WHERE gameid = ' + mysql.escape(gameID),
-      getGameHandler
     );
   },
 };

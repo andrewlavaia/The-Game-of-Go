@@ -2,7 +2,6 @@ const model = require('../models/game_result_model.js');
 const utilityRatings = require('../utility/ratings.js');
 
 function formatGameResult(result, data, type, loserID) {
-
   const whiteID = result[0].username_white;
   const blackID = result[0].username_black;
   const winnerID = (loserID === whiteID ? blackID : whiteID);
@@ -50,7 +49,7 @@ function calcRatingChange(winner, loser, gameResult) {
   let newEloLoser = loser.elo + (k * (s2 - e2));
 
   if (newEloWinner < 0)
-    newEloWinner = 0; // in case of a draw
+    newEloWinner = 0;
   if (newEloLoser < 0)
     newEloLoser = 0;
 
@@ -105,10 +104,12 @@ module.exports = {
     model.getGame(data.gameId, db, getGameHandler);
 
     function getGameHandler(result) {
-      let gameResult = formatGameResult(result, data, type, loser);
-      model.insertGameResult(gameResult, db, insertGameResultHandler);
-      if (gameResult.isRated === 1)
-        adjustUserRatings(socket, db, gameResult);
+      if (result.length !== 0) { // prevent double insertion from both users
+        let gameResult = formatGameResult(result, data, type, loser);
+        model.insertGameResult(gameResult, db, insertGameResultHandler);
+        if (gameResult.isRated === 1)
+          adjustUserRatings(socket, db, gameResult);
+      }
     }
 
     function insertGameResultHandler(result) {

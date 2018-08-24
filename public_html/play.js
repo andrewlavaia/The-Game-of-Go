@@ -467,7 +467,7 @@
         if (lockCount === 2) {
           gameOver = true;
 
-          socket.emit('resultbyscore', {
+          socket.emit('finalScoreRequest', {
             userId: username,
             gameId: serverGame.id,
             game: game,

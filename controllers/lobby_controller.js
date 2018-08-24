@@ -49,30 +49,6 @@ function formatGame(socket, data) {
   return game;
 }
 
-function formatGameDB(row) {
-  const game = {
-    id: row.gameid,
-    board: null,
-    game: null,
-    users: {
-      white: row.username_white,
-      whiteElo: 50,
-      whiteRank: utilityRatings.convertRankToString(-17),
-      black: row.username_black,
-      blackElo: 100,
-      blackRank: utilityRatings.convertRankToString(-18),
-    },
-    time: {
-      type: 'Sudden Death', // types allowed: sudden_death, Japanese
-      seconds: 60,
-      periods: 0,
-    },
-    boardSize: 19, // 9, 13, or 19 are most common
-    isRated: row.israted,
-  }
-  return game;
-}
-
 let self = module.exports = {
   getSeeks: function getSeeks(socket, db) {
     model.getSeeks(db, getSeeksHandler);
@@ -90,6 +66,11 @@ let self = module.exports = {
       self.getSeeks(socket, db);
     }
   },
+  acceptSeek: function acceptSeek(socket, db, data) {
+    self.createNewGame(socket, db, data);
+    self.deleteSeeksByUserID(socket, db, socket.request.user.username);
+    self.deleteSeeksByUserID(socket, db, data.opponentId);
+  },
   deleteSeekByID: function deleteSeekByID(socket, db, seekID) {
     model.deleteSeekByID(seekID, db, deleteSeekByIDHandler);
 
@@ -101,6 +82,7 @@ let self = module.exports = {
     model.deleteSeeksByUserID(userID, db, deleteSeeksByUserIDHandler);
 
     function deleteSeeksByUserIDHandler(result) {
+      console.log("seeks deleted");
       self.getSeeks(socket, db);
     }
   },
@@ -120,24 +102,4 @@ let self = module.exports = {
 
     return game; // remove this once lobby is sorted out
   },
-  loadGame: function loadGame(socket, db, gameID) {
-    model.getGame(gameID, db, getGameHandler);
-
-    function getGameHandler(result) {
-      let game = formatGameDB(result[0]);
-      socket.emit('launchgame', {
-        game,
-      });
-      socket.emit('launchChat', {
-        game,
-      });
-      socket.broadcast.emit('launchgame', {
-        game,
-      });
-      socket.broadcast.emit('launchChat', {
-        game,
-      });
-    }
-  },
-
 }

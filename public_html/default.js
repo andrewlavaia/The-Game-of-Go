@@ -59,6 +59,17 @@
               seekId: 0,
               isRated: 1,
             });
+            socket.emit('acceptSeekRequest', {
+              opponentId: user,
+              opponentRank: 3, // placeholder
+              time: {
+                type: 'sudden_death',
+                seconds: 30,
+                periods: 0,
+              },
+              seekId: 0,
+              isRated: 1,
+            });
           }));
       });
     }
@@ -126,6 +137,20 @@
         if (username !== chartData.getValue(dataRow, dataColOpponent)) {
           // alert('SeekID ' + chartData.getValue(dataRow, dataSeekID) + ' selected');
           socket.emit('invite', {
+            opponentId: chartData.getValue(dataRow, dataColOpponent),
+            opponentRank: chartData.getValue(dataRow, dataColRank),
+            time: {
+              type: chartData.getValue(dataRow, dataColTimeType),
+              seconds: chartData.getValue(dataRow, dataColSeconds),
+              periods: chartData.getValue(dataRow, dataColPeriods),
+            },
+            seekId: chartData.getValue(dataRow, dataColSeekID),
+            isRated: chartData.getValue(dataRow, dataColIsRated),
+            boardSize: chartData.getValue(dataRow, dataColBoardSize),
+            komi: chartData.getValue(dataRow, dataColKomi),
+            handicap: chartData.getValue(dataRow, dataColHandicap),
+          });
+          socket.emit('acceptSeekRequest', {
             opponentId: chartData.getValue(dataRow, dataColOpponent),
             opponentRank: chartData.getValue(dataRow, dataColRank),
             time: {
