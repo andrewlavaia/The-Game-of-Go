@@ -311,12 +311,12 @@ $(function () {
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on('user left', function (data) {
-    if (serverGame && serverGame.id === data.gameid) {
+    // if (serverGame && serverGame.id === data.gameid) {
       log(data.username + ' left');
       // addParticipantsMessage(data);
       removeChatTyping(data);
       console.log(data.username + ' - ' + data.gameid);
-    }
+    // }
   });
 
   // Whenever the server emits 'typing', show the typing message

@@ -8,13 +8,13 @@ module.exports = function(socket) {
     // send ping to client
     socket.emit('pingResponse', {
       ping: latency,
-      userId: socket.userId,
+      userId: socket.request.user.username,
     });
 
     // send ping to opponent
     socket.broadcast.emit('pingResponse', {
       ping: latency,
-      userId: socket.userId,
+      userId: socket.request.user.username,
     });
   });
 }

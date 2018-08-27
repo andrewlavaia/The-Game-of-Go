@@ -1,5 +1,16 @@
 const model = require('../models/game_model.js');
+const gameResultController = require('../controllers/game_result_controller.js');
 const utilityRatings = require('../utility/ratings.js');
+
+// go board timer variables
+let seconds;
+let periods;
+let timer_black;
+let timer_white;
+let periods_black
+let periods_white;
+let timer_type;
+let intervalID;
 
 function formatGameDB(row) {
   const game = {
@@ -52,5 +63,104 @@ module.exports = {
     function gameMoveHandler(result) {
       console.log("Move successfully updated");
     }
+  },
+
+  setTimer: function setTimer(socket, db, data) {
+    seconds = data.time.seconds;
+    periods = data.time.periods;
+    timer_black = data.time.seconds;
+    timer_white = data.time.seconds;
+    periods_black = data.time.periods;
+    periods_white = data.time.periods;
+    timer_type = data.time.type;
+  },
+
+  pauseTimer: function pauseTimer(socket, db) {
+    clearInterval(intervalID);
+  },
+
+  move: function move(socket, db, data) {
+    if (data.pass === false) {
+      socket.broadcast.emit('move', data);
+    } else {
+      socket.broadcast.emit('pass', data);
+    }
+
+    // potential security concern: should I look up users through MySQL
+    // rather than trusting data.blackUser and data.white User
+
+    // Update Board Game Timer
+    if (intervalID !== undefined) {
+      clearInterval(intervalID);
+    }
+
+    // reset seconds timer when timer type is "Japanese"
+    // can also do when periods > 0 ?
+    if (timer_type === 'Japanese') {
+      timer_black = seconds;
+      timer_white = seconds;
+    }
+
+    intervalID = setInterval(() => {
+      if (data.game.turn === 1 && timer_black > 0) {
+        timer_black--;
+      } else if (data.game.turn === 1 && timer_black === 0 && periods_black > 0) {
+        periods_black--;
+        timer_black = seconds;
+      } else if (data.game.turn === 1 && timer_black === 0 && periods_black === 0) {
+        // console.log('Black loses on time');
+
+        gameResultController.processGameResult(socket, db, data, 'Time Loss', data.blackUser);
+        socket.emit('timeloss', {
+          gameId: data.gameId,
+          loser: data.blackUser,
+        });
+        socket.broadcast.emit('timeloss', {
+          gameId: data.gameId,
+          loser: data.blackUser,
+        });
+
+        clearInterval(intervalID);
+      } else if (data.game.turn === -1 && timer_white > 0) {
+        timer_white--;
+      } else if (data.game.turn === -1 && timer_white === 0 && periods_white > 0) {
+        periods_white--;
+        timer_white = seconds;
+      } else if (data.game.turn === -1 && timer_white === 0 && periods_white === 0) {
+
+        gameResultController.processGameResult(socket, db, data, 'Time Loss', data.whiteUser);
+        socket.emit('timeloss', {
+          gameId: data.gameId,
+          loser: data.whiteUser,
+        });
+        socket.broadcast.emit('timeloss', {
+          gameId: data.gameId,
+          loser: data.whiteUser,
+        });
+        clearInterval(intervalID);
+      }
+
+      // send to client
+      socket.emit('timer', {
+        seconds, // shorthand for seconds: seconds,
+        periods,
+        timer_white,
+        timer_black,
+        periods_black,
+        periods_white,
+        gameId: data.gameId,
+      });
+
+      // send to all other clients
+      socket.broadcast.emit('timer', {
+        seconds, // shorthand for seconds: seconds,
+        periods,
+        timer_white,
+        timer_black,
+        periods_black,
+        periods_white,
+        gameId: data.gameId,
+      });
+    }, 1000);
   },
 }

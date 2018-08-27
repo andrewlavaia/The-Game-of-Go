@@ -54,4 +54,12 @@ module.exports = function(socket) {
       });
     }
   });
+
+  socket.on('disconnect', (msg) => {
+    socket.broadcast.emit('user left', {
+      username: socket.request.user.username,
+      // numUsers: numUsers,
+      gameid: socket.gameId, // !!! socket.gameId no longer exists
+    });
+  });
 }
